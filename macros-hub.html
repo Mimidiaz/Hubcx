@@ -987,6 +987,13 @@ function draw(){
   if(sort==='use')list.sort((a,b)=>b.uses-a.uses);
   else if(sort==='az')list.sort((a,b)=>a.title.localeCompare(b.title));
   else list.sort((a,b)=>new Date(b.edited||0)-new Date(a.edited||0));
+  // Always secondary-sort: pendientes first, then ajustes, then aprobadas
+  const QA_ORDER={'rechazada':0,'requiere_ajustes':1,'requiere_nueva_revision':2,'pendiente':3,'sin_revisar':3,'':3,'aprobada':99};
+  list.sort((a,b)=>{
+    const oa=QA_ORDER[a.estado_calidad||'']??3;
+    const ob=QA_ORDER[b.estado_calidad||'']??3;
+    return oa-ob;
+  });
 
   const mine=TPL.filter(t=>t.createdBy===CU?.id);
   const oficiales=getVisTPL().filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada');
@@ -1021,32 +1028,40 @@ function draw(){
     const ccl='cg-'+t.cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'');
     const plain=stripHTML(t.body);
 
-    // QA indicator — en vista usuario: SOLO mostrar check verde si está aprobada
-    // Si no está aprobada (pendiente o rechazada), no mostrar nada
-    let qaEl='';
-    if(t.estado_calidad==='aprobada'){
-      qaEl=`<div class="verified-mark" title="Verificada por Calidad · ${esc(t.aprobada_por||'')}"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z"/></svg></div>`;
-    }
-    // pendiente y rechazada: qaEl queda vacío — sin indicador visible
+    // ── QA STATE BADGE — always visible ──
+    const QA_VISUAL = {
+      aprobada:               {icon:'✓', label:'Aprobada',        color:'#00956E', bg:'rgba(0,191,140,.1)',  border:'rgba(0,191,140,.25)'},
+      rechazada:              {icon:'✕', label:'Rechazada',        color:'#DC2626', bg:'rgba(240,92,92,.1)',  border:'rgba(240,92,92,.25)'},
+      requiere_ajustes:       {icon:'⚠', label:'Requiere ajustes', color:'#D97700', bg:'rgba(245,158,11,.12)',border:'rgba(245,158,11,.3)'},
+      requiere_nueva_revision:{icon:'↺', label:'Nueva revisión',   color:'#7C3AED', bg:'rgba(163,120,243,.1)',border:'rgba(163,120,243,.25)'},
+      pendiente:              {icon:'●', label:'Pendiente',         color:'#94A3B8', bg:'rgba(148,163,184,.1)',border:'rgba(148,163,184,.25)'},
+      sin_revisar:            {icon:'●', label:'Sin revisar',       color:'#94A3B8', bg:'rgba(148,163,184,.1)',border:'rgba(148,163,184,.25)'},
+    };
+    const qv = QA_VISUAL[t.estado_calidad||'sin_revisar'] || QA_VISUAL.sin_revisar;
+    const qaEl = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;background:${qv.bg};color:${qv.color};border:1px solid ${qv.border};white-space:nowrap;flex-shrink:0">${qv.icon} ${qv.label}</span>`;
+
+    // ── INTERCOM BADGE ──
+    const intercomEl = t.en_intercom
+      ? `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:600;background:rgba(0,191,140,.08);color:#00956E;border:1px solid rgba(0,191,140,.2)">✓ Intercom</span>`
+      : '';
 
     return `<div class="mac-card${selId===t.id?' sel':''}" onclick="openDetail('${t.id}')" style="animation-delay:${Math.min(i,12)*0.025}s">
-      <div class="mac-card-top">
-        <div style="flex:1;min-width:0">
-          <div class="mac-cat-row">
-            <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--c-bg);color:var(--c-muted);border:1px solid var(--c-border)">
-              <span class="sdot cd-${t.cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'')}"></span>${t.cat}
-            </span>
-          </div>
-          <div class="mac-title">${esc(t.title)}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:8px;margin-top:2px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px">
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:var(--h-bg);color:var(--h-muted);border:1px solid var(--h-border);white-space:nowrap;flex-shrink:0">
+          <span class="sdot cd-${t.cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'')}"></span>${esc(t.cat)}
+        </span>
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
           ${qaEl}
           <button class="mac-fav${t.fav?' on':''}" onclick="event.stopPropagation();toggleFav('${t.id}')">${t.fav?'★':'☆'}</button>
         </div>
       </div>
+      <div class="mac-title">${esc(t.title)}</div>
       <div class="mac-preview">${plain||'Sin contenido'}</div>
       <div class="mac-footer">
-        <span class="mac-uses">${t.uses} uso${t.uses!==1?'s':''}</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="mac-uses">${t.uses} uso${t.uses!==1?'s':''}</span>
+          ${intercomEl}
+        </div>
         <div class="mac-actions">
           <button class="mac-pip-btn" onclick="event.stopPropagation();openPiP('${t.id}')" title="Flotar">↗</button>
           <button class="mac-copy-btn" onclick="event.stopPropagation();copyMacro('${t.id}')">
