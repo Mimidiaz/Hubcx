@@ -15,7 +15,7 @@ html:not(.light){ --c-bg:#F4F8FE!important;--c-card:#FFFFFF!important;--c-border
 .mac-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--c-bg)}
 
 /* ─── MAC CANVAS OVERRIDES ─ */
-#mac-canvas{padding:28px 32px 48px;gap:24px}
+#mac-canvas{padding:24px 32px 44px;gap:18px}
 
 /* ─── MAC TWO-COLUMN LAYOUT ─ */
 .mac-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px;align-items:start}
@@ -34,19 +34,19 @@ html:not(.light){ --c-bg:#F4F8FE!important;--c-card:#FFFFFF!important;--c-border
 .mac-right{display:flex;flex-direction:column;gap:16px;min-width:0}
 
 /* ─── TOOLBAR ─ */
-.mac-toolbar{display:flex;align-items:center;gap:10px;padding:14px 18px!important}
+.mac-toolbar{display:flex;align-items:center;gap:10px;padding:16px 20px!important;box-shadow:0 10px 30px rgba(0,21,51,.05)!important;border-radius:18px!important}
 .mac-search-wrap{flex:1;position:relative;min-width:0}
-.mac-search{width:100%;padding:9px 12px 9px 36px;background:var(--c-bg);border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:13px;color:var(--c-text);outline:none;transition:border-color .15s}
+.mac-search{width:100%;padding:10px 14px 10px 38px;background:var(--c-bg);border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:13px;color:var(--c-text);outline:none;transition:border-color .15s}
 .mac-search:focus{border-color:#0062DE;box-shadow:0 0 0 3px rgba(0,98,222,.1)}
 .mac-search::placeholder{color:var(--c-hint)}
 .mac-select{padding:8px 12px;background:var(--c-bg);border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:12px;color:var(--c-text);outline:none;cursor:pointer;white-space:nowrap}
 
 /* ─── MAC CARD GRID ─ */
-.mac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;align-content:start;align-items:start}
+.mac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;align-content:start;align-items:start}
 
 /* ─── MAC CARD ─ */
-.mac-card{background:#FFFFFF;border:1px solid #E4EAF3;border-radius:18px;padding:20px;box-shadow:0 8px 24px rgba(0,21,51,.05);cursor:pointer;display:flex;flex-direction:column;min-height:220px;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden;animation:fadeUp .22s ease both}
-.mac-card:hover{border-color:#C8D6EC;box-shadow:0 12px 32px rgba(0,21,51,.1);transform:translateY(-2px)}
+.mac-card{background:#FFFFFF;border:1px solid #E4EAF3;border-radius:20px;padding:22px;box-shadow:0 10px 28px rgba(0,21,51,.055);cursor:pointer;display:flex;flex-direction:column;min-height:220px;transition:border-color .15s,box-shadow .15s,transform .15s;position:relative;overflow:hidden;animation:fadeUp .22s ease both}
+.mac-card:hover{border-color:#C8D6EC;box-shadow:0 16px 34px rgba(0,21,51,.08);transform:translateY(-2px)}
 .mac-card.sel{border-color:#0062DE;box-shadow:0 0 0 2px rgba(0,98,222,.15)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 .mac-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px}
@@ -468,13 +468,18 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
         Pendientes QA
         <span class="sidebar-soon" id="cnt-pending" style="background:rgba(245,158,11,.2);color:#F59E0B">0</span>
       </div>
+      <!-- Categorías — item + sub-list collapsible -->
+      <div class="sidebar-item" id="sb-cats-toggle" onclick="toggleSbCats()" style="justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="15" height="15"><path d="M1 2.5A1.5 1.5 0 012.5 1h3A1.5 1.5 0 017 2.5v3A1.5 1.5 0 015.5 7h-3A1.5 1.5 0 011 5.5v-3zm8 0A1.5 1.5 0 0110.5 1h3A1.5 1.5 0 0115 2.5v3A1.5 1.5 0 0113.5 7h-3A1.5 1.5 0 019 5.5v-3zm-8 8A1.5 1.5 0 012.5 9h3A1.5 1.5 0 017 10.5v3A1.5 1.5 0 015.5 15h-3A1.5 1.5 0 011 13.5v-3zm8 0A1.5 1.5 0 0110.5 9h3A1.5 1.5 0 0115 10.5v3A1.5 1.5 0 0113.5 15h-3A1.5 1.5 0 019 13.5v-3z"/></svg>
+          Categorías
+        </div>
+        <svg id="sb-cats-arrow" width="10" height="10" viewBox="0 0 16 16" fill="currentColor" style="color:rgba(255,255,255,.3);transition:transform .2s;flex-shrink:0;transform:rotate(-90deg)"><path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z"/></svg>
+      </div>
+      <div id="sb-cats" style="display:none;padding:0 0 4px"></div>
+
       <div class="sidebar-sep"></div>
-      <!-- CATEGORÍAS colapsable -->
-      <button class="sidebar-section" id="sb-cats-toggle" onclick="toggleSbCats()" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;cursor:pointer;padding:14px 10px 6px;font-family:var(--ff)">
-        <span>Categorías</span>
-        <svg id="sb-cats-arrow" width="10" height="10" viewBox="0 0 16 16" fill="currentColor" style="color:rgba(255,255,255,.3);transition:transform .2s;flex-shrink:0"><path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z"/></svg>
-      </button>
-      <div id="sb-cats" style="display:none;padding:0 0 8px"></div>
+      <div class="sidebar-section">Accesos</div>
       <a class="sidebar-item" href="index.html">
         <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>
         Panel CX
@@ -537,12 +542,6 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
               <div class="module-eyebrow">Cocos Capital · Macros</div>
               <div class="module-title" id="cbar-title">Mis macros</div>
               <div class="module-subtitle" id="cbar-sub">Plantillas rápidas para responder mejor y ahorrar tiempo.</div>
-            </div>
-            <div class="hero-actions">
-              <button class="primary-action admin-only" onclick="openM('create')" id="btn-nueva-macro-hero" style="display:none">
-                <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
-                + Nueva macro
-              </button>
             </div>
           </div>
 
@@ -1166,7 +1165,7 @@ function draw(){
       <div class="mac-card-top">
         <div style="flex:1;min-width:0">
           <div class="mac-cat-row">
-            <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:var(--c-bg);color:var(--c-muted);border:1px solid var(--c-border)">
+            <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;background:var(--c-bg);color:var(--c-muted);border:1px solid var(--c-border)">
               <span class="sdot cd-${t.cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'')}"></span>${t.cat}
             </span>
           </div>
