@@ -543,58 +543,33 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
     </div>
 
     <!-- ══ VIEW: CALIDAD QA ══════════════════════════════════ -->
-    <div id="view-qa" style="display:none;flex:1;flex-direction:column;gap:16px;overflow:hidden">
+    <div id="view-qa" style="display:none;flex:1;flex-direction:column;gap:12px;overflow:hidden">
 
-      <!-- Filters bar -->
-      <div class="hub-panel" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0">
-        <div style="position:relative;flex:1;min-width:200px">
+      <!-- Metrics + search bar -->
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap">
+        <!-- Metric pills -->
+        <div id="qa-metrics" style="display:flex;gap:8px;flex-shrink:0"></div>
+        <div style="flex:1;min-width:180px;position:relative">
           <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#A0B0C8;pointer-events:none"><path d="M11.4 10A5.5 5.5 0 102.6 2.6a5.5 5.5 0 008.8 7.4l3.3 3.3 1.4-1.4-3.3-3.3zm-5-.4a3.5 3.5 0 113.5-3.5A3.5 3.5 0 016.4 9.6z"/></svg>
-          <input id="qa-q" type="text" placeholder="Buscar macro, categoría, autor…" oninput="renderQATable()" style="width:100%;padding:8px 12px 8px 32px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:13px;outline:none;font-family:var(--h-ff)">
+          <input id="qa-q" type="text" placeholder="Buscar macro, categoría, autor…" oninput="renderQATable()" style="width:100%;padding:8px 12px 8px 32px;background:#fff;border:1px solid var(--h-border);border-radius:8px;font-size:13px;outline:none;font-family:var(--h-ff);box-shadow:0 1px 3px rgba(0,21,51,.04)">
         </div>
-        <select id="qa-filter-estado" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
-          <option value="">Todos los estados</option>
-          <option value="sin_revisar">Sin revisar</option>
-          <option value="pendiente">Pendiente</option>
-          <option value="aprobada">Aprobada</option>
-          <option value="rechazada">Rechazada</option>
-          <option value="requiere_ajustes">Requiere ajustes</option>
-          <option value="requiere_nueva_revision">Requiere nueva revisión</option>
+        <select id="qa-filter-cat" onchange="renderQATable()" style="padding:7px 10px;background:#fff;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+          <option value="">Todas las categorías</option>
         </select>
-        <select id="qa-filter-intercom" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+        <select id="qa-filter-autor" onchange="renderQATable()" style="padding:7px 10px;background:#fff;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+          <option value="">Todos los autores</option>
+        </select>
+        <select id="qa-filter-intercom" onchange="renderQATable()" style="padding:7px 10px;background:#fff;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
           <option value="">Intercom: todos</option>
           <option value="si">En Intercom</option>
           <option value="no">No en Intercom</option>
         </select>
-        <select id="qa-filter-cat" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
-          <option value="">Todas las categorías</option>
-        </select>
-        <select id="qa-filter-autor" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
-          <option value="">Todos los autores</option>
-        </select>
-        <span id="qa-count-bar" style="font-size:12px;color:#6B7C99;white-space:nowrap;margin-left:auto"></span>
+        <!-- Hidden: kept for getFilteredQA compat -->
+        <select id="qa-filter-estado" onchange="renderQATable()" style="display:none"></select>
       </div>
 
-      <!-- Table -->
-      <div class="hub-panel" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
-        <div style="overflow:auto;flex:1">
-          <table id="qa-table" style="width:100%;border-collapse:collapse;font-size:13px">
-            <thead>
-              <tr style="background:#F8FAFC;border-bottom:2px solid var(--h-border);position:sticky;top:0;z-index:2">
-                <th style="padding:11px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Macro</th>
-                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Categoría</th>
-                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Autor</th>
-                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Última edición</th>
-                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Estado QA</th>
-                <th style="padding:11px 12px;text-align:center;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Intercom</th>
-                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Revisado por</th>
-                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Comentario QA</th>
-                <th style="padding:11px 12px;text-align:center;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="qa-tbody"></tbody>
-          </table>
-        </div>
-      </div>
+      <!-- Grouped content -->
+      <div id="qa-groups" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:20px;padding-bottom:24px"></div>
     </div>
 
   </main>
@@ -1294,33 +1269,7 @@ function getFilteredQA(){
 
 function autorName(id){return USERS.find(u=>u.id===id)?.name||'—';}
 
-function renderQATable(){
-  const tb=document.getElementById('qa-tbody');if(!tb)return;
-  const list=getFilteredQA();
-  const cb=document.getElementById('qa-count-bar');
-  if(cb)cb.textContent=`${list.length} macro${list.length!==1?'s':''} · Pendientes: ${list.filter(t=>t.estado_calidad==='pendiente'||!t.estado_calidad).length}`;
-  if(!list.length){tb.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--t3)">Sin macros para los filtros seleccionados</td></tr>`;return;}
-  tb.innerHTML=list.map(t=>`<tr>
-    <td>
-      <div style="font-size:13px;font-weight:600;color:var(--t0);margin-bottom:2px">${esc(t.title)}</div>
-      <div style="font-size:11px;color:var(--t3)">${t.uses} uso${t.uses!==1?'s':''} · ${t.visibility==='shared'?'Compartida':'Privada'}</div>
-    </td>
-    <td><span style="font-size:11px;color:var(--t2)">${t.cat}</span></td>
-    <td style="font-size:12px;color:var(--t2)">${autorName(t.createdBy)}</td>
-    <td style="font-size:11px;color:var(--t3);white-space:nowrap">${fmtDateShort(t.created)}</td>
-    <td>${renderQABadge(t.estado_calidad,t.motivo_rechazo)}</td>
-    <td style="font-size:11px;color:var(--t3)">
-      ${t.aprobada_por?`<span style="color:var(--grn);font-weight:500">${esc(t.aprobada_por)}</span><br><span>${fmtDateShort(t.fecha_aprobacion)}</span>`:'—'}
-    </td>
-    <td>
-      <div style="display:flex;gap:4px;align-items:center">
-        <button class="btn btn-secondary btn-xs" onclick="openQAReview('${t.id}')">Revisar</button>
-        <button class="btn btn-success btn-xs" onclick="approveOne('${t.id}')" ${t.estado_calidad==='aprobada'?'disabled style="opacity:.35;cursor:default"':''} title="Aprobar">✓</button>
-        <button class="btn btn-danger btn-xs" onclick="openRejectModal('${t.id}')" ${t.estado_calidad==='rechazada'?'disabled style="opacity:.35;cursor:default"':''} title="Rechazar">✕</button>
-      </div>
-    </td>
-  </tr>`).join('');
-}
+// renderQATable — defined below (grouped version)
 
 // QA state config — single source of truth
 const QA_STATES = {
@@ -1395,56 +1344,105 @@ function switchToQA(btn){
   loadQAStats();
 }
 
-// ── EXPANDED renderQATable ──────────────
+// ── renderQATable — grouped by state ──────────────
 function renderQATable(){
-  const tb=document.getElementById('qa-tbody');if(!tb)return;
-  const list=getFilteredQA();
-  const cb=document.getElementById('qa-count-bar');
-  if(cb){
-    const sinRev=list.filter(t=>!t.estado_calidad||t.estado_calidad==='pendiente'||t.estado_calidad==='sin_revisar').length;
-    cb.textContent=`${list.length} macro${list.length!==1?'s':''} · Sin revisar: ${sinRev}`;
+  const list = getFilteredQA();
+  const container = document.getElementById('qa-groups');
+  if(!container) return;
+
+  // Update metrics bar
+  const metricsEl = document.getElementById('qa-metrics');
+  if(metricsEl){
+    const counts = {
+      sin_revisar: TPL.filter(t=>!t.estado_calidad||t.estado_calidad==='sin_revisar'||t.estado_calidad==='pendiente').length,
+      requiere_ajustes: TPL.filter(t=>t.estado_calidad==='requiere_ajustes'||t.estado_calidad==='requiere_nueva_revision').length,
+      rechazada: TPL.filter(t=>t.estado_calidad==='rechazada').length,
+      aprobada: TPL.filter(t=>t.estado_calidad==='aprobada').length,
+    };
+    metricsEl.innerHTML = [
+      {label:'Sin revisar', count:counts.sin_revisar, color:'#D97700', bg:'rgba(245,158,11,.1)', border:'rgba(245,158,11,.25)'},
+      {label:'Requiere ajustes', count:counts.requiere_ajustes, color:'#7C3AED', bg:'rgba(163,120,243,.1)', border:'rgba(163,120,243,.25)'},
+      {label:'Rechazadas', count:counts.rechazada, color:'#DC2626', bg:'rgba(240,92,92,.1)', border:'rgba(240,92,92,.25)'},
+      {label:'Aprobadas', count:counts.aprobada, color:'#00956E', bg:'rgba(0,191,140,.1)', border:'rgba(0,191,140,.25)'},
+    ].map(m=>`<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;background:${m.bg};border:1px solid ${m.border};font-size:12px;font-weight:600;color:${m.color};white-space:nowrap">
+      <span style="font-size:15px;font-weight:800">${m.count}</span>${m.label}
+    </div>`).join('');
   }
+
   if(!list.length){
-    tb.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--h-hint)">Sin macros para los filtros seleccionados</td></tr>`;
+    container.innerHTML=`<div style="text-align:center;padding:56px 24px;color:#A0B0C8;font-size:14px">Sin macros para los filtros seleccionados</div>`;
     return;
   }
-  tb.innerHTML=list.map(t=>{
-    const estado = t.estado_calidad||'sin_revisar';
-    const intercomCheck = t.en_intercom
-      ? `<span style="color:#00956E;font-size:16px" title="En Intercom">✓</span>`
-      : `<span style="color:#D1D9E6;font-size:16px" title="No en Intercom">○</span>`;
-    const revisor = t.revisado_por||t.aprobada_por||'—';
-    const comentario = t.comentario_qa||t.motivo_rechazo||'';
-    const editado = t.ultima_edicion||t.edited||'—';
-    return `<tr style="border-bottom:1px solid var(--h-border);transition:background .1s" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
-      <td style="padding:11px 16px;max-width:240px">
-        <div style="font-size:13px;font-weight:600;color:var(--h-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer" 
-             onclick="openQAReview('${t.id}')"
-             title="${esc(stripHTML(t.body).slice(0,200))}">${esc(t.title)}</div>
-        <div style="font-size:11px;color:var(--h-hint)">${t.uses} uso${t.uses!==1?'s':''}</div>
-        <div class="qa-preview-text" style="font-size:11px;color:var(--h-muted);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;max-width:220px">${esc(stripHTML(t.body).slice(0,120))}</div>
-      </td>
-      <td style="padding:11px 12px"><span style="font-size:11px;color:var(--h-text2)">${esc(t.cat)}</span></td>
-      <td style="padding:11px 12px;font-size:12px;color:var(--h-text2);white-space:nowrap">${esc(autorName(t.createdBy))}</td>
-      <td style="padding:11px 12px;font-size:11px;color:var(--h-hint);white-space:nowrap">${fmtDateShort(editado)}</td>
-      <td style="padding:11px 12px">${renderQABadge(estado)}</td>
-      <td style="padding:11px 12px;text-align:center">
-        <label style="cursor:pointer" title="${t.en_intercom?'En Intercom - click para desmarcar':'No en Intercom - click para marcar'}">
-          <input type="checkbox" ${t.en_intercom?'checked':''} onchange="toggleIntercom('${t.id}',this.checked)" style="width:15px;height:15px;cursor:pointer">
-        </label>
-      </td>
-      <td style="padding:11px 12px;font-size:11px;color:var(--h-text2);white-space:nowrap">${esc(revisor)}</td>
-      <td style="padding:11px 12px;max-width:200px">
-        <div style="font-size:12px;color:var(--h-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(comentario)}">${esc(comentario)||'—'}</div>
-      </td>
-      <td style="padding:11px 12px;text-align:center">
-        <div style="display:flex;align-items:center;justify-content:center;gap:4px">
-          <button onclick="openQAReview('${t.id}')" title="Revisar" style="padding:4px 10px;background:var(--h-blue);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">Revisar</button>
-          <button onclick="quickQAAction('${t.id}','aprobada')" title="Aprobar" style="padding:4px 7px;background:rgba(0,191,140,.1);color:#00956E;border:1px solid rgba(0,191,140,.3);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✓</button>
-          <button onclick="quickQAAction('${t.id}','requiere_ajustes')" title="Pedir ajustes" style="padding:4px 7px;background:rgba(245,158,11,.1);color:#D97700;border:1px solid rgba(245,158,11,.3);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">⚠</button>
-        </div>
-      </td>
-    </tr>`;
+
+  // Group definition — order matters
+  const GROUPS = [
+    {key:'pending',    label:'Sin revisar',       estados:['sin_revisar','pendiente',''],  color:'#D97700', dot:'#F59E0B'},
+    {key:'adjustments',label:'Requiere atención', estados:['requiere_ajustes','requiere_nueva_revision','rechazada'], color:'#7C3AED', dot:'#A378F3'},
+    {key:'approved',   label:'Aprobadas',          estados:['aprobada'],                   color:'#00956E', dot:'#00BF8C'},
+  ];
+
+  const grouped = {};
+  GROUPS.forEach(g=>{ grouped[g.key]=[]; });
+  list.forEach(t=>{
+    const e = t.estado_calidad||'';
+    const g = GROUPS.find(g=>g.estados.includes(e));
+    if(g) grouped[g.key].push(t);
+  });
+
+  container.innerHTML = GROUPS.map(g=>{
+    const items = grouped[g.key];
+    if(!items.length) return '';
+    const rows = items.map(t=>{
+      const editado = t.ultima_edicion||t.edited||'—';
+      const preview = stripHTML(t.body).slice(0,100);
+      return `<tr style="border-bottom:1px solid #F0F4F9;cursor:pointer;transition:background .1s"
+                  onclick="openQAReview('${t.id}')"
+                  onmouseover="this.style.background='#F8FAFC'" 
+                  onmouseout="this.style.background=''">
+        <td style="padding:12px 16px;max-width:280px">
+          <div style="font-size:13px;font-weight:600;color:#0B1426;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.title)}</div>
+          <div style="font-size:11px;color:#94A3B8;margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">${esc(preview)}</div>
+        </td>
+        <td style="padding:12px 10px">
+          <span style="display:inline-block;padding:2px 8px;background:#F0F4F9;border-radius:99px;font-size:11px;font-weight:600;color:#6B7C99">${esc(t.cat)}</span>
+        </td>
+        <td style="padding:12px 10px;font-size:12px;color:#6B7C99;white-space:nowrap">${esc(autorName(t.createdBy))}</td>
+        <td style="padding:12px 10px;font-size:11px;color:#A0B0C8;white-space:nowrap">${fmtDateShort(editado)}</td>
+        <td style="padding:12px 10px">${renderQABadge(t.estado_calidad||'sin_revisar')}</td>
+        <td style="padding:12px 10px;text-align:center" onclick="event.stopPropagation()">
+          <label style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center" title="${t.en_intercom?'En Intercom':'No en Intercom'}">
+            <input type="checkbox" ${t.en_intercom?'checked':''} onchange="toggleIntercom('${t.id}',this.checked)" style="width:15px;height:15px;cursor:pointer;accent-color:#0062DE">
+          </label>
+        </td>
+        <td style="padding:12px 10px;text-align:right" onclick="event.stopPropagation()">
+          <button onclick="openQAReview('${t.id}')" style="padding:5px 14px;background:#0062DE;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--h-ff)">Revisar</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    return `<div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${g.dot};flex-shrink:0"></div>
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:${g.color}">${g.label}</div>
+        <div style="font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:${g.dot}22;color:${g.color}">${items.length}</div>
+      </div>
+      <div style="background:#fff;border:1px solid #E8EDF5;border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,21,51,.05)">
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr style="background:#F8FAFC;border-bottom:1px solid #E8EDF5">
+              <th style="padding:8px 16px;text-align:left;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em">Macro</th>
+              <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em">Categoría</th>
+              <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em">Autor</th>
+              <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em">Editada</th>
+              <th style="padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em">Estado</th>
+              <th style="padding:8px 10px;text-align:center;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em">Intercom</th>
+              <th style="padding:8px 10px;text-align:right;font-size:10px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.08em"></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
   }).join('');
 }
 
