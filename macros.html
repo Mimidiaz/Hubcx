@@ -925,9 +925,22 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(document.referrer.includes('panel-cx')||localStorage.getItem('cx_came_from_panel')){
     const _btp=document.getElementById('back-to-panel');if(_btp)_btp.style.display='block';
   }
-  try{ await loadUsers(); }catch(e){ console.warn('loadUsers err',e); }
-  const sess=loadSharedSession();
-  if(sess) loginSuccess(sess);
+  // 1. Check session from localStorage immediately — no network wait
+  const sess = loadSharedSession();
+  if(sess){
+    // Load cached users so loginSuccess has data
+    const local = JSON.parse(localStorage.getItem('m4_users')||'null');
+    if(local && local.length) USERS = local;
+    loginSuccess(sess); // show app right away
+    // Refresh users in background
+    loadUsers().catch(e=>console.warn('loadUsers bg err',e));
+  } else {
+    // No session — load users then check again
+    try{ await loadUsers(); }catch(e){ console.warn('loadUsers err',e); }
+    const sess2 = loadSharedSession();
+    if(sess2) loginSuccess(sess2);
+    // else: auth screen stays visible
+  }
 });
 
 // ════════════════════════════════════════

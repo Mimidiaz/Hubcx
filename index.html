@@ -7,6 +7,232 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="cocos-ds.css">
 <style>
+/* ══════════════════════════════════════
+   DARK MODE — CX Hub
+   Mismo sistema que Bitácora
+   #0B1426 → #0F1B33 → #141F38 → #1A2744
+══════════════════════════════════════ */
+html:not(.light){
+  --dk-base:    #0B1426;
+  --dk-surface: #0F1B33;
+  --dk-raised:  #141F38;
+  --dk-overlay: #1A2744;
+  --dk-border:  rgba(255,255,255,.06);
+  --dk-border2: rgba(255,255,255,.11);
+  --dk-border3: rgba(255,255,255,.17);
+  --dk-text:    #E6EDF7;
+  --dk-text2:   #94A3B8;
+  --dk-text3:   #4E6680;
+  --dk-blue:    #3B82F6;
+  --dk-blue-bg: rgba(59,130,246,.1);
+  --dk-blue-bd: rgba(59,130,246,.3);
+
+  /* DS token overrides */
+  --c-bg:       var(--dk-base);
+  --c-card:     var(--dk-surface);
+  --c-border:   var(--dk-border);
+  --c-border2:  var(--dk-border2);
+  --c-text:     var(--dk-text);
+  --c-text2:    #AEBFD4;
+  --c-muted:    var(--dk-text2);
+  --c-hint:     var(--dk-text3);
+  --shadow-card:0 4px 20px rgba(0,0,0,.35);
+  --shadow-sm:  0 1px 4px rgba(0,0,0,.25);
+  --shadow-md:  0 4px 16px rgba(0,0,0,.4);
+}
+
+/* Base */
+html:not(.light) body   { background: var(--dk-base); color: var(--dk-text); }
+html:not(.light) .app-content { background: var(--dk-base); }
+
+/* Topbar */
+html:not(.light) .app-topbar {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+  box-shadow: none;
+}
+html:not(.light) .topbar-title { color: var(--dk-text); }
+html:not(.light) .date-pill {
+  background: var(--dk-raised); border-color: var(--dk-border2); color: var(--dk-text2);
+}
+html:not(.light) .icon-button {
+  background: var(--dk-raised); border-color: var(--dk-border2); color: var(--dk-text2);
+}
+html:not(.light) .icon-button:hover {
+  background: var(--dk-overlay); border-color: var(--dk-border3); color: var(--dk-text);
+}
+html:not(.light) .user-pill {
+  background: var(--dk-raised); border-color: var(--dk-border2);
+}
+html:not(.light) .user-name { color: var(--dk-text); }
+html:not(.light) .user-role { color: var(--dk-text3); }
+
+/* Hero */
+html:not(.light) .module-hero { background: transparent; }
+html:not(.light) .module-eyebrow { color: var(--dk-blue); }
+html:not(.light) .module-title { color: var(--dk-text); }
+html:not(.light) .module-subtitle { color: var(--dk-text2); }
+html:not(.light) .greeting-eyebrow { color: var(--dk-blue); }
+html:not(.light) .greeting-title { color: var(--dk-text); }
+html:not(.light) .greeting-sub { color: var(--dk-text2); }
+html:not(.light) #greeting-title { color: var(--dk-text); }
+html:not(.light) #greeting-sub   { color: var(--dk-text2); }
+
+/* Section labels */
+html:not(.light) .section-label { color: var(--dk-text); }
+
+/* KPI cards */
+html:not(.light) .kpi-card,
+html:not(.light) .stat-tile {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+  box-shadow: var(--shadow-card);
+}
+html:not(.light) .kpi-card:hover,
+html:not(.light) .stat-tile:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,.45);
+  border-color: var(--dk-border2);
+}
+html:not(.light) .kpi-value,
+html:not(.light) .stat-tile-val   { color: var(--dk-text); }
+html:not(.light) .kpi-title,
+html:not(.light) .stat-tile-lbl   { color: var(--dk-text); }
+html:not(.light) .kpi-subtitle,
+html:not(.light) .stat-tile-sub   { color: var(--dk-text2); }
+html:not(.light) .trend-flat {
+  background: var(--dk-raised); color: var(--dk-text3);
+}
+
+/* Tool cards */
+html:not(.light) .tool-card {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+  box-shadow: none;
+}
+html:not(.light) .tool-card:hover {
+  background: var(--dk-raised);
+  border-color: var(--dk-border2);
+  box-shadow: 0 8px 28px rgba(0,0,0,.4);
+}
+html:not(.light) .tool-name  { color: var(--dk-text); }
+html:not(.light) .tool-desc  { color: var(--dk-text2); }
+html:not(.light) .tool-cta-btn {
+  background: var(--dk-raised);
+  border-color: var(--dk-border2);
+  color: var(--dk-text2);
+}
+
+/* Novedades panel */
+html:not(.light) .novedades-card,
+html:not(.light) .panel {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+}
+html:not(.light) .nov-item { border-color: var(--dk-border); }
+html:not(.light) .nov-item:first-child { padding-top: 4px; }
+html:not(.light) .nov-title   { color: var(--dk-text); }
+html:not(.light) .nov-body    { color: var(--dk-text2); }
+html:not(.light) .nov-footer  { color: var(--dk-text3); border-color: var(--dk-border); }
+html:not(.light) .nov-time    { color: var(--dk-text3); }
+html:not(.light) .nov-load-more { border-color: var(--dk-border); }
+
+/* Filter chips */
+html:not(.light) .chip,
+html:not(.light) .filter-pill {
+  background: var(--dk-raised);
+  border-color: var(--dk-border2);
+  color: var(--dk-text2);
+}
+html:not(.light) .chip:hover,
+html:not(.light) .filter-pill:hover {
+  border-color: var(--dk-border3); color: var(--dk-text);
+}
+html:not(.light) .chip.active,
+html:not(.light) .filter-pill.active {
+  background: var(--dk-blue-bg);
+  border-color: var(--dk-blue-bd);
+  color: var(--dk-blue);
+}
+
+/* Eventos del día */
+html:not(.light) .eventos-dia-panel {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+}
+html:not(.light) .eventos-dia-header { border-color: var(--dk-border); }
+html:not(.light) .panel-title        { color: var(--dk-text); }
+html:not(.light) .evento-dia-item    { border-color: var(--dk-border); }
+html:not(.light) .evento-dia-item:hover { background: var(--dk-raised); }
+html:not(.light) .evento-dia-name    { color: var(--dk-text); }
+html:not(.light) .evento-dia-type    { color: var(--dk-text3); }
+html:not(.light) .evento-dia-ticker  { color: var(--dk-text3); }
+html:not(.light) .eventos-empty      { color: var(--dk-text2); }
+html:not(.light) .eventos-footer { border-color: var(--dk-border); }
+
+/* Planillas */
+html:not(.light) .plan-panel  { background: var(--dk-surface); border-color: var(--dk-border); }
+html:not(.light) .plan-item   { border-color: var(--dk-border); }
+html:not(.light) .plan-item:hover { background: var(--dk-raised); }
+html:not(.light) .plan-name   { color: var(--dk-text); }
+html:not(.light) .plan-desc   { color: var(--dk-text2); }
+
+/* Buttons */
+html:not(.light) .btn-secondary,
+html:not(.light) .btn-ghost {
+  background: var(--dk-raised);
+  border-color: var(--dk-border2);
+  color: var(--dk-text2);
+}
+html:not(.light) .btn-secondary:hover,
+html:not(.light) .btn-ghost:hover {
+  background: var(--dk-overlay);
+  border-color: var(--dk-border3);
+  color: var(--dk-text);
+}
+
+/* Modals */
+html:not(.light) .modal {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+}
+html:not(.light) .modal-header,
+html:not(.light) .modal-footer {
+  background: var(--dk-raised);
+  border-color: var(--dk-border);
+}
+html:not(.light) .modal-title { color: var(--dk-text); }
+html:not(.light) .form-field input,
+html:not(.light) .form-field select,
+html:not(.light) .form-field textarea,
+html:not(.light) .field-inp {
+  background: var(--dk-overlay);
+  border-color: var(--dk-border2);
+  color: var(--dk-text);
+}
+html:not(.light) .form-field label,
+html:not(.light) .field-label { color: var(--dk-text3); }
+
+/* Notif panel */
+html:not(.light) #notif-panel {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+  box-shadow: 0 8px 28px rgba(0,0,0,.5);
+}
+html:not(.light) .notif-item { border-color: var(--dk-border); }
+html:not(.light) .notif-item:hover { background: var(--dk-raised); }
+html:not(.light) .notif-msg   { color: var(--dk-text); }
+html:not(.light) .notif-time  { color: var(--dk-text3); }
+
+/* User menu */
+html:not(.light) #user-menu {
+  background: var(--dk-surface);
+  border-color: var(--dk-border);
+  box-shadow: 0 8px 28px rgba(0,0,0,.5);
+}
+
+/* Empty states */
+html:not(.light) .empty-state-title { color: var(--dk-text2); }
+html:not(.light) .empty-state-sub   { color: var(--dk-text3); }
 /* ─────────────────────────────────────────
    STATS ROW — 4 KPIs de contexto
 ───────────────────────────────────────── */
@@ -863,15 +1089,33 @@ function saveSharedSession(u){
 function clearSharedSession(){ localStorage.removeItem(SESSION_KEY); }
 
 // ════════════════════════════════════════
-// INIT
+// INIT — session-first, no flash of login
 // ════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', async ()=>{
   applyTheme();
-  await loadUsers();
+  // 1. Try session from localStorage immediately — no network wait
   const sess = loadSharedSession();
   if(sess){
+    // Restore from cached users first so we don't wait for Supabase
+    const local = JSON.parse(localStorage.getItem('m4_users')||'null');
+    if(local && local.length) USERS = local;
     CU = USERS.find(u=>u.email===sess.email && u.active) || sess;
-    initApp();
+    initApp(); // show app right away — no login flash
+    // Then refresh users in background
+    loadUsers().then(()=>{
+      // Re-sync CU with fresh data if available
+      const fresh = USERS.find(u=>u.email===sess.email && u.active);
+      if(fresh) CU = fresh;
+    });
+  } else {
+    // No session — load users then show login
+    await loadUsers();
+    const sess2 = loadSharedSession();
+    if(sess2){
+      CU = USERS.find(u=>u.email===sess2.email && u.active) || sess2;
+      initApp();
+    }
+    // else: login screen stays visible (default state)
   }
 });
 

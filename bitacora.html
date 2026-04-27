@@ -5040,9 +5040,29 @@ function toast(msg,type){const el=document.getElementById('toast');el.textConten
 
 // ─── INIT ─────────────────────────────────
 (async()=>{
+  applyTheme();
+  // 1. Check session from localStorage immediately
+  const raw = localStorage.getItem('cx_session');
+  if(raw){
+    try{
+      const data = JSON.parse(raw);
+      if(Date.now()-data.ts < 8*60*60*1000){
+        // Valid session — show app immediately, load DB in background
+        CU = data;
+        document.getElementById('login-screen').style.display='none';
+        initApp(); // instant — no login flash
+        await loadDB(); // load full data in background
+        // Re-sync CU with fresh DB data if available
+        if(checkSess()) {/* CU already set */}
+        return;
+      }
+    }catch(e){}
+    localStorage.removeItem('cx_session');
+  }
+  // No valid session — load DB then show login if needed
   await loadDB();
   applyTheme();
-  if(checkSess())initApp();
+  if(checkSess()) initApp();
   else document.getElementById('login-screen').style.display='flex';
 })();
 
