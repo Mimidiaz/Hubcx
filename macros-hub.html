@@ -510,6 +510,10 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/><path d="M7.1 4.995a.905.905 0 111.8 0l-.35 3.507a.552.552 0 01-1.1 0L7.1 4.995z"/></svg>
           QA <span id="cnt-pending" style="font-size:10px;opacity:.6;margin-left:2px">0</span>
         </button>
+        <button class="hub-pill admin-only" id="sf-qa" onclick="switchToQA(this)" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/><path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/></svg>
+          Calidad QA
+        </button>
         <button class="hub-pill hub-pill-primary admin-only" onclick="openM('create')" id="btn-nueva-macro" style="display:none">
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
           + Nueva macro
@@ -537,6 +541,62 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
       <!-- Grid -->
       <div id="grid" style="flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-content:start"></div>
     </div>
+
+    <!-- ══ VIEW: CALIDAD QA ══════════════════════════════════ -->
+    <div id="view-qa" style="display:none;flex:1;flex-direction:column;gap:16px;overflow:hidden">
+
+      <!-- Filters bar -->
+      <div class="hub-panel" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0">
+        <div style="position:relative;flex:1;min-width:200px">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#A0B0C8;pointer-events:none"><path d="M11.4 10A5.5 5.5 0 102.6 2.6a5.5 5.5 0 008.8 7.4l3.3 3.3 1.4-1.4-3.3-3.3zm-5-.4a3.5 3.5 0 113.5-3.5A3.5 3.5 0 016.4 9.6z"/></svg>
+          <input id="qa-q" type="text" placeholder="Buscar macro, categoría, autor…" oninput="renderQATable()" style="width:100%;padding:8px 12px 8px 32px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:13px;outline:none;font-family:var(--h-ff)">
+        </div>
+        <select id="qa-filter-estado" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+          <option value="">Todos los estados</option>
+          <option value="sin_revisar">Sin revisar</option>
+          <option value="pendiente">Pendiente</option>
+          <option value="aprobada">Aprobada</option>
+          <option value="rechazada">Rechazada</option>
+          <option value="requiere_ajustes">Requiere ajustes</option>
+          <option value="requiere_nueva_revision">Requiere nueva revisión</option>
+        </select>
+        <select id="qa-filter-intercom" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+          <option value="">Intercom: todos</option>
+          <option value="si">En Intercom</option>
+          <option value="no">No en Intercom</option>
+        </select>
+        <select id="qa-filter-cat" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+          <option value="">Todas las categorías</option>
+        </select>
+        <select id="qa-filter-autor" onchange="renderQATable()" style="padding:7px 10px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none">
+          <option value="">Todos los autores</option>
+        </select>
+        <span id="qa-count-bar" style="font-size:12px;color:#6B7C99;white-space:nowrap;margin-left:auto"></span>
+      </div>
+
+      <!-- Table -->
+      <div class="hub-panel" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+        <div style="overflow:auto;flex:1">
+          <table id="qa-table" style="width:100%;border-collapse:collapse;font-size:13px">
+            <thead>
+              <tr style="background:#F8FAFC;border-bottom:2px solid var(--h-border);position:sticky;top:0;z-index:2">
+                <th style="padding:11px 16px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Macro</th>
+                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Categoría</th>
+                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Autor</th>
+                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Última edición</th>
+                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Estado QA</th>
+                <th style="padding:11px 12px;text-align:center;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Intercom</th>
+                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Revisado por</th>
+                <th style="padding:11px 12px;text-align:left;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Comentario QA</th>
+                <th style="padding:11px 12px;text-align:center;font-size:10px;font-weight:700;color:#6B7C99;text-transform:uppercase;letter-spacing:.08em">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="qa-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -589,6 +649,78 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 <!-- MODAL -->
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeM()">
   <div class="modal" id="modal-c"></div>
+</div>
+
+<!-- QA REVIEW MODAL -->
+<div class="overlay" id="overlay-qa-review" onclick="if(event.target===this)closeQAReview()" style="display:none">
+  <div class="modal" style="max-width:680px;width:96vw">
+    <div class="mh" style="padding:16px 20px;border-bottom:1px solid var(--h-border);display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:4px" id="qar-cat-label">Categoría</div>
+        <div class="mh-title" id="qar-title" style="font-size:16px;font-weight:700;color:var(--h-text)">—</div>
+      </div>
+      <button class="mcls" onclick="closeQAReview()">×</button>
+    </div>
+    <div style="display:flex;height:480px;overflow:hidden">
+      <!-- Left: macro content -->
+      <div style="flex:1;overflow-y:auto;padding:20px;border-right:1px solid var(--h-border)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:10px">Contenido</div>
+        <div id="qar-body" style="font-size:13px;color:var(--h-text);line-height:1.75;background:#F8FAFC;border:1px solid var(--h-border);border-radius:10px;padding:14px"></div>
+        <div id="qar-footer" style="margin-top:14px"></div>
+      </div>
+      <!-- Right: QA controls -->
+      <div style="width:260px;flex-shrink:0;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px">
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Estado QA</div>
+          <div id="qar-estado-badge"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Intercom</div>
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--h-text)">
+            <input type="checkbox" id="qar-intercom" onchange="toggleIntercomFromReview()" style="width:16px;height:16px;cursor:pointer">
+            Cargada en Intercom
+          </label>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Comentario QA</div>
+          <textarea id="qar-comment" placeholder="Dejá un comentario para el autor…" rows="4" style="width:100%;padding:9px 11px;background:#F8FAFC;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none;resize:vertical;line-height:1.6"></textarea>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Acciones</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button onclick="qaActionFromReview('aprobada')" style="padding:8px 12px;background:#00956E;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--h-ff);text-align:left">✓ Aprobar</button>
+            <button onclick="qaActionFromReview('requiere_ajustes')" style="padding:8px 12px;background:#D97700;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--h-ff);text-align:left">⚠ Pedir ajustes</button>
+            <button onclick="qaActionFromReview('requiere_nueva_revision')" style="padding:8px 12px;background:#7C3AED;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--h-ff);text-align:left">↺ Nueva revisión</button>
+            <button onclick="qaActionFromReview('rechazada')" style="padding:8px 12px;background:rgba(240,92,92,.1);color:#DC2626;border:1px solid rgba(240,92,92,.3);border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--h-ff);text-align:left">✕ Rechazar</button>
+            <button onclick="saveQAComment()" style="padding:8px 12px;background:#F5F7FA;color:var(--h-text);border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--h-ff);text-align:left">💬 Guardar comentario</button>
+          </div>
+        </div>
+        <div id="qar-meta" style="font-size:11px;color:var(--h-hint);line-height:1.7;padding-top:8px;border-top:1px solid var(--h-border)"></div>
+      </div>
+    </div>
+    <input type="hidden" id="qar-id">
+  </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="overlay" id="overlay-reject" onclick="if(event.target===this)closeRejectModal()" style="display:none">
+  <div class="modal" style="max-width:420px">
+    <div class="mh" style="padding:16px 20px;border-bottom:1px solid var(--h-border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:15px;font-weight:700">Rechazar macro</span>
+      <button class="mcls" onclick="closeRejectModal()">×</button>
+    </div>
+    <div style="padding:20px">
+      <div style="font-size:13px;color:var(--h-text2);margin-bottom:14px">Indicá el motivo del rechazo para que el autor pueda corregirlo.</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--h-muted);margin-bottom:7px">Motivo *</div>
+      <textarea id="reject-reason" rows="4" placeholder="Describí el motivo del rechazo…" style="width:100%;padding:10px 12px;background:#F8FAFC;border:1px solid var(--h-border);border-radius:8px;font-size:13px;font-family:var(--h-ff);outline:none;resize:vertical;line-height:1.6"></textarea>
+      <div id="reject-err" style="font-size:12px;color:#DC2626;display:none;margin-top:6px">El motivo es obligatorio</div>
+    </div>
+    <div style="padding:14px 20px;border-top:1px solid var(--h-border);display:flex;justify-content:flex-end;gap:8px">
+      <button onclick="closeRejectModal()" style="padding:8px 16px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--h-ff)">Cancelar</button>
+      <button onclick="confirmReject()" style="padding:8px 16px;background:#DC2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--h-ff)">Rechazar</button>
+    </div>
+    <input type="hidden" id="reject-id">
+  </div>
 </div>
 
 <!-- CHANGE PASSWORD -->
@@ -705,8 +837,16 @@ async function sbSave(t){
     aprobada_por_calidad:t.aprobada_por_calidad||false,
     aprobada_por:t.aprobada_por||'',
     fecha_aprobacion:t.fecha_aprobacion||null,
-    estado_calidad:t.estado_calidad||'pendiente',
-    motivo_rechazo:t.motivo_rechazo||''
+    estado_calidad:t.estado_calidad||'sin_revisar',
+    motivo_rechazo:t.motivo_rechazo||'',
+    comentario_qa:t.comentario_qa||'',
+    revisado_por:t.revisado_por||'',
+    fecha_revision_qa:t.fecha_revision_qa||null,
+    en_intercom:t.en_intercom||false,
+    fecha_intercom:t.fecha_intercom||null,
+    marcado_intercom_por:t.marcado_intercom_por||'',
+    ultima_edicion:t.ultima_edicion||t.edited||null,
+    editado_por:t.editado_por||''
   };
   await sbFetch('macros',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(p)});
 }
@@ -833,8 +973,17 @@ async function loadTPL(){
         aprobada_por_calidad:r.aprobada_por_calidad||false,
         aprobada_por:r.aprobada_por||'',
         fecha_aprobacion:r.fecha_aprobacion||null,
-        estado_calidad:r.estado_calidad||'pendiente',
-        motivo_rechazo:r.motivo_rechazo||''
+        estado_calidad:r.estado_calidad||'sin_revisar',
+        motivo_rechazo:r.motivo_rechazo||'',
+        // New QA fields
+        comentario_qa:r.comentario_qa||'',
+        revisado_por:r.revisado_por||'',
+        fecha_revision_qa:r.fecha_revision_qa||null,
+        en_intercom:r.en_intercom||false,
+        fecha_intercom:r.fecha_intercom||null,
+        marcado_intercom_por:r.marcado_intercom_por||'',
+        ultima_edicion:r.ultima_edicion||r.updated_at||null,
+        editado_por:r.editado_por||''
       }));
       save();draw();
       if(CURRENT_MODE==='calidad') renderQATable(), loadQAStats();
@@ -944,7 +1093,17 @@ function toggleSbCats(){
   if(arrow)arrow.style.transform=open?'rotate(0deg)':'rotate(-90deg)';
 }
 
-function setF(f){F=f;actCat=null;document.querySelectorAll('.sidebar-nav .sidebar-item,.mac-cat-item').forEach(i=>i.classList.remove('active','on'));const el=document.getElementById('sf-'+f);if(el){el.classList.add('active','on');}draw();}
+function setF(f){
+  F=f;actCat=null;
+  document.querySelectorAll('.sidebar-nav .sidebar-item,.mac-cat-item,.hub-pill').forEach(i=>i.classList.remove('active','on'));
+  const el=document.getElementById('sf-'+f);if(el){el.classList.add('active','on');}
+  // Hide QA view, show usuario view
+  const vqa=document.getElementById('view-qa');
+  if(vqa) vqa.style.display='none';
+  const vU=document.getElementById('view-usuario');
+  if(vU) vU.style.display='flex';
+  draw();
+}
 function setActCat(c){actCat=actCat===c?null:c;F=null;document.querySelectorAll('.sidebar-nav .sidebar-item,.mac-cat-item').forEach(i=>i.classList.remove('active','on'));draw();}
 function toggleFav(id){const t=TPL.find(t=>t.id==id);if(!t)return;t.fav=!t.fav;save();if(SB_CONNECTED)sbSave(t);draw();if(selId==id)renderDetail();}
 
@@ -1163,13 +1322,19 @@ function renderQATable(){
   </tr>`).join('');
 }
 
-function renderQABadge(estado, motivo){
-  if(estado==='aprobada') return`<span class="qa-badge qa-approved"><svg width="9" height="9" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z"/></svg>Aprobada</span>`;
-  if(estado==='rechazada'){
-    const tip=esc(motivo||'Sin motivo');
-    return`<span class="qa-badge qa-rejected reject-tooltip" data-tip="${tip}">✕ Rechazada</span>`;
-  }
-  return`<span class="qa-badge qa-pending">● Pendiente</span>`;
+// QA state config — single source of truth
+const QA_STATES = {
+  aprobada:               {label:'Aprobada',            color:'#00956E', bg:'rgba(0,191,140,.1)',  border:'rgba(0,191,140,.3)'},
+  rechazada:              {label:'Rechazada',            color:'#DC2626', bg:'rgba(240,92,92,.1)',  border:'rgba(240,92,92,.3)'},
+  requiere_ajustes:       {label:'Requiere ajustes',     color:'#D97700', bg:'rgba(245,158,11,.1)', border:'rgba(245,158,11,.3)'},
+  requiere_nueva_revision:{label:'Nueva revisión',       color:'#7C3AED', bg:'rgba(163,120,243,.1)',border:'rgba(163,120,243,.3)'},
+  pendiente:              {label:'Pendiente',             color:'#6B7C99', bg:'rgba(107,124,153,.1)',border:'rgba(107,124,153,.25)'},
+  sin_revisar:            {label:'Sin revisar',           color:'#6B7C99', bg:'rgba(107,124,153,.1)',border:'rgba(107,124,153,.25)'},
+};
+
+function renderQABadge(estado){
+  const s = QA_STATES[estado] || QA_STATES.sin_revisar;
+  return `<span style="display:inline-flex;align-items:center;padding:3px 8px;border-radius:99px;font-size:10px;font-weight:700;background:${s.bg};color:${s.color};border:1px solid ${s.border};white-space:nowrap">${s.label}</span>`;
 }
 
 function fmtDateShort(d){
@@ -1218,48 +1383,231 @@ function populateQAFilters(){
   if(sa){const authors=[...new Set(TPL.map(t=>t.createdBy))].map(id=>({id,name:autorName(id)})).sort((a,b)=>a.name.localeCompare(b.name));const fo=sa.options[0];sa.innerHTML='';sa.appendChild(fo);authors.forEach(a=>{const o=document.createElement('option');o.value=a.id;o.textContent=a.name;sa.appendChild(o);});}
 }
 
-// ── QA Review modal ──────────────────
+// ── VIEW SWITCH ────────────────────────
+function switchToQA(btn){
+  document.querySelectorAll('.hub-pill').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.getElementById('view-usuario').style.display='none';
+  const vqa = document.getElementById('view-qa');
+  if(vqa){ vqa.style.display='flex'; }
+  populateQAFilters();
+  renderQATable();
+  loadQAStats();
+}
+
+// ── EXPANDED renderQATable ──────────────
+function renderQATable(){
+  const tb=document.getElementById('qa-tbody');if(!tb)return;
+  const list=getFilteredQA();
+  const cb=document.getElementById('qa-count-bar');
+  if(cb){
+    const sinRev=list.filter(t=>!t.estado_calidad||t.estado_calidad==='pendiente'||t.estado_calidad==='sin_revisar').length;
+    cb.textContent=`${list.length} macro${list.length!==1?'s':''} · Sin revisar: ${sinRev}`;
+  }
+  if(!list.length){
+    tb.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--h-hint)">Sin macros para los filtros seleccionados</td></tr>`;
+    return;
+  }
+  tb.innerHTML=list.map(t=>{
+    const estado = t.estado_calidad||'sin_revisar';
+    const intercomCheck = t.en_intercom
+      ? `<span style="color:#00956E;font-size:16px" title="En Intercom">✓</span>`
+      : `<span style="color:#D1D9E6;font-size:16px" title="No en Intercom">○</span>`;
+    const revisor = t.revisado_por||t.aprobada_por||'—';
+    const comentario = t.comentario_qa||t.motivo_rechazo||'';
+    const editado = t.ultima_edicion||t.edited||'—';
+    return `<tr style="border-bottom:1px solid var(--h-border);transition:background .1s" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
+      <td style="padding:11px 16px;max-width:240px">
+        <div style="font-size:13px;font-weight:600;color:var(--h-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.title)}</div>
+        <div style="font-size:11px;color:var(--h-hint)">${t.uses} uso${t.uses!==1?'s':''}</div>
+      </td>
+      <td style="padding:11px 12px"><span style="font-size:11px;color:var(--h-text2)">${esc(t.cat)}</span></td>
+      <td style="padding:11px 12px;font-size:12px;color:var(--h-text2);white-space:nowrap">${esc(autorName(t.createdBy))}</td>
+      <td style="padding:11px 12px;font-size:11px;color:var(--h-hint);white-space:nowrap">${fmtDateShort(editado)}</td>
+      <td style="padding:11px 12px">${renderQABadge(estado)}</td>
+      <td style="padding:11px 12px;text-align:center">
+        <label style="cursor:pointer" title="${t.en_intercom?'En Intercom - click para desmarcar':'No en Intercom - click para marcar'}">
+          <input type="checkbox" ${t.en_intercom?'checked':''} onchange="toggleIntercom('${t.id}',this.checked)" style="width:15px;height:15px;cursor:pointer">
+        </label>
+      </td>
+      <td style="padding:11px 12px;font-size:11px;color:var(--h-text2);white-space:nowrap">${esc(revisor)}</td>
+      <td style="padding:11px 12px;max-width:200px">
+        <div style="font-size:12px;color:var(--h-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(comentario)}">${esc(comentario)||'—'}</div>
+      </td>
+      <td style="padding:11px 12px;text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:4px">
+          <button onclick="openQAReview('${t.id}')" title="Revisar" style="padding:4px 10px;background:var(--h-blue);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">Revisar</button>
+          <button onclick="quickQAAction('${t.id}','aprobada')" title="Aprobar" style="padding:4px 7px;background:rgba(0,191,140,.1);color:#00956E;border:1px solid rgba(0,191,140,.3);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">✓</button>
+          <button onclick="quickQAAction('${t.id}','requiere_ajustes')" title="Pedir ajustes" style="padding:4px 7px;background:rgba(245,158,11,.1);color:#D97700;border:1px solid rgba(245,158,11,.3);border-radius:6px;font-size:11px;font-weight:700;cursor:pointer">⚠</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ── INTERCOM TOGGLE ─────────────────────
+async function toggleIntercom(id, checked){
+  if(!canApprove()){toast('Sin permisos','er');return;}
+  const t=TPL.find(t=>t.id==id);if(!t)return;
+  const prev=t.en_intercom||false;
+  t.en_intercom=checked;
+  t.fecha_intercom=checked?new Date().toISOString():null;
+  t.marcado_intercom_por=checked?CU.name:null;
+  logQA(t,'intercom', prev?'si':'no', checked?'si':'no','');
+  save(); await sbSave(t);
+  renderQATable();
+  toast(checked?'Marcada en Intercom ✓':'Desmarcada de Intercom','ok');
+}
+
+async function toggleIntercomFromReview(){
+  const id=document.getElementById('qar-id')?.value;if(!id)return;
+  const checked=document.getElementById('qar-intercom')?.checked;
+  await toggleIntercom(id, checked);
+}
+
+// ── QA ACTIONS ──────────────────────────
+async function quickQAAction(id, estado){
+  if(!canApprove()){toast('Sin permisos de calidad','er');return;}
+  const t=TPL.find(t=>t.id==id);if(!t)return;
+  await setQAEstado(t, estado, '');
+  renderQATable(); loadQAStats();
+  toast(`Estado actualizado: ${QA_STATES[estado]?.label||estado}`,'ok');
+}
+
+async function qaActionFromReview(estado){
+  const id=document.getElementById('qar-id')?.value;if(!id)return;
+  const t=TPL.find(t=>t.id==id);if(!t)return;
+  const comment=document.getElementById('qar-comment')?.value?.trim()||'';
+  if(estado==='rechazada' && !comment){
+    toast('Indicá el motivo del rechazo','er');
+    document.getElementById('qar-comment')?.focus();
+    return;
+  }
+  await setQAEstado(t, estado, comment);
+  closeQAReview();
+  renderQATable(); loadQAStats();
+  toast(`${QA_STATES[estado]?.label} ✓`,'ok');
+}
+
+async function saveQAComment(){
+  const id=document.getElementById('qar-id')?.value;if(!id)return;
+  const t=TPL.find(t=>t.id==id);if(!t)return;
+  const comment=document.getElementById('qar-comment')?.value?.trim()||'';
+  const prev=t.comentario_qa||'';
+  t.comentario_qa=comment;
+  logQA(t,'comentario',prev,comment,comment);
+  save(); await sbSave(t);
+  toast('Comentario guardado','ok');
+}
+
+async function setQAEstado(t, nuevoEstado, comment){
+  const prev=t.estado_calidad||'sin_revisar';
+  t.estado_calidad=nuevoEstado;
+  t.revisado_por=CU.name;
+  t.fecha_revision_qa=new Date().toISOString();
+  if(comment) t.comentario_qa=comment;
+  if(nuevoEstado==='aprobada'){
+    t.aprobada_por_calidad=true;
+    t.aprobada_por=CU.name;
+    t.fecha_aprobacion=new Date().toISOString();
+    t.motivo_rechazo='';
+  }
+  if(nuevoEstado==='rechazada') t.motivo_rechazo=comment;
+  logQA(t,'cambio_estado',prev,nuevoEstado,comment);
+  save(); await sbSave(t);
+}
+
+// ── QA REVIEW MODAL ─────────────────────
 function openQAReview(id){
   const t=TPL.find(t=>t.id==id);if(!t)return;
-  const plain=stripHTML(t.body);
-  const body=document.getElementById('qar-body');
-  const footer=document.getElementById('qar-footer');
+  document.getElementById('qar-id').value=id;
   document.getElementById('qar-title').textContent=t.title;
-
-  // Build approval history from comments tagged as qa
-  const qaHistory=(t.comments||[]).filter(c=>c.qa);
-  const historyHTML=qaHistory.length
-    ?`<div style="margin-top:16px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:8px">Historial de revisiones</div>${qaHistory.map(c=>`<div style="display:flex;gap:10px;padding:8px 12px;background:var(--bg);border:1px solid var(--b0);border-radius:var(--r-sm);margin-bottom:6px"><div><div style="font-size:11px;font-weight:600;color:var(--t0)">${esc(c.user)} <span style="color:${c.action==='aprobó'?'var(--grn)':'var(--red)'}">${c.action}</span></div><div style="font-size:11px;color:var(--t3)">${c.date}</div></div>${c.text?`<div style="flex:1;font-size:12px;color:var(--t2);line-height:1.5">${esc(c.text)}</div>`:''}</div>`).join('')}</div>`
-    :'';
-
-  body.innerHTML=`
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
-      ${renderQABadge(t.estado_calidad,t.motivo_rechazo)}
-      <span style="font-size:11px;color:var(--t3)">${t.cat} · ${autorName(t.createdBy)} · ${t.uses} usos</span>
-      ${t.aprobada_por?`<span style="font-size:11px;color:var(--grn)">✓ ${esc(t.aprobada_por)} · ${fmtDateShort(t.fecha_aprobacion)}</span>`:''}
-    </div>
-    ${t.motivo_rechazo?`<div style="background:rgba(240,92,92,.07);border:1px solid rgba(240,92,92,.2);border-radius:var(--r-sm);padding:10px 13px;margin-bottom:12px;font-size:12px;color:var(--red);line-height:1.6"><strong>Motivo de rechazo:</strong> ${esc(t.motivo_rechazo)}</div>`:''}
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:8px">Contenido completo</div>
-    <div style="background:var(--s1);border:1px solid var(--b0);border-radius:var(--r-md);padding:16px;font-size:13px;color:var(--t1);line-height:1.75;max-height:280px;overflow-y:auto">${t.body||'Sin contenido'}</div>
-    <div style="margin-top:14px">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);margin-bottom:7px">Comentario de revisión (opcional)</div>
-      <textarea class="fi" id="qar-comment" rows="2" placeholder="Dejá una nota para el autor…" style="resize:vertical"></textarea>
-    </div>
-    ${historyHTML}`;
-
-  footer.innerHTML=`
-    <button class="btn btn-secondary" onclick="closeQAReview()">Cerrar</button>
-    <button class="btn btn-danger" onclick="rejectFromReview('${t.id}')" ${t.estado_calidad==='rechazada'?'disabled style="opacity:.4"':''}>
-      <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
-      Rechazar
-    </button>
-    <button class="btn btn-success" style="padding:9px 20px;font-size:13px" onclick="approveFromReview('${t.id}')" ${t.estado_calidad==='aprobada'?'disabled style="opacity:.4"':''}>
-      <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M13.854 3.646a.5.5 0 010 .708l-7 7a.5.5 0 01-.708 0l-3.5-3.5a.5.5 0 11.708-.708L6.5 10.293l6.646-6.647a.5.5 0 01.708 0z"/></svg>
-      Aprobar macro
-    </button>`;
-
-  document.getElementById('overlay-qa-review').classList.add('on');
+  const catEl=document.getElementById('qar-cat-label');
+  if(catEl) catEl.textContent=t.cat;
+  document.getElementById('qar-body').innerHTML=t.body||'Sin contenido';
+  document.getElementById('qar-estado-badge').innerHTML=renderQABadge(t.estado_calidad||'sin_revisar');
+  const intercomEl=document.getElementById('qar-intercom');
+  if(intercomEl) intercomEl.checked=!!t.en_intercom;
+  const commentEl=document.getElementById('qar-comment');
+  if(commentEl) commentEl.value=t.comentario_qa||t.motivo_rechazo||'';
+  const meta=document.getElementById('qar-meta');
+  if(meta) meta.innerHTML=[
+    t.aprobada_por?`Aprobada por: <strong>${esc(t.aprobada_por)}</strong>`:'',
+    t.fecha_aprobacion?`Fecha: ${fmtDateShort(t.fecha_aprobacion)}`:'',
+    t.en_intercom&&t.marcado_intercom_por?`Intercom: <strong>${esc(t.marcado_intercom_por)}</strong>`:'',
+    `Creada: ${fmtDateShort(t.created)}`,
+    `Editada: ${fmtDateShort(t.ultima_edicion||t.edited)}`,
+  ].filter(Boolean).join('<br>');
+  const footer=document.getElementById('qar-footer');
+  if(footer){
+    const qaHistory=(t.comments||[]).filter(c=>c.qa);
+    footer.innerHTML=qaHistory.length?`<div style="margin-top:12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Historial</div>${qaHistory.map(c=>`<div style="padding:8px 10px;background:#F8FAFC;border:1px solid var(--h-border);border-radius:8px;margin-bottom:6px;font-size:12px"><strong>${esc(c.user)}</strong> ${esc(c.action||'')} <span style="color:var(--h-hint)">${esc(c.date||'')}</span>${c.text?`<div style="color:var(--h-muted);margin-top:3px">${esc(c.text)}</div>`:''}</div>`).join('')}</div>`:'';
+  }
+  document.getElementById('overlay-qa-review').style.display='flex';
 }
+function closeQAReview(){document.getElementById('overlay-qa-review').style.display='none';}
+
+// ── REJECT MODAL ────────────────────────
+function openRejectModal(id){
+  document.getElementById('reject-id').value=id;
+  document.getElementById('reject-reason').value='';
+  document.getElementById('reject-err').style.display='none';
+  document.getElementById('overlay-reject').style.display='flex';
+}
+function closeRejectModal(){document.getElementById('overlay-reject').style.display='none';}
+async function confirmReject(){
+  const id=document.getElementById('reject-id').value;
+  const reason=document.getElementById('reject-reason').value.trim();
+  if(!reason){document.getElementById('reject-err').style.display='block';return;}
+  const t=TPL.find(t=>t.id==id);if(!t)return;
+  await setQAEstado(t,'rechazada',reason);
+  closeRejectModal();
+  renderQATable(); loadQAStats();
+  toast('Macro rechazada','ok');
+}
+
+// ── QA_LOG ──────────────────────────────
+const QA_LOG_KEY='qa_log_local';
+function logQA(t, accion, estadoAnterior, estadoNuevo, comentario){
+  const entry={
+    id_macro:t.id, titulo_macro:t.title,
+    accion, estado_anterior:estadoAnterior, estado_nuevo:estadoNuevo,
+    en_intercom_anterior:null, en_intercom_nuevo:t.en_intercom||false,
+    usuario:CU.name, comentario, fecha:new Date().toISOString()
+  };
+  try{
+    const log=JSON.parse(localStorage.getItem(QA_LOG_KEY)||'[]');
+    log.unshift(entry);
+    localStorage.setItem(QA_LOG_KEY, JSON.stringify(log.slice(0,500)));
+  }catch(e){}
+  // Also save to Supabase qa_log table (non-blocking, best-effort)
+  sbFetch('qa_log',{method:'POST',headers:{'Prefer':'return=minimal'},
+    body:JSON.stringify({
+      macro_id:entry.id_macro, macro_title:entry.titulo_macro,
+      action:entry.accion, estado_anterior:entry.estado_anterior,
+      estado_nuevo:entry.estado_nuevo, usuario:entry.usuario,
+      comentario:entry.comentario, created_at:entry.fecha
+    })
+  }).catch(()=>{});
+}
+
+// ── AUTO-REVERSION ON EDIT ──────────────
+// Called inside saveTPL after updating a macro
+function checkQAReversion(t, prevEstado){
+  if(prevEstado==='aprobada' && t.estado_calidad==='aprobada'){
+    t.estado_calidad='requiere_nueva_revision';
+    t.ultima_edicion=new Date().toISOString();
+    t.editado_por=CU.name;
+    const autoComment='La macro fue modificada después de la aprobación.';
+    t.comentario_qa=autoComment;
+    t.comments=t.comments||[];
+    t.comments.push({user:'Sistema',av:'SIS',text:autoComment,date:today(),qa:true,action:'modificó'});
+    logQA(t,'edicion_post_aprobacion','aprobada','requiere_nueva_revision',autoComment);
+    toast('⚠ Macro editada — requiere nueva revisión QA','in');
+  }
+}
+
+
 
 async function approveFromReview(id){
   const comment=document.getElementById('qar-comment')?.value?.trim();
@@ -1441,7 +1789,10 @@ async function saveTPL(id){
     toast('Macro creada ✓ — pendiente de revisión','ok');
   }else{
     const t=TPL.find(t=>t.id==id);if(!t)return;
-    Object.assign(t,{title,body,cat,visibility,tags,edited:now});
+    const prevEstado=t.estado_calidad;
+    Object.assign(t,{title,body,cat,visibility,tags,edited:now,
+      ultima_edicion:new Date().toISOString(),editado_por:CU.name});
+    checkQAReversion(t, prevEstado); // auto-revert if edited after approval
     if(SB_CONNECTED)await sbSave(t);
     toast('Guardado ✓','ok');
     if(selId==t.id)renderDetail();
