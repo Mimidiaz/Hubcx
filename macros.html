@@ -1905,13 +1905,118 @@ let pipDrag=false, pipOX=0, pipOY=0;
 
 function openPiP(id){
   const t=TPL.find(t=>t.id==id);if(!t)return;
-  pipId=id; pipMode='content';
+  pipId=id;
+
+  // Build a self-contained HTML window
+  const html=`<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>${esc(t.title)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#0F1B33;color:#E6EDF7;font-size:13px;line-height:1.6;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.pip-header{background:#0B1426;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:default}
+.pip-title{font-size:13px;font-weight:700;color:#E6EDF7;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pip-cat{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:rgba(0,98,222,.15);color:#93C5FD;white-space:nowrap}
+.pip-search-bar{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;display:flex;gap:6px}
+.pip-search-bar input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:7px 11px;color:#E6EDF7;font-family:inherit;font-size:12px;outline:none}
+.pip-search-bar input::placeholder{color:rgba(255,255,255,.25)}
+.pip-search-bar input:focus{border-color:#3B82F6}
+.pip-body{flex:1;overflow-y:auto;padding:14px;color:#D1D9E6;line-height:1.75;font-size:13px}
+.pip-body img{max-width:100%;border-radius:6px;display:block;margin:6px 0}
+.pip-footer{padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:8px;flex-shrink:0;background:#0B1426}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .13s}
+.btn-primary{background:#0062DE;color:#fff}
+.btn-primary:hover{background:#0052C0}
+.btn-secondary{background:rgba(255,255,255,.08);color:#E6EDF7;border:1px solid rgba(255,255,255,.12)}
+.btn-secondary:hover{background:rgba(255,255,255,.13)}
+.list-item{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;transition:background .1s}
+.list-item:hover{background:rgba(255,255,255,.05)}
+.list-item-title{font-size:12px;font-weight:600;color:#E6EDF7;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list-item-cat{font-size:10px;color:#4E6680;margin-top:1px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="pip-header">
+  <div class="pip-title" id="pip-title">${esc(t.title)}</div>
+  <span class="pip-cat">${esc(t.cat)}</span>
+  <button class="btn btn-secondary" style="padding:4px 10px;font-size:11px" onclick="showList()">☰</button>
+</div>
+<div id="pip-content">
+  <div class="pip-body" id="pip-body">${t.body||'Sin contenido'}</div>
+  <div class="pip-footer">
+    <button class="btn btn-primary" id="copy-btn" onclick="copyMacro()">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M4 2h8v2H4zm-2 2h12v11H2V4zm2 2v7h8V6H4z"/></svg>
+      Copiar
+    </button>
+    <button class="btn btn-secondary" onclick="showList()">Ver todas</button>
+  </div>
+</div>
+<div id="pip-list" style="display:none;flex-direction:column;flex:1;overflow:hidden">
+  <div class="pip-search-bar">
+    <input id="search" placeholder="Buscar macro…" oninput="filterList()" autofocus>
+  </div>
+  <div id="list-items" style="flex:1;overflow-y:auto"></div>
+</div>
+
+<script>
+const ALL=${JSON.stringify(TPL.map(t=>({id:t.id,title:t.title,cat:t.cat,body:t.body||'',uses:t.uses||0})))};
+let currentId=${JSON.stringify(id)};
+
+function showList(){
+  document.getElementById('pip-content').style.display='none';
+  document.getElementById('pip-list').style.display='flex';
+  filterList();
+  setTimeout(()=>document.getElementById('search').focus(),50);
+}
+function showContent(id){
+  const t=ALL.find(x=>x.id==id);if(!t)return;
+  currentId=id;
   document.getElementById('pip-title').textContent=t.title;
-  document.getElementById('pip-body').innerHTML=t.body||'';
-  document.getElementById('pip-content-view').style.display='flex';
-  document.getElementById('pip-list-view').style.display='none';
-  document.getElementById('pip-mode-btn').textContent='☰ Lista';
-  document.getElementById('pip-win').classList.add('on');
+  document.getElementById('pip-body').innerHTML=t.body||'Sin contenido';
+  document.getElementById('pip-list').style.display='none';
+  document.getElementById('pip-content').style.display='';
+}
+function filterList(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const items=ALL.filter(t=>!q||t.title.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q));
+  document.getElementById('list-items').innerHTML=items.map(t=>\`<div class="list-item" onclick="showContent('\${t.id}')">
+    <div style="flex:1;min-width:0"><div class="list-item-title">\${t.title}</div><div class="list-item-cat">\${t.cat}</div></div>
+    <button style="background:#0062DE;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit" onclick="event.stopPropagation();copyById('\${t.id}',this)">Copiar</button>
+  </div>\`).join('');
+}
+async function copyMacro(){
+  const t=ALL.find(x=>x.id==currentId);if(!t)return;
+  await doCopy(t.body);
+  const btn=document.getElementById('copy-btn');
+  btn.textContent='✓ Copiado';btn.style.background='#00BF8C';
+  setTimeout(()=>{btn.innerHTML='<svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M4 2h8v2H4zm-2 2h12v11H2V4zm2 2v7h8V6H4z"/></svg> Copiar';btn.style.background='';},1800);
+}
+async function copyById(id,btn){
+  const t=ALL.find(x=>x.id==id);if(!t)return;
+  await doCopy(t.body);
+  const orig=btn.textContent;btn.textContent='✓';btn.style.background='#00BF8C';
+  setTimeout(()=>{btn.textContent=orig;btn.style.background='#0062DE';},1500);
+}
+async function doCopy(body){
+  const plain=body.replace(/<[^>]*>/g,' ').replace(/\\s+/g,' ').trim();
+  try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob(['<!DOCTYPE html><html><body>'+body+'</body></html>'],{type:'text/html'}),'text/plain':new Blob([plain],{type:'text/plain'})})]);}
+  catch(e){try{await navigator.clipboard.writeText(plain);}catch(e2){alert('Copiado: '+plain.substring(0,100));}}
+}
+<\/script>
+</body>
+</html>`;
+
+  // Open real browser window — persists when switching tabs
+  const w = window.open('','cocos_pip','width=380,height=560,left='+((screen.width||1200)-400)+',top=80,resizable=yes,scrollbars=no');
+  if(!w){ toast('Habilitá las ventanas emergentes para usar PiP','error'); return; }
+  w.document.open();
+  w.document.write(html);
+  w.document.close();
+  w.focus();
 }
 function closePiP(){
   document.getElementById('pip-win').classList.remove('on');
