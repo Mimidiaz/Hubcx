@@ -850,7 +850,7 @@ let USER_ROLES=[]; // roles disponibles para el usuario actual
 window.addEventListener('DOMContentLoaded',async()=>{
   initTheme();
   if(document.referrer.includes('panel-cx')||localStorage.getItem('cx_came_from_panel')){
-    document.getElementById('back-to-panel').style.display='block';
+    const _btp=document.getElementById('back-to-panel');if(_btp)_btp.style.display='block';
   }
   try{ await loadUsers(); }catch(e){ console.warn('loadUsers err',e); }
   const sess=loadSharedSession();
@@ -984,10 +984,13 @@ function setMode(mode, reloadTPL=true){
     const btn=document.getElementById('mb-'+m);
     if(btn) btn.classList.toggle('active',m===mode);
   });
-  document.getElementById('view-usuario').classList.toggle('on', mode==='usuario');
-  document.getElementById('view-qa').classList.toggle('on', mode==='calidad');
+  const vU=document.getElementById('view-usuario');
+  const vQ=document.getElementById('view-qa');
+  if(vU) vU.classList.toggle('on', mode==='usuario');
+  if(vQ) vQ.classList.toggle('on', mode==='calidad');
   const lbl={usuario:'Agente',calidad:'Calidad'};
-  document.getElementById('u-role').textContent=lbl[mode]||'Agente';
+  const uRole=document.getElementById('u-role');
+  if(uRole) uRole.textContent=lbl[mode]||'Agente';
   if(mode==='calidad' && reloadTPL){ renderQATable(); loadQAStats(); populateQAFilters(); }
   if(mode==='usuario' && reloadTPL) draw();
 }
@@ -1045,9 +1048,9 @@ function draw(){
   const mine=TPL.filter(t=>t.createdBy===CU?.id);
   const oficiales=getVisTPL().filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada');
   const favs=getVisTPL().filter(t=>t.fav);
-  document.getElementById('cnt-mine').textContent=mine.length;
-  document.getElementById('cnt-shared').textContent=oficiales.length;
-  document.getElementById('cnt-fav').textContent=favs.length;
+  const _cm=document.getElementById('cnt-mine');if(_cm)_cm.textContent=mine.length;
+  const _cs=document.getElementById('cnt-shared');if(_cs)_cs.textContent=oficiales.length;
+  const _cf=document.getElementById('cnt-fav');if(_cf)_cf.textContent=favs.length;
 
   // Sidebar cats — only categories, no tags
   const catsCount=[...new Set(TPL.filter(t=>t.createdBy===CU?.id).map(t=>t.cat))].sort();
