@@ -931,14 +931,14 @@ window.addEventListener('DOMContentLoaded',async()=>{
     // Load cached users so loginSuccess has data
     const local = JSON.parse(localStorage.getItem('m4_users')||'null');
     if(local && local.length) USERS = local;
-    loginSuccess(sess); // show app right away
+    loginSuccess(sess, true); // show app right away — fromSession=true skips passChanged modal
     // Refresh users in background
     loadUsers().catch(e=>console.warn('loadUsers bg err',e));
   } else {
     // No session — load users then check again
     try{ await loadUsers(); }catch(e){ console.warn('loadUsers err',e); }
     const sess2 = loadSharedSession();
-    if(sess2) loginSuccess(sess2);
+    if(sess2) loginSuccess(sess2, true);
     // else: auth screen stays visible
   }
 });
@@ -1030,7 +1030,7 @@ function initShell(user){
   if(user.role==='admin'){const kpiQaCard=document.querySelector('#mac-kpi-row .admin-only');if(kpiQaCard)kpiQaCard.style.display='flex';}
   initTheme();
 }
-function loginSuccess(u){
+function loginSuccess(u, fromSession=false){
   CU=u;
   document.getElementById('auth').style.display='none';
   document.getElementById('app').classList.add('on');
@@ -1050,7 +1050,7 @@ function loginSuccess(u){
   loadTPL();
   initPiPDrag();
   cxNotifBadge();
-  if(!u.passChanged) setTimeout(()=>document.getElementById('chpass-overlay').classList.add('on'),600);
+  if(!u.passChanged && !fromSession) setTimeout(()=>document.getElementById('chpass-overlay').classList.add('on'),600);
 }
 
 // ════════════════════════════════════════
