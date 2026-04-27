@@ -652,7 +652,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 </div>
 
 <!-- QA REVIEW MODAL -->
-<div class="overlay" id="overlay-qa-review" onclick="if(event.target===this)closeQAReview()" style="display:none">
+<div class="overlay" id="overlay-qa-review" onclick="if(event.target===this)closeQAReview()">
   <div class="modal" style="max-width:680px;width:96vw">
     <div class="mh" style="padding:16px 20px;border-bottom:1px solid var(--h-border);display:flex;align-items:center;justify-content:space-between">
       <div>
@@ -703,7 +703,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 </div>
 
 <!-- REJECT MODAL -->
-<div class="overlay" id="overlay-reject" onclick="if(event.target===this)closeRejectModal()" style="display:none">
+<div class="overlay" id="overlay-reject" onclick="if(event.target===this)closeRejectModal()">
   <div class="modal" style="max-width:420px">
     <div class="mh" style="padding:16px 20px;border-bottom:1px solid var(--h-border);display:flex;align-items:center;justify-content:space-between">
       <span style="font-size:15px;font-weight:700">Rechazar macro</span>
@@ -1418,8 +1418,11 @@ function renderQATable(){
     const editado = t.ultima_edicion||t.edited||'—';
     return `<tr style="border-bottom:1px solid var(--h-border);transition:background .1s" onmouseover="this.style.background='#F8FAFC'" onmouseout="this.style.background=''">
       <td style="padding:11px 16px;max-width:240px">
-        <div style="font-size:13px;font-weight:600;color:var(--h-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.title)}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--h-text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer" 
+             onclick="openQAReview('${t.id}')"
+             title="${esc(stripHTML(t.body).slice(0,200))}">${esc(t.title)}</div>
         <div style="font-size:11px;color:var(--h-hint)">${t.uses} uso${t.uses!==1?'s':''}</div>
+        <div class="qa-preview-text" style="font-size:11px;color:var(--h-muted);margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;max-width:220px">${esc(stripHTML(t.body).slice(0,120))}</div>
       </td>
       <td style="padding:11px 12px"><span style="font-size:11px;color:var(--h-text2)">${esc(t.cat)}</span></td>
       <td style="padding:11px 12px;font-size:12px;color:var(--h-text2);white-space:nowrap">${esc(autorName(t.createdBy))}</td>
@@ -1543,18 +1546,18 @@ function openQAReview(id){
     const qaHistory=(t.comments||[]).filter(c=>c.qa);
     footer.innerHTML=qaHistory.length?`<div style="margin-top:12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Historial</div>${qaHistory.map(c=>`<div style="padding:8px 10px;background:#F8FAFC;border:1px solid var(--h-border);border-radius:8px;margin-bottom:6px;font-size:12px"><strong>${esc(c.user)}</strong> ${esc(c.action||'')} <span style="color:var(--h-hint)">${esc(c.date||'')}</span>${c.text?`<div style="color:var(--h-muted);margin-top:3px">${esc(c.text)}</div>`:''}</div>`).join('')}</div>`:'';
   }
-  document.getElementById('overlay-qa-review').style.display='flex';
+  document.getElementById('overlay-qa-review').classList.add('on');
 }
-function closeQAReview(){document.getElementById('overlay-qa-review').style.display='none';}
+function closeQAReview(){document.getElementById('overlay-qa-review').classList.remove('on');}
 
 // ── REJECT MODAL ────────────────────────
 function openRejectModal(id){
   document.getElementById('reject-id').value=id;
   document.getElementById('reject-reason').value='';
   document.getElementById('reject-err').style.display='none';
-  document.getElementById('overlay-reject').style.display='flex';
+  document.getElementById('overlay-reject').classList.add('on');
 }
-function closeRejectModal(){document.getElementById('overlay-reject').style.display='none';}
+function closeRejectModal(){document.getElementById('overlay-reject').classList.remove('on');}
 async function confirmReject(){
   const id=document.getElementById('reject-id').value;
   const reason=document.getElementById('reject-reason').value.trim();
@@ -1620,7 +1623,7 @@ async function rejectFromReview(id){
   closeQAReview();
   openRejectModal(id);
 }
-function closeQAReview(){document.getElementById('overlay-qa-review').classList.remove('on');}
+// closeQAReview defined above
 
 // Legacy — kept for backward compat
 function populateQACatFilter(){populateQAFilters();}
