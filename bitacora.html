@@ -1886,7 +1886,7 @@ function initApp(){
   document.getElementById('app').classList.add('on');
   initShell(CU);
   applyRoleUI(CU.role==='admin');
-  // Drive: attempt silent reconnect if previously authorized (admin only)
+  const ia = CU.role==='admin';
   if(ia&&localStorage.getItem('cc_drive_connected')==='1'){
     setDriveUI(true);
     setTimeout(()=>{try{driveConnect(true);}catch(e){}},1200);
@@ -5041,29 +5041,46 @@ function toast(msg,type){const el=document.getElementById('toast');el.textConten
 // ─── INIT ─────────────────────────────────
 (async()=>{
   applyTheme();
-  // 1. Check session from localStorage immediately
+  // 1. Check session immediately from localStorage — no network needed
   const raw = localStorage.getItem('cx_session');
+  let hasSession = false;
   if(raw){
     try{
       const data = JSON.parse(raw);
       if(Date.now()-data.ts < 8*60*60*1000){
-        // Valid session — show app immediately, load DB in background
         CU = data;
+        hasSession = true;
+        // Show app shell immediately — hide login, show spinner
         document.getElementById('login-screen').style.display='none';
-        initApp(); // instant — no login flash
-        await loadDB(); // load full data in background
-        // Re-sync CU with fresh DB data if available
-        if(checkSess()) {/* CU already set */}
-        return;
+        document.getElementById('app').classList.add('on');
+        initShell(CU);
+        applyRoleUI(CU.role==='admin');
+      } else {
+        localStorage.removeItem('cx_session');
       }
-    }catch(e){}
-    localStorage.removeItem('cx_session');
+    }catch(e){ localStorage.removeItem('cx_session'); }
   }
-  // No valid session — load DB then show login if needed
+  // 2. Load DB (events, users, etc.) — always needed
   await loadDB();
-  applyTheme();
-  if(checkSess()) initApp();
-  else document.getElementById('login-screen').style.display='flex';
+  if(hasSession){
+    // Re-sync CU with fresh DB data
+    const fresh = DB.users.find(u=>u.id===CU.id&&u.active);
+    if(fresh) CU = fresh;
+    // Now render all content (needs DB loaded)
+    populateSels(); populateUpcomingFilters(); deduplicateExistingEvents();
+    autoCompleteCheck(); renderEvents(); renderCal(); renderUpcoming();
+    renderUsers(); renderIns(); renderTypes(); renderLog(); renderNotifBadge();
+    const ia = CU.role==='admin';
+    if(ia&&localStorage.getItem('cc_drive_connected')==='1'){
+      setDriveUI(true);
+      setTimeout(()=>{try{driveConnect(true);}catch(e){}},1200);
+    }
+    if(!DB.comments) DB.comments=[];
+  } else {
+    // No session — check again after DB load (in case users table validates)
+    if(checkSess()) initApp();
+    else document.getElementById('login-screen').style.display='flex';
+  }
 })();
 
 </script>
