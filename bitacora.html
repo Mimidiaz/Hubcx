@@ -711,6 +711,8 @@ async function doLogin(){
   const u = DB.users.find(u=>u.email.toLowerCase()===em && u.pass===pw && u.active);
   if(!u){ errEl.textContent='Email o contraseña incorrectos.'; errEl.style.display='block'; return; }
   CU = u;
+  // Shared session — readable by both Bitácora and Panel CX
+  localStorage.setItem('cc_shared_sess', JSON.stringify({id:u.id, email:u.email, role:u.role, name:u.name, pass:u.pass||'', active:true}));
   sessionStorage.setItem('cc_sess', JSON.stringify({id:u.id, email:u.email, role:u.role, name:u.name}));
   audit('LOGIN','session',u.email);
   await initApp();
@@ -720,14 +722,31 @@ function doLogout(){
   audit('LOGOUT','session',CU?.email);
   CU=null;
   sessionStorage.removeItem('cc_sess');
+  localStorage.removeItem('cc_shared_sess');
   document.getElementById('app').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('login-pass').value='';
 }
 
 function checkSess(){
-  const raw=sessionStorage.getItem('cc_sess'); if(!raw)return false;
-  try{ const u=JSON.parse(raw); if(u&&u.id){ CU={...u,pass:''}; return true; } }catch(_){}
+  // Try sessionStorage first (same tab)
+  const raw=sessionStorage.getItem('cc_sess');
+  if(raw){
+    try{ const u=JSON.parse(raw); if(u&&u.id){ CU={...u,pass:u.pass||''}; return true; } }catch(_){}
+  }
+  // Fallback: shared session written by Panel CX
+  const shared=localStorage.getItem('cc_shared_sess');
+  if(shared){
+    try{
+      const u=JSON.parse(shared);
+      if(u&&u.id&&u.email&&u.active!==false){
+        CU={...u};
+        // Mirror to sessionStorage for this tab
+        sessionStorage.setItem('cc_sess', JSON.stringify(u));
+        return true;
+      }
+    }catch(_){ localStorage.removeItem('cc_shared_sess'); }
+  }
   return false;
 }
 
