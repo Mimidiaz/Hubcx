@@ -443,37 +443,37 @@ body.dark .sheets-action-card{background:var(--surf-1)}
       </div>
     </div>
     <nav class="sidebar-nav">
-      <div class="sidebar-section">Herramientas</div>
+      <div class="sidebar-section">Vistas</div>
+      <button class="sidebar-item active" id="sb-calendar" onclick="switchView('calendar',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>
+        Calendario
+      </button>
+      <button class="sidebar-item" id="sb-events" onclick="switchView('events',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 10.5a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0-2a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0-2a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z"/><path d="M3 0h10a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V2a2 2 0 012-2zm0 1a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V2a1 1 0 00-1-1H3z"/></svg>
+        Eventos
+      </button>
+      <div class="sidebar-sep admin-only" id="sb-gestion-sep" style="display:none"></div>
+      <div class="sidebar-section admin-only" id="sb-gestion-label" style="display:none">Gestión</div>
+      <div id="sb-gestion-items" class="admin-only" style="display:none">
+        <button class="sidebar-item" id="sb-upload" onclick="switchView('carga',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
+          Carga
+        </button>
+        <button class="sidebar-item" id="sb-types" onclick="switchView('types',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 4a1 1 0 000 2h12a1 1 0 100-2H2zm0 5a1 1 0 000 2h5a1 1 0 000-2H2zm0 5a1 1 0 000 2h7a1 1 0 100-2H2z"/></svg>
+          Tipos
+        </button>
+      </div>
+      <div class="sidebar-sep"></div>
+      <div class="sidebar-section">Accesos</div>
       <a class="sidebar-item" href="index.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Inicio
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>
+        Panel CX
       </a>
       <a class="sidebar-item" href="macros.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>
+        Macros
       </a>
-      <a class="sidebar-item active" href="bitacora.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 0h8a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V1.5A1.5 1.5 0 013 0h2zM3 1a.5.5 0 00-.5.5V12a1 1 0 001 1h9a1 1 0 001-1V2a1 1 0 00-1-1H3z"/><path d="M4.5 5.5A.5.5 0 015 5h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h3a.5.5 0 010 1H5a.5.5 0 01-.5-.5z"/></svg>Bitácora
-      </a>
-      <a class="sidebar-item" href="base-conocimiento.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687z"/></svg>Base de conocimiento
-      </a>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 4.5v3h3a.5.5 0 010 1H7V11a.5.5 0 01-1 0V8.5H3a.5.5 0 010-1h3V4.5a.5.5 0 011 0z"/><path d="M14 1H2a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V2a1 1 0 00-1-1zM2 0a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V2a2 2 0 00-2-2H2z"/></svg>Organización CX
-        <span class="sidebar-soon">Pronto</span>
-      </button>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.715 6.542L3.343 7.914a3 3 0 104.243 4.243l1.828-1.829A3 3 0 008.586 5.5L8 6.086a1.002 1.002 0 00-.154.199 2 2 0 01.861 3.337L6.88 11.45a2 2 0 11-2.83-2.83l.793-.792a4.018 4.018 0 01-.128-1.287z"/><path d="M6.586 4.672A3 3 0 007.414 9.5l.775-.776a2 2 0 01-.896-3.346L9.12 3.55a2 2 0 112.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 10-4.243-4.243L6.586 4.672z"/></svg>Links útiles
-        <span class="sidebar-soon">Pronto</span>
-      </button>
-      <div class="sidebar-sep"></div>
-      <div class="sidebar-section">Reportes</div>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H2a2 2 0 01-2-2V2zm4.5 5.5a.5.5 0 000 1h5.793l-2.147 2.146a.5.5 0 00.708.708l3-3a.5.5 0 000-.708l-3-3a.5.5 0 10-.708.708L10.293 7.5H4.5z"/></svg>Escalamientos
-        <span class="sidebar-soon">Pronto</span>
-      </button>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 01.5-.5h4a.5.5 0 01.5.5v4a.5.5 0 01-1 0V4.9l-3.613 4.417a.5.5 0 01-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 01-.808-.588l4-5.5a.5.5 0 01.758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 01-.5-.5z"/></svg>Métricas
-        <span class="sidebar-soon">Pronto</span>
-      </button>
     </nav>
     <div class="sidebar-footer" style="flex-shrink:0">
       <a class="sidebar-help" href="#" onclick="return false">

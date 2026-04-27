@@ -391,37 +391,37 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
       </div>
     </div>
     <nav class="sidebar-nav">
-      <div class="sidebar-section">Herramientas</div>
+      <div class="sidebar-section">Vistas</div>
+      <div class="sidebar-item active" id="sf-mine" onclick="setF('mine')">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+        Mis macros
+        <span class="sidebar-soon" id="cnt-mine" style="background:rgba(0,98,222,.25);color:#93C5FD">0</span>
+      </div>
+      <div class="sidebar-item" id="sf-shared" onclick="setF('shared')">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 1a1 1 0 00-1 1v11a1 1 0 001 1H9a1 1 0 001-1V4.914a1 1 0 00-.293-.707L7.793 2.293A1 1 0 007.086 2H2.5zm0 1h4.586L9 3.914V13H2.5V2z"/></svg>
+        Oficiales
+        <span class="sidebar-soon" id="cnt-shared" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)">0</span>
+      </div>
+      <div class="sidebar-item" id="sf-fav" onclick="setF('fav')">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+        Favoritas
+        <span class="sidebar-soon" id="cnt-fav" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.4)">0</span>
+      </div>
+      <div class="sidebar-item admin-only" id="sf-pending" onclick="setF('pending')" style="display:none">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/><path d="M7.002 11a1 1 0 112 0 1 1 0 01-2 0zM7.1 4.995a.905.905 0 111.8 0l-.35 3.507a.552.552 0 01-1.1 0L7.1 4.995z"/></svg>
+        Pendientes QA
+        <span class="sidebar-soon" id="cnt-pending" style="background:rgba(245,158,11,.2);color:#F59E0B">0</span>
+      </div>
+      <div class="sidebar-sep"></div>
+      <div class="sidebar-section">Accesos</div>
       <a class="sidebar-item" href="index.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Inicio
-      </a>
-      <a class="sidebar-item active" href="macros.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>
+        Panel CX
       </a>
       <a class="sidebar-item" href="bitacora.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 0h8a2 2 0 012 2v10a2 2 0 01-2 2H3a2 2 0 01-2-2V1.5A1.5 1.5 0 013 0h2zM3 1a.5.5 0 00-.5.5V12a1 1 0 001 1h9a1 1 0 001-1V2a1 1 0 00-1-1H3z"/><path d="M4.5 5.5A.5.5 0 015 5h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h6a.5.5 0 010 1H5a.5.5 0 01-.5-.5zm0 2a.5.5 0 01.5-.5h3a.5.5 0 010 1H5a.5.5 0 01-.5-.5z"/></svg>Bitácora
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>
+        Bitácora
       </a>
-      <a class="sidebar-item" href="base-conocimiento.html">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811V2.828zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687z"/></svg>Base de conocimiento
-      </a>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 4.5v3h3a.5.5 0 010 1H7V11a.5.5 0 01-1 0V8.5H3a.5.5 0 010-1h3V4.5a.5.5 0 011 0z"/><path d="M14 1H2a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V2a1 1 0 00-1-1zM2 0a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V2a2 2 0 00-2-2H2z"/></svg>Organización CX
-        <span class="sidebar-soon">Pronto</span>
-      </button>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M4.715 6.542L3.343 7.914a3 3 0 104.243 4.243l1.828-1.829A3 3 0 008.586 5.5L8 6.086a1.002 1.002 0 00-.154.199 2 2 0 01.861 3.337L6.88 11.45a2 2 0 11-2.83-2.83l.793-.792a4.018 4.018 0 01-.128-1.287z"/><path d="M6.586 4.672A3 3 0 007.414 9.5l.775-.776a2 2 0 01-.896-3.346L9.12 3.55a2 2 0 112.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 10-4.243-4.243L6.586 4.672z"/></svg>Links útiles
-        <span class="sidebar-soon">Pronto</span>
-      </button>
-      <div class="sidebar-sep"></div>
-      <div class="sidebar-section">Reportes</div>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H2a2 2 0 01-2-2V2zm4.5 5.5a.5.5 0 000 1h5.793l-2.147 2.146a.5.5 0 00.708.708l3-3a.5.5 0 000-.708l-3-3a.5.5 0 10-.708.708L10.293 7.5H4.5z"/></svg>Escalamientos
-        <span class="sidebar-soon">Pronto</span>
-      </button>
-      <button class="sidebar-item soon">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M0 0h1v15h15v1H0V0zm10 3.5a.5.5 0 01.5-.5h4a.5.5 0 01.5.5v4a.5.5 0 01-1 0V4.9l-3.613 4.417a.5.5 0 01-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 01-.808-.588l4-5.5a.5.5 0 01.758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 01-.5-.5z"/></svg>Métricas
-        <span class="sidebar-soon">Pronto</span>
-      </button>
     </nav>
     <div class="sidebar-footer" style="flex-shrink:0">
       <a class="sidebar-help" href="#" onclick="return false">
@@ -1105,7 +1105,7 @@ function draw(){
   }).join('');
 }
 
-function setF(f){F=f;actCat=null;document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));document.getElementById('sf-'+f)?.classList.add('on');draw();}
+function setF(f){F=f;actCat=null;document.querySelectorAll('.sidebar-nav .sidebar-item').forEach(i=>i.classList.remove('active','on'));const el=document.getElementById('sf-'+f);if(el){el.classList.add('active','on');}draw();}
 function setActCat(c){actCat=actCat===c?null:c;F=null;draw();}
 function toggleFav(id){const t=TPL.find(t=>t.id==id);if(!t)return;t.fav=!t.fav;save();if(SB_CONNECTED)sbSave(t);draw();if(selId==id)renderDetail();}
 
