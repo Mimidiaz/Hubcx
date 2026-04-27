@@ -7,7 +7,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="cocos-ds.css">
 <style>
-/* ─── BITÁCORA LAYOUT ─ */
+/* ─── VIEWS ── hide/show ─────────────── */
+.view{display:none!important}
+.view.active{display:flex!important;flex-direction:column;flex:1;overflow:hidden}
 .bit-body{display:flex;flex:1;overflow:hidden;min-height:0}
 .content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--c-bg)}
 .content-body{flex:1;overflow-y:auto;padding:20px 28px 32px}
@@ -1725,17 +1727,15 @@ function toggleViewAsUser(){toggleAdminView();}
 function switchView(name, btn){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+name)?.classList.add('active');
-  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  // Update sidebar active state — supports both old (.sb-item) and new (.sidebar-item)
+  document.querySelectorAll('.sidebar-item, .sb-item').forEach(b=>b.classList.remove('active','on'));
   (btn||document.getElementById('sb-'+name))?.classList.add('active');
   if(name==='calendar')renderCal();
-  // Legacy redirects
   if(name==='upcoming')name='events';
   if(name==='bulk'||name==='upload')name='carga';
   if(name==='events'){renderEvents();}
   if(name==='carga'){
-    // populate ci-type select
     populateCargaSelects();
-    // default to individual tab
     switchCargaTab('individual',document.getElementById('ctab-individual'));
   }
 }
