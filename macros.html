@@ -970,12 +970,11 @@ function loginSuccess(u){
 // ════════════════════════════════════════
 function setupModeSwitcher(){
   const sw=document.getElementById('mode-switcher');
-  // Only show switcher if user has calidad role too
   if(USER_ROLES.includes('calidad')){
-    sw.style.display='flex';
-    document.getElementById('mb-calidad').style.display='';
+    if(sw) sw.style.display='flex';
+    const btnCal=document.getElementById('mb-calidad');
+    if(btnCal) btnCal.style.display='';
   }
-  // Always start in usuario mode
   setMode('usuario',false);
 }
 
