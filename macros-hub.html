@@ -447,11 +447,13 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 .empty{text-align:center;padding:56px 20px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .empty-ico{font-size:36px;opacity:.2}.empty-t{font-size:15px;font-weight:600;color:var(--h-text2)}.empty-s{font-size:13px;color:var(--h-muted)}
 
-/* hub-main for macros */
-.hub-main{display:flex;flex-direction:column;flex:1;overflow:hidden;padding:20px 28px 32px;max-width:1440px;width:100%;margin:0 auto;gap:0}
-
-.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.sh-content{flex:1;overflow-y:auto;background:#F4F8FE;padding:24px 32px 48px;display:flex;flex-direction:column;gap:16px}
+/* Macros layout chain */
+.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.sh-content{flex:1;overflow:hidden;background:#F4F8FE;display:flex;flex-direction:column}
+/* Inner content */
+#view-usuario{flex:1;display:flex;flex-direction:column;overflow:hidden;gap:14px;padding:20px 28px 20px}
+#view-qa{flex:1;display:flex;flex-direction:column;overflow:hidden;gap:12px;padding:16px 28px 20px}
+#grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-content:start}
 </style>
 </head>
 <body>
@@ -481,9 +483,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
         <span class="sh-module-pill">MACROS</span>
       </div>
       <nav class="sh-nav">
-        <a class="sh-nav-item" href="bitacora-hub.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>Bitácora</a>
-        <a class="sh-nav-item active" href="macros-hub.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros</a>
-        <a class="sh-nav-item" href="index.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Panel CX</a>
+        <a class="sh-nav-item" href="index.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Hub CX</a>
       </nav>
     </div>
     <div class="sh-topbar-right">
@@ -535,7 +535,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
     <div class="sh-content">
 
     <!-- Search + sort toolbar -->
-    <div id="view-usuario" style="flex:1;display:flex;flex-direction:column;gap:16px;overflow:hidden">
+    <div id="view-usuario" style="">
       <div class="hub-panel" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0">
         <div style="flex:1;position:relative">
           <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#A0B0C8;pointer-events:none"><path d="M11.4 10A5.5 5.5 0 102.6 2.6a5.5 5.5 0 008.8 7.4l3.3 3.3 1.4-1.4-3.3-3.3zm-5-.4a3.5 3.5 0 113.5-3.5A3.5 3.5 0 016.4 9.6z"/></svg>
@@ -550,11 +550,11 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
       <!-- Categories sub-nav -->
       <div id="mac-cats-bar" style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0"></div>
       <!-- Grid -->
-      <div id="grid" style="flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-content:start"></div>
+      <div id="grid" style=""></div>
     </div>
 
     <!-- ══ VIEW: CALIDAD QA ══════════════════════════════════ -->
-    <div id="view-qa" style="display:none;flex:1;flex-direction:column;gap:12px;overflow:hidden">
+    <div id="view-qa" style="display:none;flex:1;flex-direction:column;gap:12px;overflow:hidden;min-height:0">
 
       <!-- Metrics + search bar -->
       <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap">
@@ -580,7 +580,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
       </div>
 
       <!-- Grouped content -->
-      <div id="qa-groups" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:20px;padding-bottom:24px"></div>
+      <div id="qa-groups" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:20px;padding-bottom:24px;min-height:0"></div>
     </div>
 
   </main>
