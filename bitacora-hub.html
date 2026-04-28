@@ -656,33 +656,77 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 /* Bitácora view system */
 .view{display:none!important}
 .view.active{display:flex!important;flex-direction:column;flex:1;min-height:0;overflow:hidden}
-/* ── LAYOUT CHAIN ── */
-.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
-.sh-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#F4F8FE}
-.content-body{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;padding:20px 40px 0;max-width:1600px;width:100%;margin:0 auto;box-sizing:border-box;align-self:center}
+/* ══ LAYOUT — page scroll, no clipping ══ */
+html,body{overflow-y:auto!important;height:auto!important}
+#app{height:auto!important;min-height:100vh;display:flex;flex-direction:column}
+.sh-topbar{position:sticky;top:0;z-index:200}
+.sh-main{flex:1;display:flex;flex-direction:column}
+.sh-content{flex:1;display:flex;flex-direction:column;background:#F4F8FE}
+.bit-body,.content{flex:1;display:flex;flex-direction:column}
+.content-body{
+  flex:1;display:flex;flex-direction:column;
+  padding:20px 40px 40px;
+  max-width:1600px;width:100%;margin:0 auto;box-sizing:border-box;align-self:center;
+}
 /* ── CALENDAR VIEW ── */
-#view-calendar{flex:1;display:flex;flex-direction:column;gap:0;min-height:0;padding-bottom:20px}
-.cal-nav-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 0 8px;border-bottom:1px solid #E4EAF3;margin-bottom:8px}
-.cal-month-label{font-size:20px!important;font-weight:700!important;min-width:140px}
-#cal-filter-bar{flex-shrink:0;display:flex!important;gap:5px;flex-wrap:wrap;padding:8px 0 10px;margin-bottom:0}
+.view{display:none!important}
+.view.active{display:flex!important;flex-direction:column}
+#view-calendar{display:flex;flex-direction:column;gap:0}
+.cal-nav-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 0 10px;
+  border-bottom:1px solid #E4EAF3;margin-bottom:8px;
+  flex-wrap:nowrap;
+}
+.cal-month-label{font-size:22px!important;font-weight:800!important;color:#001533!important;min-width:150px;letter-spacing:-.02em}
+#cal-filter-bar{display:flex!important;gap:5px;flex-wrap:wrap;padding:8px 0 12px}
 .cal-chip{padding:4px 11px!important;font-size:11px!important}
-/* calv wrappers */
-#calv-month{flex:1;display:flex;flex-direction:column;min-height:calc(100vh - 300px);overflow-y:auto}
-#calv-week{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-/* grid — fills space, each row equal height */
+/* calv wrappers — auto height */
+#calv-month{display:block}
+#calv-week{display:block}
+/* ── GRID — 6 rows, always full, no clipping ── */
 .calgrid{
-  display:grid;
+  display:grid!important;
   grid-template-columns:repeat(7,1fr);
-  flex:1;
-  min-height:640px;
-  grid-auto-rows:1fr;
+  grid-template-rows:auto repeat(6,minmax(130px,1fr));
+  width:100%;
   border:1px solid #E4EAF3;
   border-radius:18px;
   overflow:hidden;
-  background:#fff;
+  background:#E4EAF3;
+  gap:1px;
 }
-/* day cells */
-.cald{min-height:118px!important;max-height:none!important}
+/* ── Day cells ── */
+.cald{
+  background:#fff;
+  padding:10px 8px 8px;
+  min-height:130px;
+  overflow:hidden;
+  vertical-align:top;
+  position:relative;
+}
+.cald.oth{background:#FAFBFD}
+/* ── Events ── */
+.cal-event{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 8px 4px 6px;
+  margin-bottom:3px;
+  min-height:22px;
+  border-radius:6px;
+  font-size:12px;font-weight:500;
+  cursor:pointer;overflow:hidden;
+  transition:opacity .12s;
+  white-space:nowrap;
+}
+.cal-event:hover{opacity:.85}
+.cal-ev-type{font-weight:700;flex-shrink:0}
+.cal-ev-tickers{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;opacity:.8}
+.cal-day-more{
+  display:inline-block;font-size:11px;
+  color:#6B7C99;margin-top:4px;cursor:pointer;
+  padding:1px 4px;border-radius:4px;
+}
+.cal-day-more:hover{background:#E8EEF8;color:#0062DE}
 </style>
 <style>/* CRITICAL: topbar dark — override any cached CSS */
 .sh-topbar{background:#001533!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
@@ -1096,6 +1140,19 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 
 
 
+
+<!-- DAY EVENTS DRAWER -->
+<div id="day-drawer-overlay" onclick="closeDayDrawer()" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(0,21,51,.35)"></div>
+<div id="day-drawer" style="position:fixed;top:0;right:0;bottom:0;width:380px;background:#fff;z-index:401;box-shadow:-8px 0 32px rgba(0,21,51,.15);display:none;flex-direction:column;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1)">
+  <div style="padding:20px 20px 16px;border-bottom:1px solid #E4EAF3;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+    <div>
+      <div id="drawer-date-label" style="font-size:18px;font-weight:800;color:#001533;letter-spacing:-.02em"></div>
+      <div id="drawer-count" style="font-size:12px;color:#6B7C99;margin-top:2px"></div>
+    </div>
+    <button onclick="closeDayDrawer()" style="width:32px;height:32px;border-radius:50%;border:1px solid #E4EAF3;background:transparent;cursor:pointer;font-size:20px;color:#6B7C99;display:flex;align-items:center;justify-content:center;line-height:1">×</button>
+  </div>
+  <div id="drawer-events" style="flex:1;overflow-y:auto;padding:16px 20px"></div>
+</div>
 
 <!-- NOTIFICATION PANEL (slide-in, not a modal) -->
 <div id="notif-panel" style="display:none;position:fixed;top:52px;right:0;width:360px;height:calc(100vh - 52px);background:#fff;border-left:1px solid var(--b0);z-index:350;box-shadow:-4px 0 24px rgba(15,40,90,.1);flex-direction:column;overflow:hidden">
@@ -3109,7 +3166,7 @@ function renderCalWeek(){
     }).join('');
 
     const moreBadge=overflow>0?`<span class="cal-day-more" onclick="event.stopPropagation();filterEventsByDay('${ds}')">+${overflow} más</span>`:'';
-    h+=`<div class="cald${isT?' tod':''}">${cdnHtml}${cards}${moreBadge}</div>`;
+    h+=`<div class="cald${isT?' tod':''}" onclick="openDayDrawer('${ds}',DB.events.filter(e=>e.date==='${ds}'))" style="cursor:pointer">${cdnHtml}${cards}${moreBadge}</div>\`;
   }
 
   grid.innerHTML=h;
@@ -3187,7 +3244,7 @@ function calEventStyle(typeName){
     text:s[2],      // type label + ticker text
     // keep these for badge rendering elsewhere
     border:s[1],
-    tkBg:`rgba(0,0,0,.06)`,
+    tkBg:'rgba(0,0,0,.06)',
   };
 }
 
@@ -5091,6 +5148,45 @@ async function sheetsImport(){
 // ─── UTILS ────────────────────────────────
 function fmtDate(d){if(!d)return'—';const dt=new Date(d+'T12:00:00');return dt.toLocaleDateString('es-AR',{day:'2-digit',month:'short',year:'numeric'});}
 let tt;
+function openDayDrawer(dateStr, events){
+  const overlay=document.getElementById('day-drawer-overlay');
+  const drawer=document.getElementById('day-drawer');
+  const lbl=document.getElementById('drawer-date-label');
+  const cnt=document.getElementById('drawer-count');
+  const feed=document.getElementById('drawer-events');
+  if(!drawer)return;
+  const [yr,mo,dy]=dateStr.split('-').map(Number);
+  const d=new Date(yr,mo-1,dy);
+  const DIAS=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  lbl.textContent=`${DIAS[d.getDay()]} ${dy} de ${MESES[mo-1]}`;
+  cnt.textContent=events.length?`${events.length} evento${events.length!==1?'s':''}`:'Sin eventos';
+  feed.innerHTML=events.length?events.map(e=>{
+    const st=calEventStyle(e.type||'');
+    const tickers=(e.tickers||[]).join(', ');
+    return`<div style="padding:14px 16px;border:1px solid #E4EAF3;border-radius:14px;margin-bottom:10px;border-left:4px solid ${st.dot}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="padding:3px 9px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:${st.bg};color:${st.text}">${esc(e.type||'Evento')}</span>
+        ${tickers?`<span style="font-size:12px;color:#6B7C99">${esc(tickers)}</span>`:''}
+      </div>
+      <div style="font-size:14px;font-weight:600;color:#001533;margin-bottom:4px">${esc(e.company||e.title||'Sin título')}</div>
+      ${e.desc?`<div style="font-size:12px;color:#6B7C99;line-height:1.55">${esc(e.desc)}</div>`:''}
+      ${e.amount?`<div style="font-size:12px;color:#0062DE;font-weight:600;margin-top:6px">${esc(String(e.amount))}</div>`:''}
+      <button onclick="event.stopPropagation();viewEv('${e.id}');closeDayDrawer()" style="margin-top:8px;padding:4px 12px;border:1px solid #E4EAF3;border-radius:7px;background:transparent;font-size:11px;font-weight:600;color:#6B7C99;cursor:pointer">Ver detalle →</button>
+    </div>`;
+  }).join(''):`<div style="text-align:center;padding:40px 20px;color:#A0B0C8;font-size:13px">Sin eventos este día</div>`;
+  overlay.style.display='block';
+  drawer.style.display='flex';
+  requestAnimationFrame(()=>{ drawer.style.transform='translateX(0)'; });
+}
+function closeDayDrawer(){
+  const drawer=document.getElementById('day-drawer');
+  const overlay=document.getElementById('day-drawer-overlay');
+  if(!drawer)return;
+  drawer.style.transform='translateX(100%)';
+  setTimeout(()=>{ drawer.style.display='none'; overlay.style.display='none'; },260);
+}
+
 function toast(msg,type){const el=document.getElementById('toast');el.textContent=msg;el.className='show '+(type||'');clearTimeout(tt);tt=setTimeout(()=>el.className='',3200);}
 
 // ─── INIT ─────────────────────────────────
