@@ -59,8 +59,8 @@
 /* ── Day cells ── */
 .cald{
   background:var(--cal-cell-bg);
-  padding:7px 7px 6px;
-  min-height:90px;
+  padding:10px 8px 8px;
+  min-height:118px;
   overflow:hidden;
   vertical-align:top;
   transition:background .1s;
@@ -90,12 +90,15 @@ body.dark .cald.tod{
   display:flex;
   align-items:center;
   gap:5px;
-  padding:2px 6px 2px 5px;
-  margin-bottom:2px;
-  border-radius:4px;
+  padding:3px 8px 3px 6px;
+  margin-bottom:3px;
+  min-height:22px;
+  border-radius:5px;
+  font-size:12px;
   cursor:pointer;
-  transition:opacity .1s,filter .1s;
-  min-width:0;overflow:hidden;
+  overflow:hidden;
+  transition:opacity .12s;
+  white-space:nowrap;
 }
 .cal-event:hover{opacity:.78;filter:brightness(.97)}
 .cal-event:last-child{margin-bottom:0}
@@ -656,21 +659,30 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 /* ── LAYOUT CHAIN ── */
 .sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
 .sh-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#F4F8FE}
-.content-body{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;padding:20px 40px 0;max-width:1500px;width:100%;margin:0 auto;box-sizing:border-box}
+.content-body{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;padding:20px 40px 0;max-width:1600px;width:100%;margin:0 auto;box-sizing:border-box;align-self:center}
 /* ── CALENDAR VIEW ── */
-#view-calendar{flex:1;display:flex;flex-direction:column;gap:0;min-height:0;padding-bottom:16px}
-/* Nav bar — single tight row */
-.cal-nav-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px 0 8px;border-bottom:1px solid #E4EAF3;margin-bottom:8px}
+#view-calendar{flex:1;display:flex;flex-direction:column;gap:0;min-height:0;padding-bottom:20px}
+.cal-nav-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:10px 0 8px;border-bottom:1px solid #E4EAF3;margin-bottom:8px}
 .cal-month-label{font-size:20px!important;font-weight:700!important;min-width:140px}
-/* Filters — compact row below nav */
 #cal-filter-bar{flex-shrink:0;display:flex!important;gap:5px;flex-wrap:wrap;padding:8px 0 10px;margin-bottom:0}
 .cal-chip{padding:4px 11px!important;font-size:11px!important}
 /* calv wrappers */
-#calv-month,#calv-week{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
-/* grid fills all space */
-.calgrid{flex:1;min-height:calc(100vh - 380px);grid-auto-rows:1fr!important}
-/* day cells flexible */
-.cald{min-height:0!important;max-height:none!important}
+#calv-month{flex:1;display:flex;flex-direction:column;min-height:calc(100vh - 300px);overflow-y:auto}
+#calv-week{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+/* grid — fills space, each row equal height */
+.calgrid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  flex:1;
+  min-height:640px;
+  grid-auto-rows:1fr;
+  border:1px solid #E4EAF3;
+  border-radius:18px;
+  overflow:hidden;
+  background:#fff;
+}
+/* day cells */
+.cald{min-height:118px!important;max-height:none!important}
 </style>
 <style>/* CRITICAL: topbar dark — override any cached CSS */
 .sh-topbar{background:#001533!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
@@ -820,7 +832,7 @@ body.dark .sheets-action-card{background:var(--surf-1)}
           </div>
 
           <!-- Monthly grid -->
-          <div id="calv-month" style="flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;border:1px solid #E4EAF3;border-radius:18px;overflow:hidden">
+          <div id="calv-month">
             <div class="calgrid" id="calgrid"></div>
           </div>
 
@@ -3223,9 +3235,9 @@ function renderCal(){
       return`<div class="cal-event" style="background:${st.bg}"
         onclick="viewEv('${e.id}')"
         title="${e.type}${tickers.length?' · '+tickers.join(', '):''}${e.company?' · '+e.company:''}">
-        <span class="cal-ev-dot" style="background:${st.dot}"></span>
-        <span class="cal-ev-type" style="color:${st.text}">${label}</span>
-        ${tkStr?`<span class="cal-ev-tickers" style="color:${st.text};opacity:.7">${tkStr}</span>`:''}
+        <span class="cal-ev-dot" style="background:${st.dot};flex-shrink:0"></span>
+        <span class="cal-ev-type" style="color:${st.text};font-weight:700;flex-shrink:0">${label}</span>
+        ${tkStr?`<span class="cal-ev-tickers" style="color:${st.text};opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${tkStr}</span>`:''}
       </div>`;
     }).join('');
 
