@@ -2376,7 +2376,11 @@ function applyRoleUI(isAdmin){
   const effectiveAdmin=isAdmin&&!_viewingAsUser;
 
   // admin-only elements (content views, buttons)
-  document.querySelectorAll('.admin-only').forEach(el=>el.style.display=effectiveAdmin?'':'none');
+  document.querySelectorAll('.admin-only').forEach(el=>{
+    if(!effectiveAdmin){ el.style.display='none'; return; }
+    const tag=el.tagName.toLowerCase();
+    el.style.display=(tag==='button'||tag==='a'||el.classList.contains('sh-icon-btn'))?'flex':'inline-flex';
+  });
 
   // Header admin toolbar
   // sb-status-wrap not in agus shell
