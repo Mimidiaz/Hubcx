@@ -141,14 +141,14 @@ body.dark .cald.tod{
 
 /* ══════════════════════════════════════
    DARK MODE — Cocos Bitácora
-   Layered: #0B1426 → #0F1B33 → #141F38
+   Layered: #001533 → #0F1B33 → #002C65
    Inspired by Linear / Stripe / Notion
 ══════════════════════════════════════ */
 body.dark{
   /* Layer system */
-  --dk-base:    #0B1426;
+  --dk-base:    #001533;
   --dk-surface: #0F1B33;
-  --dk-raised:  #141F38;
+  --dk-raised:  #002C65;
   --dk-overlay: #1A2744;
   --dk-border:  rgba(255,255,255,.06);
   --dk-border2: rgba(255,255,255,.11);
@@ -673,9 +673,9 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 .cald{min-height:0!important;max-height:none!important}
 </style>
 <style>/* CRITICAL: topbar dark — override any cached CSS */
-.sh-topbar{background:#0B1F3A!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
+.sh-topbar{background:#001533!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
 .sh-wordmark{color:#fff!important}
-.sh-wordmark em{color:#4B9FFF!important}
+.sh-wordmark em{color:#D7ECFE!important}
 .sh-nav-item{color:rgba(255,255,255,.55)!important}
 .sh-nav-item:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
 .sh-nav-item.active{background:#0062DE!important;color:#fff!important}
@@ -686,12 +686,13 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 .sh-urole{color:rgba(255,255,255,.45)!important}
 .sh-logout{border-color:rgba(255,255,255,.15)!important;color:rgba(255,255,255,.6)!important}
 .sh-logout:hover{color:#fff!important;border-color:rgba(255,255,255,.35)!important}
-.sh-module-pill{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.15)!important}
+.sh-module-pill{background:#0062DE!important;border:none!important}
 </style>
 </head>
 <body>
 <div id="login-screen" class="hub-login">
   <div class="hub-login-box">
+    <div style="margin-bottom:20px"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" rx="10" fill="#0062DE"/><path d="M28 13C26.2 11 23.6 9.8 20.8 9.8C15.4 9.8 11 14.2 11 19.6C11 25 15.4 29.4 20.8 29.4C23.6 29.4 26.2 28.2 28 26.2" stroke="white" stroke-width="3" stroke-linecap="round"/><circle cx="28.5" cy="19.6" r="2.5" fill="white"/></svg></div>
     <div class="hub-login-brand">cocos<em>.</em>capital</div>
     <div class="hub-login-sub">Bitácora · Capital Markets</div>
     <div class="hub-login-card">
@@ -713,7 +714,7 @@ body.dark .sheets-action-card{background:var(--surf-1)}
     <div class="sh-topbar-left">
       <div class="sh-logo">
         <div class="sh-logo-mark">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="8" cy="8" r="2.5"/></svg>
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="28" height="28" rx="7" fill="#0062DE"/><path d="M19.5 9.5C18.2 7.9 16.3 7 14.2 7C10.2 7 7 10.2 7 14.2C7 18.2 10.2 21.4 14.2 21.4C16.3 21.4 18.2 20.5 19.5 18.9" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="14.2" r="1.8" fill="white"/></svg>
         </div>
         <span class="sh-wordmark">cocos<em>.</em></span>
         <span class="sh-module-pill">BITÁCORA</span>
@@ -741,7 +742,7 @@ body.dark .sheets-action-card{background:var(--surf-1)}
     <div class="sh-hero-bg"></div>
     <div class="sh-hero-inner">
       <div class="sh-hero-badge"><span class="sh-hero-dot"></span>Bitácora</div>
-      <h1 class="sh-hero-title">Calendario de <em>eventos</em></h1>
+      <h1 class="sh-hero-title">Calendario de <em style="color:#D7ECFE">eventos</em></h1>
       <p class="sh-hero-sub">Pagos, vencimientos, licitaciones y novedades del mercado en un solo lugar</p>
       <div class="sh-hero-pills">
         <button class="sh-hero-pill active" id="sb-calendar" onclick="switchView('calendar',this)">
@@ -5129,7 +5130,7 @@ function showSplash(msg){
   if(!el){
     el = document.createElement('div');
     el.id = 'bit-splash';
-    el.style.cssText = 'position:fixed;inset:0;z-index:200;background:var(--c-bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .3s';
+    el.style.cssText = 'position:fixed;inset:0;z-index:200;background:#F4F8FE;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .3s';
     el.innerHTML = '<div style="font-size:22px;font-weight:800;letter-spacing:-.03em;color:var(--c-text)">cocos<span style="color:#0062DE">.</span></div><div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--c-muted)"><div style="width:16px;height:16px;border:2px solid var(--c-border);border-top-color:#0062DE;border-radius:50%;animation:spin .65s linear infinite"></div><span id="bit-splash-msg">Cargando…</span></div>';
     document.body.appendChild(el);
   }

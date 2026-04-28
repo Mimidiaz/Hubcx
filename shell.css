@@ -15,12 +15,14 @@ a{color:inherit;text-decoration:none}
 
 /* ── TOKENS ── */
 :root{
-  --navy:#001533;--blue:#0062DE;--blue2:#0052C0;--sky:#4B9FFF;
+  --navy:#001533;
+  --navy-mid:#002C65;--blue:#0062DE;--blue2:#0052C0;--sky:#4B9FFF;
   --bg:#F4F8FE;--card:#FFFFFF;--border:#E4EAF3;--border2:#C8D6EC;
   --text:#001533;--text2:#1A3A62;--muted:#6B7C99;--hint:#A0B0C8;
   --green:#00BF8C;--amber:#F59E0B;--red:#F05C5C;--purple:#A378F3;
-  --hero-bg:#0B1F3A;
+  --hero-bg:#001533;
   --ff:'Plus Jakarta Sans',system-ui,sans-serif;
+  --fm:'Plus Jakarta Sans',system-ui,sans-serif;
   --r-sm:8px;--r-md:12px;--r-lg:16px;--r-card:18px;--r-panel:20px;
   --shadow:0 4px 20px rgba(0,21,51,.07),0 1px 3px rgba(0,21,51,.04);
   --shadow-sm:0 1px 3px rgba(0,21,51,.05);
@@ -47,7 +49,7 @@ a{color:inherit;text-decoration:none}
 .sh-logo{display:flex;align-items:center;gap:9px;margin-right:6px}
 .sh-logo-mark{
   width:32px;height:32px;border-radius:9px;
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.15);
+  background:#0062DE;border:none;
   display:flex;align-items:center;justify-content:center;
   color:#fff;
 }
@@ -136,7 +138,7 @@ a{color:inherit;text-decoration:none}
   font-size:32px;font-weight:700;color:#fff;
   letter-spacing:-.04em;line-height:1.15;margin:0;
 }
-.sh-hero-title em{color:var(--sky);font-style:normal}
+.sh-hero-title em{color:#D7ECFE;font-style:normal}
 .sh-hero-sub{
   font-size:14px;color:rgba(255,255,255,.5);
   line-height:1.5;margin:0;max-width:520px;

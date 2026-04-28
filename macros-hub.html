@@ -9,7 +9,7 @@
 
 /* ── MACROS MODULE CSS ── */
 .mac-body{display:flex;flex:1;overflow:hidden;min-height:0}
-.mac-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--c-bg)}
+.mac-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#F4F8FE}
 
 /* ─── MAC CANVAS OVERRIDES ─ */
 #mac-canvas{padding:24px 32px 44px;gap:18px}
@@ -22,10 +22,10 @@
 .mac-cat-list{display:flex;flex-direction:column;gap:2px}
 .mac-cat-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;font-size:13px;font-weight:500;color:var(--c-muted);cursor:pointer;transition:all .12s;border:none;background:transparent;width:100%;text-align:left}
 .mac-cat-item svg{width:14px;height:14px;flex-shrink:0;opacity:.5}
-.mac-cat-item:hover{background:var(--c-bg);color:var(--c-text)}
+.mac-cat-item:hover{background:#F4F8FE;color:var(--c-text)}
 .mac-cat-item.active,.mac-cat-item.on{background:rgba(0,98,222,.08);color:#0062DE;font-weight:600}
 .mac-cat-item.active svg,.mac-cat-item.on svg{opacity:1}
-.mac-cat-count{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--c-bg);color:var(--c-hint);border:1px solid var(--c-border);flex-shrink:0}
+.mac-cat-count{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;background:#F4F8FE;color:var(--c-hint);border:1px solid var(--c-border);flex-shrink:0}
 
 /* ─── RIGHT SIDE ─ */
 .mac-right{display:flex;flex-direction:column;gap:16px;min-width:0}
@@ -33,10 +33,10 @@
 /* ─── TOOLBAR ─ */
 .mac-toolbar{display:flex;align-items:center;gap:10px;padding:16px 20px!important;box-shadow:0 10px 30px rgba(0,21,51,.05)!important;border-radius:18px!important}
 .mac-search-wrap{flex:1;position:relative;min-width:0}
-.mac-search{width:100%;padding:10px 14px 10px 38px;background:var(--c-bg);border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:13px;color:var(--c-text);outline:none;transition:border-color .15s}
+.mac-search{width:100%;padding:10px 14px 10px 38px;background:#F4F8FE;border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:13px;color:var(--c-text);outline:none;transition:border-color .15s}
 .mac-search:focus{border-color:#0062DE;box-shadow:0 0 0 3px rgba(0,98,222,.1)}
 .mac-search::placeholder{color:var(--c-hint)}
-.mac-select{padding:8px 12px;background:var(--c-bg);border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:12px;color:var(--c-text);outline:none;cursor:pointer;white-space:nowrap}
+.mac-select{padding:8px 12px;background:#F4F8FE;border:1px solid var(--c-border);border-radius:10px;font-family:var(--ff);font-size:12px;color:var(--c-text);outline:none;cursor:pointer;white-space:nowrap}
 
 /* ─── MAC CARD GRID ─ */
 .mac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;align-content:start;align-items:start}
@@ -172,7 +172,7 @@ select.ssel{padding:7px 10px;background:var(--ds-bg);border:1px solid var(--ds-b
 
 /* Title — primary read target */
 .mac-title{
-  font-size:15px;font-weight:600;color:#0B1426;
+  font-size:15px;font-weight:600;color:#001533;
   letter-spacing:-.02em;line-height:1.3;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden;margin-bottom:8px;
@@ -219,7 +219,7 @@ select.ssel{padding:7px 10px;background:var(--ds-bg);border:1px solid var(--ds-b
   font-family:var(--h-ff);font-size:12px;font-weight:600;
   border:1px solid #E4EAF3;cursor:pointer;transition:all .13s;
 }
-.mac-edit-btn:hover{background:#F5F7FA;color:#0B1426;border-color:#C8D6EC}
+.mac-edit-btn:hover{background:#F5F7FA;color:#001533;border-color:#C8D6EC}
 
 /* Flotar */
 .mac-pip-btn{background:none;border:1px solid #E4EAF3;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;color:#A0B0C8;transition:all .12s;line-height:1.4}
@@ -456,9 +456,9 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 #grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-content:start}
 </style>
 <style>/* CRITICAL: topbar dark — override any cached CSS */
-.sh-topbar{background:#0B1F3A!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
+.sh-topbar{background:#001533!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
 .sh-wordmark{color:#fff!important}
-.sh-wordmark em{color:#4B9FFF!important}
+.sh-wordmark em{color:#D7ECFE!important}
 .sh-nav-item{color:rgba(255,255,255,.55)!important}
 .sh-nav-item:hover{background:rgba(255,255,255,.08)!important;color:#fff!important}
 .sh-nav-item.active{background:#0062DE!important;color:#fff!important}
@@ -469,12 +469,13 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 .sh-urole{color:rgba(255,255,255,.45)!important}
 .sh-logout{border-color:rgba(255,255,255,.15)!important;color:rgba(255,255,255,.6)!important}
 .sh-logout:hover{color:#fff!important;border-color:rgba(255,255,255,.35)!important}
-.sh-module-pill{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.15)!important}
+.sh-module-pill{background:#0062DE!important;border:none!important}
 </style>
 </head>
 <body>
 <div id="auth" class="hub-login">
   <div class="hub-login-box">
+    <div style="margin-bottom:20px"><svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" rx="10" fill="#0062DE"/><path d="M28 13C26.2 11 23.6 9.8 20.8 9.8C15.4 9.8 11 14.2 11 19.6C11 25 15.4 29.4 20.8 29.4C23.6 29.4 26.2 28.2 28 26.2" stroke="white" stroke-width="3" stroke-linecap="round"/><circle cx="28.5" cy="19.6" r="2.5" fill="white"/></svg></div>
     <div class="hub-login-brand">cocos<em>.</em>capital</div>
     <div class="hub-login-sub">Macros · CX Hub</div>
     <div class="hub-login-card">
@@ -494,7 +495,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
   <header class="sh-topbar">
     <div class="sh-topbar-left">
       <div class="sh-logo">
-        <div class="sh-logo-mark"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="8" cy="8" r="2.5"/></svg></div>
+        <div class="sh-logo-mark"><svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="28" height="28" rx="7" fill="#0062DE"/><path d="M19.5 9.5C18.2 7.9 16.3 7 14.2 7C10.2 7 7 10.2 7 14.2C7 18.2 10.2 21.4 14.2 21.4C16.3 21.4 18.2 20.5 19.5 18.9" stroke="white" stroke-width="2.5" stroke-linecap="round"/><circle cx="20" cy="14.2" r="1.8" fill="white"/></svg></div>
         <span class="sh-wordmark">cocos<em>.</em></span>
         <span class="sh-module-pill">MACROS</span>
       </div>
@@ -516,7 +517,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
     <div class="sh-hero-bg"></div>
     <div class="sh-hero-inner">
       <div class="sh-hero-badge"><span class="sh-hero-dot"></span>Macros</div>
-      <h1 class="sh-hero-title" id="cbar-title">Mis <em>macros</em></h1>
+      <h1 class="sh-hero-title" id="cbar-title">Mis <em style="color:#D7ECFE">macros</em></h1>
       <p class="sh-hero-sub" id="cbar-sub">Plantillas rápidas para responder mejor y ahorrar tiempo</p>
       <div class="sh-hero-pills">
         <button class="sh-hero-pill active" id="sf-mine" onclick="setF('mine')">
@@ -1433,7 +1434,7 @@ function renderQATable(){
                   onmouseover="this.style.background='#F8FAFC'" 
                   onmouseout="this.style.background=''">
         <td style="padding:12px 16px;max-width:280px">
-          <div style="font-size:13px;font-weight:600;color:#0B1426;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.title)}</div>
+          <div style="font-size:13px;font-weight:600;color:#001533;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(t.title)}</div>
           <div style="font-size:11px;color:#94A3B8;margin-top:2px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">${esc(preview)}</div>
         </td>
         <td style="padding:12px 10px">
@@ -2045,7 +2046,7 @@ function openPiP(id){
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:#0F1B33;color:#E6EDF7;font-size:13px;line-height:1.6;display:flex;flex-direction:column;height:100vh;overflow:hidden}
-.pip-header{background:#0B1426;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:default}
+.pip-header{background:#001533;border-bottom:1px solid rgba(255,255,255,.08);padding:10px 14px;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:default}
 .pip-title{font-size:13px;font-weight:700;color:#E6EDF7;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pip-cat{font-size:10px;font-weight:600;padding:2px 8px;border-radius:99px;background:rgba(0,98,222,.15);color:#93C5FD;white-space:nowrap}
 .pip-search-bar{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0;display:flex;gap:6px}
@@ -2054,7 +2055,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#0F1B33;color:#E6EDF7
 .pip-search-bar input:focus{border-color:#3B82F6}
 .pip-body{flex:1;overflow-y:auto;padding:14px;color:#D1D9E6;line-height:1.75;font-size:13px}
 .pip-body img{max-width:100%;border-radius:6px;display:block;margin:6px 0}
-.pip-footer{padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:8px;flex-shrink:0;background:#0B1426}
+.pip-footer{padding:10px 14px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:8px;flex-shrink:0;background:#001533}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .13s}
 .btn-primary{background:#0062DE;color:#fff}
 .btn-primary:hover{background:#0052C0}
