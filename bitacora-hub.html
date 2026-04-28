@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Bitácora · Cocos Capital</title>
-<link rel="stylesheet" href="hub-ds.css">
+<link rel="stylesheet" href="shell.css">
 <style>
+
 /* ── BITÁCORA MODULE CSS ── */
 /* ─── VIEWS ── hide/show ─────────────── */
 .view{display:none!important}
@@ -649,11 +650,15 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 .view{display:none!important}
 .view.active{display:flex!important;flex-direction:column;flex:1;min-height:0}
 .hub-cal-wrap{background:var(--h-card);border:1px solid var(--h-border);border-radius:var(--h-r-panel);box-shadow:var(--h-shadow);overflow:hidden;flex:1;display:flex;flex-direction:column;min-height:0}
+
+/* Bitácora view system */
+.view{display:none!important}
+.view.active{display:flex!important;flex-direction:column;flex:1;min-height:0}
+.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.sh-content{flex:1;overflow-y:auto;background:#F4F8FE;padding:32px 40px 56px}
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
 <div id="login-screen" class="hub-login">
   <div class="hub-login-box">
     <div class="hub-login-brand">cocos<em>.</em>capital</div>
@@ -670,65 +675,73 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 </div>
 
 <!-- APP -->
-<div id="app">
-  <header class="hub-header">
-    <div class="hub-logo">
-      <div class="hub-logo-mark">
-        <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="2.5"/></svg>
+
+<div id="app" style="display:none;flex-direction:column;height:100vh;overflow:hidden">
+  <!-- TOPBAR — white, fixed, always on top -->
+  <header class="sh-topbar">
+    <div class="sh-topbar-left">
+      <div class="sh-logo">
+        <div class="sh-logo-mark">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="8" cy="8" r="2.5"/></svg>
+        </div>
+        <span class="sh-wordmark">cocos<em>.</em></span>
+        <span class="sh-module-pill">BITÁCORA</span>
       </div>
-      <span class="hub-wordmark">cocos<em>.</em></span>
-      <span class="hub-module-pill">Bitácora</span>
+      <nav class="sh-nav">
+        <a class="sh-nav-item active" href="bitacora-hub.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>Bitácora</a>
+        <a class="sh-nav-item" href="macros-hub.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros</a>
+        <a class="sh-nav-item" href="index.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Panel CX</a>
+      </nav>
     </div>
-    <nav class="hub-nav">
-      <a class="hub-nav-item active" href="bitacora.html"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>Bitácora</a>
-      <a class="hub-nav-item" href="macros.html"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros</a>
-      <a class="hub-nav-item" href="index.html"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Panel CX</a>
-    </nav>
-    <div class="hub-header-right">
+    <div class="sh-topbar-right">
       <div style="position:relative">
-        <button class="hub-icon-btn" onclick="cxNotifToggle?cxNotifToggle():toggleNotifPanel?toggleNotifPanel():null" title="Notificaciones">
+        <button class="sh-icon-btn" onclick="cxNotifToggle&&cxNotifToggle()" title="Notificaciones">
           🔔<span id="notif-badge" style="display:none;position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:#0062DE;border:2px solid #fff"></span>
         </button>
       </div>
-      <button class="hub-icon-btn" id="theme-btn" onclick="toggleTheme?toggleTheme():null" title="Tema">🌙</button>
-      <div class="hub-user-pill">
-        <div class="hub-av" id="u-av">?</div>
-        <div><div class="hub-uname" id="u-name">—</div><div class="hub-urole" id="u-role">—</div></div>
+      <button class="sh-icon-btn" id="theme-btn" onclick="toggleTheme&&toggleTheme()" title="Tema">🌙</button>
+      <div class="sh-user-pill">
+        <div class="sh-av" id="u-av">?</div>
+        <div><div class="sh-uname" id="u-name">—</div><div class="sh-urole" id="u-role">—</div></div>
       </div>
-      <button class="hub-logout" onclick="doLogout()">Salir</button>
+      <button class="sh-logout" onclick="doLogout()">Salir</button>
     </div>
   </header>
-  <div class="hub-hero">
-    <div class="hub-hero-pattern"></div>
-    <div class="hub-hero-inner">
-      <div class="hub-hero-badge"><div class="hub-hero-badge-dot"></div>Capital Markets · Bitácora</div>
-      <h1 class="hub-hero-title">Calendario de <em>eventos</em></h1>
-      <p class="hub-hero-sub">Pagos, vencimientos, licitaciones y novedades del mercado en un solo lugar</p>
-      <div class="hub-hero-pills">
-        <button class="hub-pill active" id="sb-calendar" onclick="switchView('calendar',this)">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>
+  <!-- HERO OSCURO -->
+  <div class="sh-hero">
+    <div class="sh-hero-bg"></div>
+    <div class="sh-hero-inner">
+      <div class="sh-hero-badge"><span class="sh-hero-dot"></span>Bitácora</div>
+      <h1 class="sh-hero-title">Calendario de <em>eventos</em></h1>
+      <p class="sh-hero-sub">Pagos, vencimientos, licitaciones y novedades del mercado en un solo lugar</p>
+      <div class="sh-hero-pills">
+        <button class="sh-hero-pill active" id="sb-calendar" onclick="switchView('calendar',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>
           Calendario
         </button>
-        <button class="hub-pill" id="sb-events" onclick="switchView('events',this)">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M5 10.5a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0-2a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0-2a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z"/><path d="M3 0h10a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V2a2 2 0 012-2zm0 1a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V2a1 1 0 00-1-1H3z"/></svg>
+        <button class="sh-hero-pill" id="sb-events" onclick="switchView('events',this)">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M5 10.5a.5.5 0 01.5-.5h2a.5.5 0 010 1h-2a.5.5 0 01-.5-.5zm0-2a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5zm0-2a.5.5 0 01.5-.5h5a.5.5 0 010 1h-5a.5.5 0 01-.5-.5z"/><path d="M3 0h10a2 2 0 012 2v12a2 2 0 01-2 2H3a2 2 0 01-2-2V2a2 2 0 012-2zm0 1a1 1 0 00-1 1v12a1 1 0 001 1h10a1 1 0 001-1V2a1 1 0 00-1-1H3z"/></svg>
           Eventos
         </button>
-        <button class="hub-pill admin-only" id="sb-upload" onclick="switchView('carga',this)" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
+        <button class="sh-hero-pill admin-only" id="sb-upload" onclick="switchView('carga',this)" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
           Carga
         </button>
-        <button class="hub-pill admin-only" id="sb-types" onclick="switchView('types',this)" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 4a1 1 0 000 2h12a1 1 0 100-2H2zm0 5a1 1 0 000 2h5a1 1 0 000-2H2zm0 5a1 1 0 000 2h7a1 1 0 100-2H2z"/></svg>
+        <button class="sh-hero-pill admin-only" id="sb-types" onclick="switchView('types',this)" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M2 4a1 1 0 000 2h12a1 1 0 100-2H2zm0 5a1 1 0 000 2h5a1 1 0 000-2H2zm0 5a1 1 0 000 2h7a1 1 0 100-2H2z"/></svg>
           Tipos
         </button>
-        <button class="hub-pill hub-pill-primary admin-only" id="btn-nuevo-evento" onclick="openCreateEvent()" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
+        <button class="sh-hero-pill sh-hero-pill-cta admin-only" id="btn-nuevo-evento" onclick="openCreateEvent()" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
           + Nuevo evento
         </button>
       </div>
     </div>
   </div>
-  <main class="hub-main">
+  <!-- CONTENT -->
+  <div class="sh-main">
+    <div class="sh-content">
+
 <div class="content-body">
 
         <!-- ══ VIEW: CALENDARIO ══════════ -->
@@ -1032,6 +1045,10 @@ body.dark .sheets-action-card{background:var(--surf-1)}
   </main>
 </div>
 
+
+    </div>
+  </div>
+</div>
 </div><!-- /app -->
 
 
@@ -1498,7 +1515,10 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 <div id="toast"></div>
 
 <div id="toast"></div>
+
+<div id="toast"></div>
 <script>
+
 
 
 
@@ -5130,6 +5150,19 @@ function initShell(user){
       el.style.display=el.classList.contains('hub-pill')?'inline-flex':'inline-flex';
     });
   }
+  applyTheme();
+}
+
+function initShell(user){
+  const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const fn=(user.name||'').split(' ')[0];
+  const el=id=>document.getElementById(id);
+  if(el('u-av'))el('u-av').textContent=av;
+  if(el('u-name'))el('u-name').textContent=fn;
+  if(el('u-role'))el('u-role').textContent=user.role==='admin'?'Admin':'Equipo';
+  const uHdr=el('hdr-role');
+  if(uHdr){uHdr.textContent=user.role==='admin'?'Admin':'Equipo';uHdr.className='role-chip '+(user.role==='admin'?'role-admin':'role-reader');}
+  if(user.role==='admin')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-flex');
   applyTheme();
 }
 </script>

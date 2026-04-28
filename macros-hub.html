@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Macros · Cocos Capital</title>
-<link rel="stylesheet" href="hub-ds.css">
+<link rel="stylesheet" href="shell.css">
 <style>
+
 /* ── MACROS MODULE CSS ── */
 .mac-body{display:flex;flex:1;overflow:hidden;min-height:0}
 .mac-content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--c-bg)}
@@ -448,11 +449,12 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 
 /* hub-main for macros */
 .hub-main{display:flex;flex-direction:column;flex:1;overflow:hidden;padding:20px 28px 32px;max-width:1440px;width:100%;margin:0 auto;gap:0}
+
+.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.sh-content{flex:1;overflow-y:auto;background:#F4F8FE;padding:24px 32px 48px;display:flex;flex-direction:column;gap:16px}
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
 <div id="auth" class="hub-login">
   <div class="hub-login-box">
     <div class="hub-login-brand">cocos<em>.</em>capital</div>
@@ -469,60 +471,69 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 </div>
 
 <!-- APP -->
-<div id="app">
-  <header class="hub-header">
-    <div class="hub-logo">
-      <div class="hub-logo-mark"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="8" r="2.5"/></svg></div>
-      <span class="hub-wordmark">cocos<em>.</em></span>
-      <span class="hub-module-pill">Macros</span>
+
+<div id="app" style="display:none;flex-direction:column;height:100vh;overflow:hidden">
+  <header class="sh-topbar">
+    <div class="sh-topbar-left">
+      <div class="sh-logo">
+        <div class="sh-logo-mark"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><circle cx="8" cy="8" r="2.5"/></svg></div>
+        <span class="sh-wordmark">cocos<em>.</em></span>
+        <span class="sh-module-pill">MACROS</span>
+      </div>
+      <nav class="sh-nav">
+        <a class="sh-nav-item" href="bitacora-hub.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>Bitácora</a>
+        <a class="sh-nav-item active" href="macros-hub.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros</a>
+        <a class="sh-nav-item" href="index.html"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Panel CX</a>
+      </nav>
     </div>
-    <nav class="hub-nav">      <a class="hub-nav-item" href="bitacora.html"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 0a.5.5 0 01.5.5V1h8V.5a.5.5 0 011 0V1h1a2 2 0 012 2v11a2 2 0 01-2 2H2a2 2 0 01-2-2V3a2 2 0 012-2h1V.5a.5.5 0 01.5-.5zM1 4v10a1 1 0 001 1h12a1 1 0 001-1V4H1z"/></svg>Bitácora</a>
-      <a class="hub-nav-item active" href="macros.html"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M2 2h5v5H2zm7 0h5v5H9zM2 9h5v5H2zm7 0h5v5H9z"/></svg>Macros</a>
-      <a class="hub-nav-item" href="index.html"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8.707 1.5a1 1 0 00-1.414 0L.646 8.146a.5.5 0 00.708.708L2 8.207V13.5A1.5 1.5 0 003.5 15h9a1.5 1.5 0 001.5-1.5V8.207l.646.647a.5.5 0 00.708-.708L13 5.793V2.5a.5.5 0 00-.5-.5h-1a.5.5 0 00-.5.5v1.293L8.707 1.5z"/></svg>Panel CX</a></nav>
-    <div class="hub-header-right">
-      <div style="position:relative"><button class="hub-icon-btn" onclick="cxNotifToggle&&cxNotifToggle()" title="Notificaciones">🔔<span id="notif-badge" style="display:none;position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:#0062DE;border:2px solid #fff"></span></button></div>
-      <button class="hub-icon-btn" id="theme-btn" onclick="initTheme&&initTheme()">🌙</button>
-      <div class="hub-user-pill"><div class="hub-av" id="u-av">?</div><div><div class="hub-uname" id="u-name">—</div><div class="hub-urole" id="u-role">—</div></div></div>
-      <button class="hub-logout" onclick="doLogout()">Salir</button>
+    <div class="sh-topbar-right">
+      <div style="position:relative">
+        <button class="sh-icon-btn" onclick="cxNotifToggle&&cxNotifToggle()" title="Notificaciones">🔔<span id="notif-badge" style="display:none;position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:#0062DE;border:2px solid #fff"></span></button>
+      </div>
+      <button class="sh-icon-btn" id="theme-btn" onclick="toggleTheme&&toggleTheme()" title="Tema">🌙</button>
+      <div class="sh-user-pill"><div class="sh-av" id="u-av">?</div><div><div class="sh-uname" id="u-name">—</div><div class="sh-urole" id="u-role">—</div></div></div>
+      <button class="sh-logout" onclick="doLogout()">Salir</button>
     </div>
   </header>
-  <!-- HERO -->
-  <div class="hub-hero">
-    <div class="hub-hero-pattern"></div>
-    <div class="hub-hero-inner">
-      <div class="hub-hero-badge"><div class="hub-hero-badge-dot"></div>CX Hub · Macros</div>
-      <h1 class="hub-hero-title" id="cbar-title">Mis <em>macros</em></h1>
-      <p class="hub-hero-sub" id="cbar-sub">Plantillas rápidas para responder mejor y ahorrar tiempo</p>
-      <div class="hub-hero-pills">
-        <button class="hub-pill active" id="sf-mine" onclick="setF('mine')">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
-          Mis macros <span id="cnt-mine" style="font-size:10px;opacity:.6;margin-left:2px">0</span>
+  <!-- HERO OSCURO -->
+  <div class="sh-hero">
+    <div class="sh-hero-bg"></div>
+    <div class="sh-hero-inner">
+      <div class="sh-hero-badge"><span class="sh-hero-dot"></span>Macros</div>
+      <h1 class="sh-hero-title" id="cbar-title">Mis <em>macros</em></h1>
+      <p class="sh-hero-sub" id="cbar-sub">Plantillas rápidas para responder mejor y ahorrar tiempo</p>
+      <div class="sh-hero-pills">
+        <button class="sh-hero-pill active" id="sf-mine" onclick="setF('mine')">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+          Mis macros <span id="cnt-mine" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
         </button>
-        <button class="hub-pill" id="sf-shared" onclick="setF('shared')">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 1a1 1 0 00-1 1v11a1 1 0 001 1H9a1 1 0 001-1V4.914a1 1 0 00-.293-.707L7.793 2.293A1 1 0 007.086 2H2.5z"/></svg>
-          Oficiales <span id="cnt-shared" style="font-size:10px;opacity:.6;margin-left:2px">0</span>
+        <button class="sh-hero-pill" id="sf-shared" onclick="setF('shared')">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M2.5 1a1 1 0 00-1 1v11a1 1 0 001 1H9a1 1 0 001-1V4.914a1 1 0 00-.293-.707L7.793 2.293A1 1 0 007.086 2H2.5z"/></svg>
+          Oficiales <span id="cnt-shared" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
         </button>
-        <button class="hub-pill" id="sf-fav" onclick="setF('fav')">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
-          Favoritas <span id="cnt-fav" style="font-size:10px;opacity:.6;margin-left:2px">0</span>
+        <button class="sh-hero-pill" id="sf-fav" onclick="setF('fav')">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+          Favoritas <span id="cnt-fav" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
         </button>
-        <button class="hub-pill admin-only" id="sf-pending" onclick="setF('pending')" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/><path d="M7.1 4.995a.905.905 0 111.8 0l-.35 3.507a.552.552 0 01-1.1 0L7.1 4.995z"/></svg>
-          QA <span id="cnt-pending" style="font-size:10px;opacity:.6;margin-left:2px">0</span>
+        <button class="sh-hero-pill admin-only" id="sf-pending" onclick="setF('pending')" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/><path d="M7.1 4.995a.905.905 0 111.8 0l-.35 3.507a.552.552 0 01-1.1 0L7.1 4.995z"/></svg>
+          QA <span id="cnt-pending" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
         </button>
-        <button class="hub-pill admin-only" id="sf-qa" onclick="switchToQA(this)" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M2.5 8a5.5 5.5 0 0 1 8.25-4.764.5.5 0 0 0 .5-.866A6.5 6.5 0 1 0 14.5 8a.5.5 0 0 0-1 0 5.5 5.5 0 1 1-11 0z"/><path d="M15.354 3.354a.5.5 0 0 0-.708-.708L8 9.293 5.354 6.646a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l7-7z"/></svg>
+        <button class="sh-hero-pill admin-only" id="sf-qa" onclick="switchToQA(this)" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M2.5 8a5.5 5.5 0 018.25-4.764.5.5 0 00.5-.866A6.5 6.5 0 1014.5 8a.5.5 0 00-1 0 5.5 5.5 0 11-11 0z"/><path d="M15.354 3.354a.5.5 0 00-.708-.708L8 9.293 5.354 6.646a.5.5 0 10-.708.708l3 3a.5.5 0 00.708 0l7-7z"/></svg>
           Calidad QA
         </button>
-        <button class="hub-pill hub-pill-primary admin-only" onclick="openM('create')" id="btn-nueva-macro" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
+        <button class="sh-hero-pill sh-hero-pill-cta admin-only" onclick="openM('create')" id="btn-nueva-macro" style="display:none">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
           + Nueva macro
         </button>
       </div>
     </div>
   </div>
   <!-- CONTENT -->
-  <main class="hub-main">
+  <div class="sh-main">
+    <div class="sh-content">
+
     <!-- Search + sort toolbar -->
     <div id="view-usuario" style="flex:1;display:flex;flex-direction:column;gap:16px;overflow:hidden">
       <div class="hub-panel" style="padding:14px 18px;display:flex;align-items:center;gap:10px;flex-shrink:0">
@@ -575,6 +586,10 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
   </main>
 </div>
 
+
+    </div>
+  </div>
+</div>
 </div><!-- /app -->
 
 
@@ -722,7 +737,10 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 <div id="toast"></div>
 
 <div id="toast"></div>
+
+<div id="toast"></div>
 <script>
+
 
 
 // ════════════════════════════════════════
@@ -2636,6 +2654,17 @@ function renderCatsBar(){
 const _origSetActCat = typeof setActCat==='function'?setActCat:null;
 if(_origSetActCat){
   setActCat = function(c){ _origSetActCat(c); setTimeout(renderCatsBar,10); };
+}
+
+function initShell(user){
+  const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const fn=(user.name||'').split(' ')[0];
+  const el=id=>document.getElementById(id);
+  if(el('u-av'))el('u-av').textContent=av;
+  if(el('u-name'))el('u-name').textContent=fn;
+  if(el('u-role'))el('u-role').textContent=user.role==='admin'?'Admin':'Equipo';
+  if(user.role==='admin')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-flex');
+  initTheme();
 }
 </script>
 </body>
