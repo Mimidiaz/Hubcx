@@ -472,7 +472,7 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
 
 <!-- APP -->
 
-<div id="app" style="display:none;flex-direction:column;height:100vh;overflow:hidden">
+<div id="app">
   <header class="sh-topbar">
     <div class="sh-topbar-left">
       <div class="sh-logo">
@@ -877,23 +877,7 @@ async function doLogin(){
   loginSuccess(u);
 }
 
-function initShell(user){
-  const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const firstName=(user.name||'').split(' ')[0];
-  const uAv=document.getElementById('u-av');if(uAv)uAv.textContent=av;
-  const uN=document.getElementById('u-name');if(uN)uN.textContent=firstName;
-  const uR=document.getElementById('u-role');if(uR)uR.textContent=user.role==='admin'?'Admin':'Equipo';
-  const sbAv=document.getElementById('sb-av');if(sbAv)sbAv.textContent=av;
-  const sbN=document.getElementById('sb-name');if(sbN)sbN.textContent=user.name||firstName;
-  const sbR=document.getElementById('sb-role');if(sbR)sbR.textContent=user.role==='admin'?'Admin':'Equipo';
-  const now=new Date();
-  const dtEl=document.getElementById('topbar-date-text');
-  if(dtEl)dtEl.textContent=now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
-  if(user.role==='admin')document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-flex');
-  // KPI QA card is block, not inline-flex
-  if(user.role==='admin'){const kpiQaCard=document.querySelector('#mac-kpi-row .admin-only');if(kpiQaCard)kpiQaCard.style.display='flex';}
-  initTheme();
-}
+
 function loginSuccess(u, fromSession=false){
   CU=u;
   document.getElementById('auth').style.display='none';
@@ -2630,15 +2614,7 @@ document.addEventListener('click',e=>{const p=document.getElementById('notif-pan
 
 
 // ── UNIFIED SHELL INIT ──
-function initShell(user){
-  const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const fn=(user.name||'').split(' ')[0];
-  const uAv=document.getElementById('u-av');if(uAv)uAv.textContent=av;
-  const uN=document.getElementById('u-name');if(uN)uN.textContent=fn;
-  const uR=document.getElementById('u-role');if(uR)uR.textContent=user.role==='admin'?'Admin':'Equipo';
-  if(user.role==='admin')document.querySelectorAll('.admin-only').forEach(el=>el.style.display='inline-flex');
-  initTheme();
-}
+
 
 // Render categories as hub-chips in the bar
 const _origDraw = typeof draw === 'function' ? draw : null;

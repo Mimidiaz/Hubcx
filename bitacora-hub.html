@@ -676,7 +676,7 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 
 <!-- APP -->
 
-<div id="app" style="display:none;flex-direction:column;height:100vh;overflow:hidden">
+<div id="app">
   <!-- TOPBAR — white, fixed, always on top -->
   <header class="sh-topbar">
     <div class="sh-topbar-left">
@@ -1893,26 +1893,7 @@ function checkSess(){
     return true;
   }catch(e){return false;}
 }
-function initShell(user){
-  const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const firstName=(user.name||'').split(' ')[0];
-  const uAv=document.getElementById('u-av');if(uAv)uAv.textContent=av;
-  const uN=document.getElementById('u-name');if(uN)uN.textContent=firstName;
-  const uR=document.getElementById('u-role');if(uR)uR.textContent=user.role==='admin'?'Admin':'Equipo';
-  // hdr-role not in agus shell — skip
-  const sbAv=document.getElementById('sb-av');if(sbAv)sbAv.textContent=av;
-  const sbN=document.getElementById('sb-name');if(sbN)sbN.textContent=user.name||firstName;
-  const sbR=document.getElementById('sb-role');if(sbR)sbR.textContent=user.role==='admin'?'Admin':'Equipo';
-  const now=new Date();
-  const dtEl=document.getElementById('topbar-date-text');
-  if(dtEl)dtEl.textContent=now.toLocaleDateString('es-AR',{weekday:'long',day:'numeric',month:'long'});
-  if(user.role==='admin'){
-    document.querySelectorAll('.admin-only').forEach(el=>{
-      el.style.display=el.classList.contains('agus-view-pill')?'flex':'inline-flex';
-    });
-  }
-  applyTheme();
-}
+
 function initApp(){
   applyTheme();
   document.getElementById('login-screen').style.display='none';
@@ -5137,21 +5118,7 @@ function hideSplash(){
 
 
 // ── UNIFIED SHELL INIT ──
-function initShell(user){
-  const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-  const fn=(user.name||'').split(' ')[0];
-  const uAv=document.getElementById('u-av');if(uAv)uAv.textContent=av;
-  const uN=document.getElementById('u-name');if(uN)uN.textContent=fn;
-  const uR=document.getElementById('u-role');if(uR)uR.textContent=user.role==='admin'?'Admin':'Equipo';
-  const now=new Date();
-  const isAdmin=user.role==='admin';
-  if(isAdmin){
-    document.querySelectorAll('.admin-only').forEach(el=>{
-      el.style.display=el.classList.contains('hub-pill')?'inline-flex':'inline-flex';
-    });
-  }
-  applyTheme();
-}
+
 
 function initShell(user){
   const av=user.av||(user.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
