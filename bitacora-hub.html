@@ -12,7 +12,7 @@
 .view{display:none!important}
 .view.active{display:flex!important;flex-direction:column;flex:1;overflow:hidden}
 .bit-body{display:flex;flex:1;overflow:hidden;min-height:0}
-.content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:var(--c-bg)}
+.content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;background:#F4F8FE}
 .content-body{flex:1;overflow-y:auto;padding:20px 28px 32px}
 /* ─── CALENDAR ───────────────────────── */
 .cal-nav-bar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-shrink:0}
@@ -60,8 +60,7 @@
 .cald{
   background:var(--cal-cell-bg);
   padding:7px 7px 6px;
-  min-height:112px;
-  max-height:112px;
+  min-height:90px;
   overflow:hidden;
   vertical-align:top;
   transition:background .1s;
@@ -654,8 +653,17 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 /* Bitácora view system */
 .view{display:none!important}
 .view.active{display:flex!important;flex-direction:column;flex:1;min-height:0}
-.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.sh-content{flex:1;overflow-y:auto;background:#F4F8FE;padding:32px 40px 56px}
+/* Layout chain — no fixed heights, no excess padding */
+.sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.sh-content{flex:1;overflow:hidden;background:#F4F8FE;display:flex;flex-direction:column}
+/* content-body inside sh-content */
+.content-body{flex:1;overflow-y:auto;padding:16px 28px 16px;display:flex;flex-direction:column}
+/* view-calendar fills remaining space */
+#view-calendar{flex:1;display:flex;flex-direction:column;gap:10px}
+/* calv-month wrapper */
+#calv-month,#calv-week{flex:1;display:flex;flex-direction:column;min-height:0}
+/* calendar grid expands */
+.calgrid{flex:1;grid-auto-rows:1fr!important}
 </style>
 </head>
 <body>
@@ -790,13 +798,13 @@ body.dark .sheets-action-card{background:var(--surf-1)}
           </div>
 
           <!-- Monthly grid -->
-          <div id="calv-month">
+          <div id="calv-month" style="flex:1;display:flex;flex-direction:column;min-height:0;background:#fff;border:1px solid #E4EAF3;border-radius:18px;overflow:hidden">
             <div class="calgrid" id="calgrid"></div>
           </div>
 
           <!-- Weekly grid -->
-          <div id="calv-week" style="display:none">
-            <div class="calgrid" id="calgrid-week" style="grid-auto-rows:minmax(140px,auto)"></div>
+          <div id="calv-week" style="display:none;flex:1;flex-direction:column;min-height:0;background:#fff;border:1px solid #E4EAF3;border-radius:18px;overflow:hidden">
+            <div class="calgrid" id="calgrid-week" style="grid-auto-rows:minmax(120px,auto)"></div>
           </div>
 
           <!-- Upcoming list -->
