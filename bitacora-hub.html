@@ -67,12 +67,14 @@
   position:relative;
 }
 .cald.oth{background:var(--cal-cell-oth)}
-.cald.oth .cdn{opacity:.3}
+.cald.oth .cdn{font-size:12px;font-weight:600;color:#64748B;display:block;margin-bottom:4px}
+.cald.oth .cdn{color:#C8D6EC}
+.cald.tod .cdn{color:#0062DE;font-weight:800}
 
 /* ── TODAY — clear but elegant ── */
 .cald.tod{
-  background:#EBF1FA;
-  box-shadow:inset 2px 0 0 #0062DE;
+  background:#EEF4FF;
+  box-shadow:inset 0 0 0 2px #0062DE;
 }
 body.dark .cald.tod{
   background:rgba(0,98,222,.1);
@@ -122,14 +124,17 @@ body.dark .cald.tod{
 
 /* ── Filter chips ── */
 .cal-chip{
-  display:inline-flex;align-items:center;
-  padding:4px 11px;border-radius:99px;
-  font-size:11px;font-weight:500;
-  cursor:pointer;border:1px solid var(--ds-border-2);
-  background:transparent;color:var(--ds-muted);
-  transition:all .12s;font-family:var(--ff);
-  white-space:nowrap;
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 12px;border-radius:99px;
+  font-size:11px;font-weight:600;letter-spacing:.01em;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  border:1px solid transparent;font-family:var(--ff);
 }
+.cal-chip .cal-chip-dot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;
+}
+.cal-chip.active{font-weight:700}
+.cal-chip:hover{filter:brightness(.95)}
 .cal-chip:hover{border-color:var(--b2);color:var(--ds-text)}
 .cal-chip.active{border-color:#0062DE;background:rgba(0,98,222,.07);color:#0062DE;font-weight:600}
 
@@ -699,7 +704,7 @@ html,body{overflow-y:auto!important;height:auto!important}
 /* ── Day cells ── */
 .cald{
   background:#fff;
-  padding:10px 8px 8px;
+  padding:8px 8px 6px;
   min-height:130px;
   overflow:hidden;
   vertical-align:top;
@@ -708,25 +713,29 @@ html,body{overflow-y:auto!important;height:auto!important}
 .cald.oth{background:#FAFBFD}
 /* ── Events ── */
 .cal-event{
-  display:flex;align-items:center;gap:5px;
-  padding:4px 8px 4px 6px;
-  margin-bottom:3px;
-  min-height:22px;
-  border-radius:6px;
-  font-size:12px;font-weight:500;
+  display:flex;align-items:center;gap:0;
+  padding:0;margin-bottom:3px;
+  min-height:22px;border-radius:6px;
+  font-size:11px;font-weight:500;
   cursor:pointer;overflow:hidden;
-  transition:opacity .12s;
+  transition:opacity .12s,filter .12s;
   white-space:nowrap;
 }
-.cal-event:hover{opacity:.85}
-.cal-ev-type{font-weight:700;flex-shrink:0}
+.cal-event:hover{opacity:.82}
+.cal-ev-bar{width:3px;flex-shrink:0;align-self:stretch;border-radius:2px 0 0 2px;min-height:18px}
+.cal-ev-label{display:flex;align-items:center;gap:3px;overflow:hidden;flex:1;min-width:0;padding:3px 7px 3px 6px}
+.cal-ev-type{font-weight:700;flex-shrink:0;font-size:11px}
+.cal-ev-sep{opacity:.3;flex-shrink:0;font-size:10px;margin:0 1px}
 .cal-ev-tickers{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;opacity:.8}
 .cal-day-more{
-  display:inline-block;font-size:11px;
+  display:inline-flex;align-items:center;
+  font-size:10px;font-weight:600;
   color:#6B7C99;margin-top:4px;cursor:pointer;
-  padding:1px 4px;border-radius:4px;
+  padding:2px 7px;border-radius:99px;
+  background:#F1F5F9;border:1px solid #E2E8F0;
+  transition:all .12s;
 }
-.cal-day-more:hover{background:#E8EEF8;color:#0062DE}
+.cal-day-more:hover{background:#EEF4FF;color:#0062DE;border-color:rgba(0,98,222,.2)}
 </style>
 <style>/* CRITICAL: topbar dark — override any cached CSS */
 .sh-topbar{background:#001533!important;border-bottom:1px solid rgba(255,255,255,.07)!important}
@@ -852,14 +861,38 @@ html,body{overflow-y:auto!important;height:auto!important}
             </button>
           </div>
 
-          <!-- Filter chips -->
-          <div id="cal-filter-bar" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
-            <button class="cal-chip active" data-key="all" onclick="calChipToggle(this)">Todos</button>
-            <button class="cal-chip" data-key="dividendo" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#10B981;display:inline-block;margin-right:4px"></span>Dividendos</button>
-            <button class="cal-chip" data-key="renta" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block;margin-right:4px"></span>Rentas</button>
-            <button class="cal-chip" data-key="amortiz" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#3B82F6;display:inline-block;margin-right:4px"></span>Amortizaciones</button>
-            <button class="cal-chip" data-key="licitac" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#8B5CF6;display:inline-block;margin-right:4px"></span>Licitaciones</button>
-            <button class="cal-chip" data-key="canje" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#F97316;display:inline-block;margin-right:4px"></span>Canjes</button>
+          <!-- Filter chips / legend -->
+          <div id="cal-filter-bar" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 0 12px">
+            <button class="cal-chip active" data-key="all"
+              style="background:#F1F5F9;color:#475569;border-color:#E2E8F0"
+              onclick="calChipToggle(this)">
+              <span class="cal-chip-dot" style="background:#64748B"></span>Todos
+            </button>
+            <button class="cal-chip" data-key="dividendo"
+              style="background:#ECFDF5;color:#065F46;border-color:rgba(16,185,129,.25)"
+              onclick="calChipToggle(this)">
+              <span class="cal-chip-dot" style="background:#10B981"></span>Dividendos
+            </button>
+            <button class="cal-chip" data-key="renta"
+              style="background:#FEF9EE;color:#92400E;border-color:rgba(245,158,11,.25)"
+              onclick="calChipToggle(this)">
+              <span class="cal-chip-dot" style="background:#F59E0B"></span>Rentas
+            </button>
+            <button class="cal-chip" data-key="amortiz"
+              style="background:#EFF6FF;color:#1E40AF;border-color:rgba(59,130,246,.25)"
+              onclick="calChipToggle(this)">
+              <span class="cal-chip-dot" style="background:#3B82F6"></span>Amortizaciones
+            </button>
+            <button class="cal-chip" data-key="licitac"
+              style="background:#F5F3FF;color:#5B21B6;border-color:rgba(139,92,246,.25)"
+              onclick="calChipToggle(this)">
+              <span class="cal-chip-dot" style="background:#8B5CF6"></span>Licitaciones
+            </button>
+            <button class="cal-chip" data-key="canje"
+              style="background:#FFF7ED;color:#9A3412;border-color:rgba(249,115,22,.25)"
+              onclick="calChipToggle(this)">
+              <span class="cal-chip-dot" style="background:#F97316"></span>Canjes
+            </button>
           </div>
 
           <!-- Calendar search overlay -->
@@ -3114,8 +3147,13 @@ function switchCal(v,btn){
   document.getElementById('calv-upcoming').style.display=v==='upcoming'?'':'none';
   const sub=document.getElementById('calml-sub');
   if(sub) sub.style.display=v==='week'?'':'none';
-  if(v==='month')renderCal();
-  else if(v==='week')renderCalWeek();
+  // When switching to week view, snap to current week so events are visible
+  if(v==='week'){
+    const now=new Date();
+    const diffMs=Math.abs(calDt-now);
+    if(diffMs > 14*86400000) calDt=new Date(); // reset if more than 2 weeks away
+    renderCalWeek();
+  } else if(v==='month') renderCal();
   else renderUpcoming();
 }
 
@@ -3129,13 +3167,21 @@ function calNext(){
   if(wk&&wk.style.display!=='none'){calDt=new Date(calDt.getTime()+7*86400000);renderCalWeek();}
   else{calDt.setMonth(calDt.getMonth()+1);renderCal();}
 }
-function calToday(){calDt=new Date();renderCal();}
+function calToday(){
+  calDt=new Date();
+  const wk=document.getElementById('calv-week');
+  if(wk&&wk.style.display!=='none') renderCalWeek();
+  else renderCal();
+}
 
 // ── Weekly render ──────────────────────
 function renderCalWeek(){
   const grid = document.getElementById('week-grid');
   const ml   = document.getElementById('calml');
   if(!grid) return;
+
+  // If DB not loaded yet, retry shortly
+  if(!DB || !DB.events){ setTimeout(renderCalWeek, 300); return; }
 
   // Monday of current week
   const d = new Date(calDt);
@@ -3350,9 +3396,11 @@ function renderCal(){
       return`<div class="cal-event" style="background:${st.bg}"
         onclick="viewEv('${e.id}')"
         title="${e.type}${tickers.length?' · '+tickers.join(', '):''}${e.company?' · '+e.company:''}">
-        <span class="cal-ev-dot" style="background:${st.dot};flex-shrink:0"></span>
-        <span class="cal-ev-type" style="color:${st.text};font-weight:700;flex-shrink:0">${label}</span>
-        ${tkStr?`<span class="cal-ev-tickers" style="color:${st.text};opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${tkStr}</span>`:''}
+        <span class="cal-ev-bar" style="background:${st.dot}"></span>
+        <span class="cal-ev-label">
+          <span class="cal-ev-type" style="color:${st.text}">${label}</span>
+          ${tkStr?`<span class="cal-ev-sep" style="color:${st.text}">·</span><span class="cal-ev-tickers" style="color:${st.text}">${tkStr}</span>`:''}
+        </span>
       </div>`;
     }).join('');
 
