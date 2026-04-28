@@ -653,19 +653,22 @@ body.dark .sheets-action-card{background:var(--surf-1)}
 /* Bitácora view system */
 .view{display:none!important}
 .view.active{display:flex!important;flex-direction:column;flex:1;min-height:0;overflow:hidden}
-/* Layout chain */
+/* ── LAYOUT CHAIN ── */
 .sh-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
 .sh-content{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#F4F8FE}
-/* content-body: scroll container, padding here */
-.content-body{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 28px 0}
-/* Calendar view */
-#view-calendar{flex:1;display:flex;flex-direction:column;gap:8px;min-height:0;padding-bottom:16px}
-.cal-nav-bar{flex-shrink:0}
-#cal-filter-bar{flex-shrink:0!important;display:flex!important}
+.content-body{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;padding:20px 40px 0;max-width:1500px;width:100%;margin:0 auto;box-sizing:border-box}
+/* ── CALENDAR VIEW ── */
+#view-calendar{flex:1;display:flex;flex-direction:column;gap:0;min-height:0;padding-bottom:16px}
+/* Nav bar — single tight row */
+.cal-nav-bar{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px 0 8px;border-bottom:1px solid #E4EAF3;margin-bottom:8px}
+.cal-month-label{font-size:20px!important;font-weight:700!important;min-width:140px}
+/* Filters — compact row below nav */
+#cal-filter-bar{flex-shrink:0;display:flex!important;gap:5px;flex-wrap:wrap;padding:8px 0 10px;margin-bottom:0}
+.cal-chip{padding:4px 11px!important;font-size:11px!important}
 /* calv wrappers */
 #calv-month,#calv-week{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
 /* grid fills all space */
-.calgrid{flex:1;min-height:0;grid-auto-rows:1fr!important}
+.calgrid{flex:1;min-height:calc(100vh - 380px);grid-auto-rows:1fr!important}
 /* day cells flexible */
 .cald{min-height:0!important;max-height:none!important}
 </style>
@@ -792,7 +795,7 @@ body.dark .sheets-action-card{background:var(--surf-1)}
           </div>
 
           <!-- Filter chips -->
-          <div id="cal-filter-bar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center">
+          <div id="cal-filter-bar" style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
             <button class="cal-chip active" data-key="all" onclick="calChipToggle(this)">Todos</button>
             <button class="cal-chip" data-key="dividendo" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#10B981;display:inline-block;margin-right:4px"></span>Dividendos</button>
             <button class="cal-chip" data-key="renta" onclick="calChipToggle(this)"><span style="width:7px;height:7px;border-radius:50%;background:#F59E0B;display:inline-block;margin-right:4px"></span>Rentas</button>
