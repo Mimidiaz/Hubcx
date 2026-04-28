@@ -712,6 +712,7 @@ html,body{overflow-y:auto!important;height:auto!important}
 }
 .cald.oth{background:#FAFBFD}
 /* ── Events ── */
+.cal-event:first-of-type{font-weight:600!important}
 .cal-event{
   display:flex;align-items:center;gap:0;
   padding:0;margin-bottom:3px;
@@ -910,6 +911,11 @@ html,body{overflow-y:auto!important;height:auto!important}
               onclick="calChipToggle(this)">
               <span class="cal-chip-dot" style="background:#F97316"></span>Canjes
             </button>
+          </div>
+
+          <!-- Active filters summary -->
+          <div id="cal-active-filters" style="display:none;align-items:center;gap:6px;flex-wrap:wrap;padding:0 0 8px;font-size:11px;color:#6B7C99">
+            <span style="font-weight:600;color:#A0B0C8">Filtrando:</span>
           </div>
 
           <!-- Calendar search overlay -->
@@ -1175,7 +1181,7 @@ html,body{overflow-y:auto!important;height:auto!important}
 
 
         <!-- ══ VIEW: CONFIGURACIÓN ══════════════════════════════ -->
-        <div class="view admin-only" id="view-config" style="display:none!important;background:#F4F8FE;min-height:calc(100vh - 160px)">
+        <div class="view admin-only" id="view-config" style="background:#F4F8FE;flex-direction:column;min-height:calc(100vh - 160px)">
           <div style="display:flex;gap:0;flex:1;min-height:0">
 
             <!-- Config Sidebar -->
@@ -1699,6 +1705,7 @@ html,body{overflow-y:auto!important;height:auto!important}
     <div class="mtit"><span id="mtyp-title">Agregar tipo</span><button class="mcls" onclick="closeModal('modal-type')">×</button></div>
     <input type="hidden" id="typ-id">
     <div class="field"><label>Nombre *</label><input type="text" id="typ-name" placeholder="VENCIMIENTO" oninput="updTypPrev()"></div>
+    <div class="field"><label>Abreviatura <small style="color:#A0B0C8;font-weight:400">(aparece en calendario)</small></label><input type="text" id="typ-abbr" placeholder="Divid." maxlength="8" oninput="updTypPrev()" style="text-transform:none"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
       <div class="field"><label>Fondo (tabla/badge)</label><input type="color" id="typ-bg" value="#002C65" oninput="updTypPrev()"></div>
       <div class="field"><label>Texto (tabla/badge)</label><input type="color" id="typ-color" value="#D7ECFE" oninput="updTypPrev()"></div>
@@ -3663,20 +3670,48 @@ function calChipToggle(chip){
     if(_calFilters.has(key)){
       _calFilters.delete(key);
       chip.classList.remove('active');
+      if(_calFilters.size===0){
+        _calFilters.clear();
+        document.querySelector('.cal-chip[data-key="all"]')?.classList.add('active');
+      }
     }else{
       _calFilters.add(key);
       chip.classList.add('active');
     }
-    // If nothing selected, revert to All
-    if(_calFilters.size===0){
-      document.querySelector('.cal-chip[data-key="all"]')?.classList.add('active');
-    }
   }
-  // Re-render whichever cal view is active
-  const wk=document.getElementById('calv-week');
-  if(wk&&wk.style.display!=='none')renderCalWeek();
-  else renderCal();
+  renderCal();
+  renderActiveFiltersBar();
 }
+
+function renderActiveFiltersBar(){
+  const bar=document.getElementById('cal-active-filters');
+  if(!bar)return;
+  if(_calFilters.size===0){bar.style.display='none';return;}
+  // Map chip keys to their HTML elements for color/label
+  const chipMap={};
+  document.querySelectorAll('.cal-chip[data-key]').forEach(chip=>{
+    chipMap[chip.dataset.key]={
+      label:chip.textContent.trim().replace(/[●]/g,'').trim(),
+      bg:chip.style.background||'#F1F5F9',
+      color:chip.style.color||'#475569',
+      border:chip.style.borderColor||'#E2E8F0'
+    };
+  });
+  bar.style.display='flex';
+  const pills=[..._calFilters].map(key=>{
+    const m=chipMap[key]||{label:key,bg:'#F1F5F9',color:'#475569',border:'#E2E8F0'};
+    return`<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;background:${m.bg};color:${m.color};border:1px solid ${m.border}">
+      ${m.label}
+      <button onclick="_calFilters.delete('${key}');renderCal();renderActiveFiltersBar();document.querySelector('.cal-chip[data-key=\\'${key}\\']')?.classList.remove('active');if(_calFilters.size===0)document.querySelector('.cal-chip[data-key=\\'all\\']')?.classList.add('active')"
+        style="background:none;border:none;cursor:pointer;color:${m.color};opacity:.6;font-size:13px;line-height:1;padding:0;margin-left:1px" title="Quitar filtro">×</button>
+    </span>`;
+  }).join('');
+  bar.innerHTML=`<span style="font-weight:600;color:#A0B0C8;font-size:10px;text-transform:uppercase;letter-spacing:.06em">Filtros:</span>${pills}
+    <button onclick="_calFilters.clear();document.querySelectorAll('.cal-chip').forEach(c=>c.classList.remove('active'));document.querySelector('.cal-chip[data-key=\\'all\\']')?.classList.add('active');renderCal();renderActiveFiltersBar()"
+      style="font-size:11px;color:#A0B0C8;background:none;border:none;cursor:pointer;font-family:inherit;padding:2px 6px;border-radius:4px" onmouseover="this.style.color='#DC2626'" onmouseout="this.style.color='#A0B0C8'">Limpiar todo</button>`;
+
+}
+
 
 function calEvMatchesFilter(e){
   if(_calFilters.size===0)return true;
@@ -4804,6 +4839,7 @@ function openTypeModal(id){
     const t=DB.eventTypes.find(x=>x.id===id);
     document.getElementById('mtyp-title').textContent='Editar tipo';
     document.getElementById('typ-name').value=t.name;
+    document.getElementById('typ-abbr').value=t.abbr||'';
     document.getElementById('typ-bg').value=t.bg;
     document.getElementById('typ-color').value=t.color;
     document.getElementById('typ-cal-color').value=t.calColor||'#BFDBFE';
@@ -4811,6 +4847,7 @@ function openTypeModal(id){
   }else{
     document.getElementById('mtyp-title').textContent='Agregar tipo';
     document.getElementById('typ-name').value='';
+    document.getElementById('typ-abbr').value='';
     document.getElementById('typ-bg').value='#002C65';
     document.getElementById('typ-color').value='#D7ECFE';
     document.getElementById('typ-cal-color').value='#BFDBFE';
@@ -4818,13 +4855,24 @@ function openTypeModal(id){
   }
   updTypPrev();openModal('modal-type');
 }
-function updTypPrev(){const p=document.getElementById('typ-prev');p.textContent=document.getElementById('typ-name').value||'TIPO';p.style.background=document.getElementById('typ-bg').value;p.style.color=document.getElementById('typ-color').value;}
+function updTypPrev(){
+  const p=document.getElementById('typ-prev');
+  const name=document.getElementById('typ-name').value||'TIPO';
+  const abbr=document.getElementById('typ-abbr')?.value||name.slice(0,3)+'.';
+  const bg=document.getElementById('typ-bg').value;
+  const color=document.getElementById('typ-color').value;
+  if(!p)return;
+  p.style.background=bg;p.style.color=color;p.style.borderLeft='3px solid '+color;
+  p.style.padding='3px 8px';p.style.borderRadius='5px';p.style.fontSize='11px';p.style.fontWeight='700';
+  p.innerHTML=`<span style="font-weight:800">${abbr}</span><span style="opacity:.75;margin-left:4px">WMT</span>`;
+}
 function saveType(){
   const name=document.getElementById('typ-name').value.trim().toUpperCase();
   if(!name){toast('Nombre requerido','error');return;}
   const id=document.getElementById('typ-id').value;
+  const abbr=document.getElementById('typ-abbr')?.value?.trim()||name.slice(0,3)+'.';
   const t={
-    id:id||'t_'+Date.now(),name,
+    id:id||'t_'+Date.now(),name,abbr,
     bg:document.getElementById('typ-bg').value,
     color:document.getElementById('typ-color').value,
     calColor:document.getElementById('typ-cal-color').value,
@@ -5928,28 +5976,42 @@ function cfgTab(btn, section){
 function renderCfgTipos(){
   const el=document.getElementById('cfg-tipos-list');
   if(!el)return;
-  if(!DB.eventTypes.length){
-    el.innerHTML='<div style="text-align:center;padding:32px;color:#A0B0C8;font-size:13px">Sin tipos configurados</div>';
+  if(!DB.eventTypes||!DB.eventTypes.length){
+    el.innerHTML='<div style="text-align:center;padding:32px;color:#A0B0C8;font-size:13px">Sin tipos. Creá el primero arriba.</div>';
     return;
   }
-  el.innerHTML=DB.eventTypes.map(t=>`
-    <div class="cfg-type-card">
-      <span style="display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;background:${t.bg};flex-shrink:0">
-        <span style="font-size:11px;font-weight:800;color:${t.color}">${(t.abbr||t.name.slice(0,3)).toUpperCase()}</span>
-      </span>
+  const TYPE_CHECKLISTS=['PAGO DE DIVIDENDOS','LICITACIÓN','INCIDENCIAS','PAGO DE AMORTIZACIÓN'];
+  el.innerHTML=DB.eventTypes.map((t,i)=>{
+    const abbr=t.abbr||(t.name.slice(0,3).toUpperCase()+'.');
+    const hasChk=TYPE_CHECKLISTS.includes(t.name);
+    // Preview pill
+    const preview=`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700;background:${t.bg};color:${t.color}"><span style="font-size:10px">${abbr}</span><span style="opacity:.8">WMT</span></span>`;
+    return`<div class="cfg-type-card" style="${i>0?'border-top:1px solid #F1F5F9;':''}margin-top:${i>0?'0':''};border-radius:${i===0?'12px 12px':''} ${i===DB.eventTypes.length-1?'0 0 12px 12px':'0 0 0 0'}">
+      <!-- Color swatch -->
+      <div style="width:40px;height:40px;border-radius:10px;background:${t.bg};flex-shrink:0;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,.08)">
+        <span style="font-size:11px;font-weight:800;color:${t.color};letter-spacing:-.01em">${abbr.slice(0,3)}</span>
+      </div>
+      <!-- Info -->
       <div style="flex:1;min-width:0">
-        <div style="font-size:14px;font-weight:600;color:#001533">${esc(t.name)}</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:3px">
-          <span style="font-size:11px;color:#6B7C99">Color cal: <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${t.calColor||t.bg};vertical-align:middle;border:1px solid rgba(0,0,0,.1)"></span></span>
-          ${t.autoComplete?'<span style="font-size:10px;padding:1px 7px;border-radius:99px;background:rgba(0,191,140,.1);color:#00956E;font-weight:700">Auto-completa</span>':''}
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <span style="font-size:14px;font-weight:700;color:#001533">${esc(t.name)}</span>
+          ${t.autoComplete?'<span style="font-size:10px;padding:1px 7px;border-radius:99px;background:rgba(0,191,140,.1);color:#00956E;font-weight:700">Auto</span>':''}
+          ${hasChk?'<span style="font-size:10px;padding:1px 7px;border-radius:99px;background:rgba(0,98,222,.08);color:#0062DE;font-weight:700">Checklist</span>':''}
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:11px;color:#A0B0C8">Abrev: <b style="color:#6B7C99">${abbr}</b></span>
+          <span style="font-size:11px;color:#A0B0C8">Vista previa: ${preview}</span>
         </div>
       </div>
+      <!-- Actions -->
       <div style="display:flex;gap:6px;flex-shrink:0">
-        <button onclick="openTypeModal('${t.id}')" style="padding:5px 12px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:#475569;transition:all .12s" onmouseover="this.style.background='#E8EEF8'" onmouseout="this.style.background='#F1F5F9'">Editar</button>
-        <button onclick="cfgDeleteType('${t.id}')" style="padding:5px 10px;background:rgba(240,92,92,.08);border:1px solid rgba(240,92,92,.2);border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;color:#DC2626;transition:all .12s" onmouseover="this.style.background='rgba(240,92,92,.15)'" onmouseout="this.style.background='rgba(240,92,92,.08)'" title="Eliminar">✕</button>
+        <button onclick="openTypeModal('${t.id}')" style="padding:5px 12px;background:#F1F5F9;border:1px solid #E2E8F0;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;color:#475569;transition:all .12s" onmouseover="this.style.background='#E8EEF8'" onmouseout="this.style.background='#F1F5F9'">✎ Editar</button>
+        <button onclick="cfgDeleteType('${t.id}')" style="padding:5px 10px;background:rgba(240,92,92,.06);border:1px solid rgba(240,92,92,.2);border-radius:7px;font-size:12px;cursor:pointer;font-family:inherit;color:#DC2626;transition:all .12s" onmouseover="this.style.background='rgba(240,92,92,.14)'" onmouseout="this.style.background='rgba(240,92,92,.06)'" title="Eliminar">✕</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
+  // Wrap in a single card
+  el.innerHTML=`<div style="background:#fff;border:1px solid #E4EAF3;border-radius:14px;overflow:hidden">${el.innerHTML}</div>`;
 }
 
 function cfgDeleteType(id){
