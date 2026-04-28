@@ -811,7 +811,7 @@ html,body{overflow-y:auto!important;height:auto!important}
         </button>
       </div>
       <button class="sh-icon-btn" id="theme-btn" onclick="toggleTheme&&toggleTheme()" title="Tema">🌙</button>
-      <button class="sh-icon-btn admin-only" id="btn-config" onclick="switchView('config',this)" title="Configuración" style="display:none;font-size:16px">⚙️</button>
+      <button class="sh-icon-btn admin-only" id="btn-config" onclick="switchView('config',this)" title="Configuración" style="font-size:16px">⚙️</button>
       <div class="sh-user-pill">
         <div class="sh-av" id="u-av">?</div>
         <div><div class="sh-uname" id="u-name">—</div><div class="sh-urole" id="u-role">—</div></div>
@@ -6120,7 +6120,13 @@ function initShell(user){
   if(el('u-role'))el('u-role').textContent=user.role==='admin'?'Admin':'Equipo';
   const uHdr=el('hdr-role');
   if(uHdr){uHdr.textContent=user.role==='admin'?'Admin':'Equipo';uHdr.className='role-chip '+(user.role==='admin'?'role-admin':'role-reader');}
-  if(user.role==='admin')document.querySelectorAll('.admin-only').forEach(e=>e.style.display='inline-flex');
+  if(user.role==='admin'){
+    document.querySelectorAll('.admin-only').forEach(e=>{
+      const tag=e.tagName.toLowerCase();
+      // Buttons and icon buttons need flex, not inline-flex
+      e.style.display=(tag==='button'||e.classList.contains('sh-icon-btn'))?'flex':'inline-flex';
+    });
+  }
   applyTheme();
 }
 </script>
