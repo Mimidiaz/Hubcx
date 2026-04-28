@@ -1434,15 +1434,165 @@ html,body{overflow-y:auto!important;height:auto!important}
 <div id="ev-panel" style="display:none;position:fixed;top:0;right:0;width:520px;max-width:100vw;height:100vh;background:#fff;z-index:490;box-shadow:-4px 0 32px rgba(15,40,90,.15);display:flex;flex-direction:column;overflow:hidden;transform:translateX(100%);transition:transform .22s cubic-bezier(.4,0,.2,1)">
 
   <!-- Panel header -->
-  <div style="flex-shrink:0;padding:16px 20px 0;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--b0);padding-bottom:12px">
-    <button onclick="closeEvPanel()" style="width:28px;height:28px;border-radius:6px;background:transparent;border:none;cursor:pointer;color:var(--t3);font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .1s" onmouseenter="this.style.background='var(--surf-1)'" onmouseleave="this.style.background='transparent'">
+  <div style="flex-shrink:0;padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #E4EAF3">
+    <button onclick="closeEvPanel()" style="width:28px;height:28px;border-radius:6px;background:transparent;border:none;cursor:pointer;color:#A0B0C8;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .1s" onmouseenter="this.style.background='#F4F8FE'" onmouseleave="this.style.background='transparent'">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
     </button>
     <div id="evp-type-badge" style="flex-shrink:0"></div>
+    <div id="evp-mode-label" style="font-size:11px;font-weight:600;color:#A0B0C8;margin-left:2px"></div>
     <div class="spacer"></div>
-    <button id="evp-edit-btn" onclick="evPanelEdit()" style="display:none;padding:5px 12px;background:var(--blue);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff)">✎ Editar</button>
-    <button id="evp-complete-btn" onclick="evPanelComplete()" style="display:none;padding:5px 12px;background:transparent;border:1px solid var(--b1);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff);color:var(--t2)"></button>
+    <!-- Read mode actions -->
+    <div id="evp-read-actions" style="display:flex;gap:6px;align-items:center">
+      <button id="evp-edit-btn" onclick="evPanelSetMode('edit')" style="display:none;padding:6px 14px;background:#0062DE;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="11" height="11"><path d="M12.854.146a.5.5 0 00-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 000-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 01.5.5v.5h.5a.5.5 0 01.5.5v.5h.5a.5.5 0 01.5.5v.5h.5a.5.5 0 01.5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 016 13.5V13h-.5a.5.5 0 01-.5-.5V12h-.5a.5.5 0 01-.5-.5V11h-.5a.5.5 0 01-.5-.5V10h-.5a.499.499 0 01-.175-.032l-.179.178a.5.5 0 00-.11.168l-2 5a.5.5 0 00.65.65l5-2a.5.5 0 00.168-.11l.178-.178z"/></svg>
+        Editar
+      </button>
+    </div>
+    <!-- Edit mode actions -->
+    <div id="evp-edit-actions" style="display:none;gap:6px;align-items:center">
+      <button onclick="evPanelSetMode('read')" style="padding:6px 14px;background:#F4F8FE;color:#6B7C99;border:1px solid #E4EAF3;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">Cancelar</button>
+      <button onclick="evPanelSaveEdit()" style="padding:6px 14px;background:#0062DE;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">Guardar</button>
+    </div>
   </div>
+
+  <!-- READ MODE -->
+  <div id="evp-read-body" style="flex:1;overflow-y:auto;padding:0">
+
+    <!-- Hero: title + meta -->
+    <div style="padding:20px 20px 16px;border-bottom:1px solid #F1F5F9">
+      <div id="evp-title" style="font-size:22px;font-weight:800;color:#001533;letter-spacing:-.03em;line-height:1.25;margin-bottom:12px"></div>
+      <div id="evp-props" style="display:flex;flex-direction:column;gap:0"></div>
+    </div>
+
+    <!-- Estado pill row -->
+    <div id="evp-status-row" style="padding:12px 20px;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;gap:8px;flex-wrap:wrap"></div>
+
+    <!-- Tags -->
+    <div style="padding:14px 20px;border-bottom:1px solid #F1F5F9">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0B0C8;margin-bottom:8px">Etiquetas</div>
+      <div id="evp-tags-read" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+    </div>
+
+    <!-- Checklist (read) -->
+    <div id="evp-checklist-wrap" style="padding:14px 20px;border-bottom:1px solid #F1F5F9;display:none">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0B0C8;margin-bottom:8px">Checklist</div>
+      <div id="evp-checklist"></div>
+    </div>
+
+    <!-- Links -->
+    <div id="evp-links-wrap" style="padding:14px 20px;border-bottom:1px solid #F1F5F9">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0B0C8;margin-bottom:8px">Links</div>
+      <div id="evp-links" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+
+    <!-- Files (read) -->
+    <div id="evp-files-wrap" style="padding:14px 20px;border-bottom:1px solid #F1F5F9;display:none">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0B0C8;margin-bottom:10px">Archivos</div>
+      <div id="evp-atts"></div>
+    </div>
+
+    <!-- Description -->
+    <div id="evp-desc-wrap" style="padding:14px 20px;border-bottom:1px solid #F1F5F9;display:none">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0B0C8;margin-bottom:8px">Descripción</div>
+      <div id="evp-desc" style="font-size:13px;color:#1A3A62;line-height:1.7;background:#F8FAFC;border-radius:8px;padding:12px"></div>
+    </div>
+
+    <!-- Note admin -->
+    <div id="evp-note-wrap" style="padding:14px 20px;border-bottom:1px solid #F1F5F9;display:none">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#92400E;margin-bottom:8px">🔒 Nota interna</div>
+      <div id="evp-note" style="font-size:13px;color:#78350F;line-height:1.65;background:#FFFBEB;border-radius:8px;padding:12px;font-style:italic"></div>
+    </div>
+
+    <!-- Comments -->
+    <div style="padding:14px 20px 0">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#A0B0C8;margin-bottom:12px">Comentarios <span id="evp-cmt-count" style="font-weight:400;text-transform:none"></span></div>
+      <div id="evp-comments-list" style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px"></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;padding-bottom:24px;position:relative">
+        <div id="evp-user-av" style="width:28px;height:28px;border-radius:50%;background:#0062DE;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:3px"></div>
+        <div style="flex:1;position:relative">
+          <textarea id="evp-comment-input" rows="1" placeholder="Agregar comentario… @ para mencionar"
+            style="width:100%;padding:8px 12px;background:#F4F8FE;border:1px solid transparent;border-radius:8px;color:#001533;font-family:inherit;font-size:13px;outline:none;resize:none;line-height:1.55;transition:all .15s;min-height:36px"
+            onfocus="this.style.background='#fff';this.style.border='1px solid #C8D6EC'"
+            onblur="this.style.background='#F4F8FE';this.style.border='1px solid transparent'"></textarea>
+          <div id="evp-mention-dd" style="display:none;position:absolute;bottom:100%;left:0;right:0;background:#fff;border:1px solid #E4EAF3;border-radius:8px;box-shadow:0 4px 16px rgba(0,21,51,.1);z-index:50;max-height:160px;overflow-y:auto"></div>
+        </div>
+        <div id="evp-comment-actions" style="display:flex;gap:6px;align-self:flex-end"></div>
+      </div>
+    </div>
+
+  </div><!-- /evp-read-body -->
+
+  <!-- EDIT MODE -->
+  <div id="evp-edit-body" style="display:none;flex:1;overflow-y:auto;padding:20px">
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+
+      <!-- Estado + Prioridad row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Estado</div>
+          <select id="evp-edit-complete" style="width:100%;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;font-size:13px;font-family:inherit;background:#F8FAFC;outline:none">
+            <option value="no">⏳ Pendiente</option>
+            <option value="yes">✅ Completo</option>
+            <option value="na">➖ N/A</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px">Prioridad</div>
+          <select id="evp-edit-priority" style="width:100%;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;font-size:13px;font-family:inherit;background:#F8FAFC;outline:none">
+            <option value="normal">⚪ Normal</option>
+            <option value="high">🟠 Alta</option>
+            <option value="critical">🔴 Crítica</option>
+            <option value="low">🔵 Baja</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Crítico toggle -->
+      <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid #E4EAF3;border-radius:10px;cursor:pointer;background:#F8FAFC">
+        <input type="checkbox" id="evp-edit-critical" style="width:16px;height:16px;accent-color:#DC2626;cursor:pointer">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:#001533">🚨 Marcar como crítico</div>
+          <div style="font-size:11px;color:#6B7C99">Muestra banner de alerta en el calendario</div>
+        </div>
+      </label>
+
+      <!-- Etiquetas edit -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Etiquetas</div>
+        <div id="evp-edit-tags" style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px"></div>
+        <div id="evp-edit-tag-options" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+      </div>
+
+      <!-- Checklist edit -->
+      <div id="evp-edit-checklist-wrap" style="display:none">
+        <div style="font-size:11px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">Checklist</div>
+        <div id="evp-edit-checklist"></div>
+        <button onclick="evAddCheckItem()" style="margin-top:8px;padding:5px 12px;border:1px dashed #C8D6EC;border-radius:7px;background:transparent;font-size:12px;color:#6B7C99;cursor:pointer;font-family:inherit">+ Agregar ítem</button>
+      </div>
+
+      <!-- Archivos -->
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#A0B0C8;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Archivos</div>
+        <!-- Drag & drop zone -->
+        <div id="evp-dropzone"
+          ondragover="event.preventDefault();this.style.borderColor='#0062DE';this.style.background='#EEF4FF'"
+          ondragleave="this.style.borderColor='#C8D6EC';this.style.background='#F8FAFC'"
+          ondrop="evHandleDrop(event)"
+          style="border:2px dashed #C8D6EC;border-radius:10px;padding:20px;text-align:center;background:#F8FAFC;cursor:pointer;transition:all .15s;margin-bottom:10px"
+          onclick="document.getElementById('evp-file-input').click()">
+          <div style="font-size:24px;margin-bottom:6px">📎</div>
+          <div style="font-size:13px;font-weight:600;color:#6B7C99">Arrastrá o hacé click para subir</div>
+          <div style="font-size:11px;color:#A0B0C8;margin-top:3px">PDF, JPG, PNG · Máx. 10 MB</div>
+        </div>
+        <input type="file" id="evp-file-input" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none" onchange="evHandleFileSelect(this.files)">
+        <div id="evp-edit-files"></div>
+      </div>
+
+    </div>
+  </div><!-- /evp-edit-body -->
+
+</div>
 
   <!-- Scrollable body -->
   <div style="flex:1;overflow-y:auto;padding:24px 24px 0">
@@ -2924,203 +3074,345 @@ function viewEv(id){openEvPanel(id);}
 function openEvPanel(id){
   const e=DB.events.find(x=>x.id===id);if(!e)return;
   _evPanelId=id;
-  window._viewEvId=id; // legacy compat
+  window._viewEvId=id;
   window._viewEvAtts=(e.images||[]);
   const ia=CU?.role==='admin';
-  const sm={yes:'✅ Completo',no:'⏳ Pendiente',na:'➖ N/A'};
-  const t=getT(e.type);
-  const st=calEventStyle(e.type,e);
 
   // Type badge
+  const st=calEventStyle(e.type,e);
   const badge=document.getElementById('evp-type-badge');
-  if(badge)badge.innerHTML=`<span style="display:inline-block;padding:3px 10px;border-radius:5px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:${st.bg};color:${st.text};border-left:3px solid ${st.border}">${e.type}</span>`;
+  if(badge)badge.innerHTML=`<span style="display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:${st.bg};color:${st.text}">${esc(e.type)}</span>`;
 
-  // Title — tickers if present, else event name, else type
+  // Title
   const titleEl=document.getElementById('evp-title');
   if(titleEl){
-    const tkStr=(e.tickers||[]).join('; ');
+    const tkStr=(e.tickers||[]).join(' · ');
     titleEl.textContent=tkStr||e.company||e.type||'—';
   }
 
   // Properties
   const propsEl=document.getElementById('evp-props');
   if(propsEl){
-    function prop(label,val){
-      return`<div style="display:flex;align-items:flex-start;gap:0;padding:5px 0;border-bottom:1px solid var(--b0)">
-        <div style="width:140px;flex-shrink:0;font-size:13px;color:var(--t3);display:flex;align-items:center;gap:7px;padding-top:1px">${label}</div>
-        <div style="font-size:13px;color:var(--t0);font-weight:500;flex:1">${val}</div>
-      </div>`;
-    }
-    const tks=(e.tickers||[]).map(tk=>`<span class="ticker-tag">${tk}</span>`).join(' ')||'<span style="color:var(--t3)">—</span>';
-    const stateColor=e.complete==='yes'?'#00956E':e.complete==='na'?'var(--t3)':'#D97700';
-    const priorityLabels={critical:'🔴 Crítico',high:'🟠 Alto',normal:'⚪ Normal',low:'🔵 Bajo'};
-    const priorityColors={critical:'#DC2626',high:'#D97700',normal:'#6B7C99',low:'#3B82F6'};
-    const pr=e.priority||'normal';
+    const prop=(label,val)=>`<div style="display:flex;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F1F5F9;gap:0">
+      <div style="width:130px;flex-shrink:0;font-size:12px;color:#A0B0C8;padding-top:1px">${label}</div>
+      <div style="font-size:13px;color:#001533;font-weight:500;flex:1">${val}</div>
+    </div>`;
+    const tks=(e.tickers||[]).map(tk=>`<span style="display:inline-block;padding:1px 8px;border-radius:99px;background:#F1F5F9;font-size:11px;font-weight:700;color:#475569;margin-right:3px">${tk}</span>`).join('')||'<span style="color:#A0B0C8">—</span>';
     propsEl.innerHTML=
       prop('📅 Fecha', fmtDate(e.date))+
       (e.timeStart?prop('🕐 Horario', `${e.timeStart}${e.timeEnd?' → '+e.timeEnd:''}`):'') +
-      prop('🏷 Evento', e.company||'<span style="color:var(--t3)">—</span>')+
-      prop('💹 Tickers', tks)+
-      prop('📊 Estado', `<span style="color:${stateColor};font-weight:600">${sm[e.complete]||'⏳ Pendiente'}</span>`)+
-      prop('⚡ Prioridad', `<span style="color:${priorityColors[pr]};font-weight:600">${priorityLabels[pr]||pr}</span>`);
+      prop('🏷 Empresa', esc(e.company||'—'))+
+      prop('💹 Tickers', tks);
   }
 
-  // ── QUICK ACTIONS ──
-  const qaEl = document.getElementById('evp-quick-actions');
-  if(qaEl){
-    qaEl.innerHTML = `
-      <button onclick="evSetComplete('yes')" style="flex:1;padding:7px 4px;border-radius:8px;border:1px solid rgba(0,191,140,.3);background:rgba(0,191,140,.08);color:#00956E;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--ff);transition:all .12s" onmouseover="this.style.background='rgba(0,191,140,.16)'" onmouseout="this.style.background='rgba(0,191,140,.08)'">✓ Completo</button>
-      <button onclick="evSetComplete('no')" style="flex:1;padding:7px 4px;border-radius:8px;border:1px solid rgba(245,158,11,.3);background:rgba(245,158,11,.08);color:#D97700;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--ff);transition:all .12s" onmouseover="this.style.background='rgba(245,158,11,.16)'" onmouseout="this.style.background='rgba(245,158,11,.08)'">⏳ Pendiente</button>
-      <button onclick="evToggleCritical()" style="flex:1;padding:7px 4px;border-radius:8px;border:1px solid rgba(220,38,38,.3);background:${e.critical?'rgba(220,38,38,.12)':'rgba(220,38,38,.06)'};color:#DC2626;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--ff);transition:all .12s" onmouseover="this.style.background='rgba(220,38,38,.16)'" onmouseout="this.style.background='${e.critical?'rgba(220,38,38,.12)':'rgba(220,38,38,.06)'}'">${e.critical?'🚨 Crítico activo':'⚠ Marcar crítico'}</button>
-    `;
+  // Status + priority pills
+  const statusRow=document.getElementById('evp-status-row');
+  if(statusRow){
+    const sm={yes:{label:'✅ Completo',bg:'rgba(0,191,140,.1)',color:'#00956E'},no:{label:'⏳ Pendiente',bg:'rgba(245,158,11,.1)',color:'#D97700'},na:{label:'➖ N/A',bg:'#F1F5F9',color:'#6B7C99'}};
+    const pm={critical:{label:'🔴 Crítico',bg:'rgba(220,38,38,.1)',color:'#DC2626'},high:{label:'🟠 Alta',bg:'rgba(249,115,22,.1)',color:'#D97700'},normal:{label:'⚪ Normal',bg:'#F8FAFC',color:'#94A3B8'},low:{label:'🔵 Baja',bg:'rgba(59,130,246,.1)',color:'#3B82F6'}};
+    const sc=sm[e.complete]||sm.no;
+    const pc=pm[e.priority||'normal']||pm.normal;
+    statusRow.innerHTML=
+      `<span style="padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:${sc.bg};color:${sc.color}">${sc.label}</span>`+
+      `<span style="padding:4px 12px;border-radius:99px;font-size:11px;font-weight:600;background:${pc.bg};color:${pc.color}">${pc.label}</span>`+
+      (e.critical?`<span style="padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700;background:rgba(220,38,38,.1);color:#DC2626">🚨 Crítico</span>`:'');
   }
 
-  // ── TAGS ──
-  const tagsEl = document.getElementById('evp-tags');
+  // Tags (read)
+  const tagsEl=document.getElementById('evp-tags-read');
   if(tagsEl){
-    const AVAILABLE_TAGS=['Urgente','Seguimiento','Interno','Cliente','Onboarding','Comunicación'];
-    const evTags = e.tags||[];
-    tagsEl.innerHTML = `
-      <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px">
-        ${evTags.length ? evTags.map(t=>`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;background:#F1F5F9;border:1px solid #E2E8F0;font-size:11px;font-weight:600;color:#475569">${t}<button onclick="evRemoveTag('${t}')" style="background:none;border:none;cursor:pointer;color:#94A3B8;font-size:12px;line-height:1;padding:0 0 0 2px">×</button></span>`).join('') : '<span style="font-size:11px;color:#A0B0C8">Sin etiquetas</span>'}
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px">
-        ${AVAILABLE_TAGS.filter(t=>!evTags.includes(t)).map(t=>`<button onclick="evAddTag('${t}')" style="padding:2px 8px;border-radius:99px;border:1px dashed #C8D6EC;background:transparent;font-size:10px;font-weight:600;color:#94A3B8;cursor:pointer;font-family:var(--ff)">+ ${t}</button>`).join('')}
-      </div>
-    `;
+    const evTags=e.tags||[];
+    const AVAIL=['Urgente','Seguimiento','Interno','Cliente','Onboarding','Comunicación'];
+    const tagColors={'Urgente':'#DC2626','Seguimiento':'#D97700','Interno':'#6B7C99','Cliente':'#0062DE','Onboarding':'#8B5CF6','Comunicación':'#10B981'};
+    tagsEl.innerHTML=evTags.length
+      ?evTags.map(t=>{const col=tagColors[t]||'#6B7C99';return`<span style="display:inline-flex;padding:4px 11px;border-radius:99px;font-size:11px;font-weight:600;background:${col}18;color:${col};border:1px solid ${col}33">${t}</span>`;}).join('')
+      :`<span style="font-size:12px;color:#A0B0C8">Sin etiquetas</span>`;
   }
 
-  // ── CHECKLIST ──
-  const chkEl = document.getElementById('evp-checklist');
-  if(chkEl){
-    const checklist = e.checklist||[];
-    // Auto-populate checklist from type config if empty
-    const typeChecklists = {
-      'PAGO DE DIVIDENDOS': ['Evento procesado en sistema','Comunicación enviada','Liquidación confirmada'],
-      'LICITACIÓN':         ['Prospecto revisado','Monto confirmado','Resultado publicado'],
-      'INCIDENCIAS':        ['Hora inicio registrada','Impacto evaluado','Resolución documentada','Comunicación enviada'],
-      'PAGO DE AMORTIZACIÓN':['Cálculo verificado','Pago procesado','Confirmación recibida'],
-    };
-    let items = checklist.length ? checklist : (typeChecklists[e.type]||[]).map(label=>({label,done:false}));
+  // Checklist (read — checkboxes interactive)
+  const TYPE_CHECKLISTS={'PAGO DE DIVIDENDOS':['Evento procesado','Comunicación enviada','Liquidación confirmada'],'LICITACIÓN':['Prospecto revisado','Monto confirmado','Resultado publicado'],'INCIDENCIAS':['Hora inicio registrada','Impacto evaluado','Resolución documentada','Comunicación enviada'],'PAGO DE AMORTIZACIÓN':['Cálculo verificado','Pago procesado','Confirmación recibida']};
+  const hasChk=TYPE_CHECKLISTS[e.type]||e.checklist?.length;
+  const chkWrap=document.getElementById('evp-checklist-wrap');
+  const chkEl=document.getElementById('evp-checklist');
+  if(chkWrap&&chkEl){
+    let items=e.checklist?.length?e.checklist:(TYPE_CHECKLISTS[e.type]||[]).map(l=>({label:l,done:false}));
     if(items.length){
-      const done = items.filter(i=>i.done).length;
-      chkEl.innerHTML = `
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <div style="flex:1;height:4px;background:#E4EAF3;border-radius:99px;overflow:hidden"><div style="height:100%;background:#0062DE;border-radius:99px;transition:width .3s;width:${Math.round(done/items.length*100)}%"></div></div>
-          <span style="font-size:10px;font-weight:700;color:#6B7C99">${done}/${items.length}</span>
-        </div>
-        ${items.map((item,i)=>`<label style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #F1F5F9;cursor:pointer">
-          <input type="checkbox" ${item.done?'checked':''} onchange="evToggleCheck(${i},this.checked)" style="width:15px;height:15px;cursor:pointer;accent-color:#0062DE">
-          <span style="font-size:12px;color:${item.done?'#A0B0C8':'#001533'};${item.done?'text-decoration:line-through':''}">${item.label}</span>
-        </label>`).join('')}
-      `;
-      // Save auto-generated checklist to event
-      if(!e.checklist||!e.checklist.length){ e.checklist=items; }
-    } else {
-      chkEl.innerHTML = '<span style="font-size:11px;color:#A0B0C8">Sin checklist para este tipo</span>';
-    }
+      chkWrap.style.display='';
+      if(!e.checklist?.length&&items.length){e.checklist=items;}
+      const done=items.filter(i=>i.done).length;
+      chkEl.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <div style="flex:1;height:4px;background:#E4EAF3;border-radius:99px;overflow:hidden"><div style="height:100%;background:#0062DE;border-radius:99px;width:${Math.round(done/items.length*100)}%"></div></div>
+        <span style="font-size:10px;font-weight:700;color:#6B7C99">${done}/${items.length}</span>
+      </div>
+      ${items.map((item,i)=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #F8FAFC;cursor:pointer">
+        <input type="checkbox" ${item.done?'checked':''} onchange="evToggleCheck(${i},this.checked)" style="width:15px;height:15px;cursor:pointer;accent-color:#0062DE;flex-shrink:0">
+        <span style="font-size:12px;color:${item.done?'#A0B0C8':'#001533'};${item.done?'text-decoration:line-through':''}">${esc(item.label)}</span>
+      </label>`).join('')}`;
+    }else{chkWrap.style.display='none';}
   }
 
-  // ── LINKS ──
-  const linksEl = document.getElementById('evp-links');
+  // Links (compact buttons)
+  const linksEl=document.getElementById('evp-links');
   if(linksEl){
-    const links = e.links||[];
-    const tks2 = (e.tickers||[]);
-    // Auto-suggest links based on tickers
-    const autoLinks = tks2.slice(0,3).flatMap(tk=>[
-      {label:`MAE · ${tk}`, url:`https://www.mae.com.ar/es/mercado/negociaciones?q=${encodeURIComponent(tk)}`},
-      {label:`CNV · ${tk}`, url:`https://www.cnv.gov.ar/SitioWeb/Busqueda/BuscarEmisora?query=${encodeURIComponent(tk)}`},
+    const tks2=e.tickers||[];
+    const autoLinks=tks2.slice(0,3).flatMap(tk=>[
+      {label:`MAE · ${tk}`,url:`https://www.mae.com.ar/es/mercado/negociaciones?q=${encodeURIComponent(tk)}`},
+      {label:`CNV · ${tk}`,url:`https://www.cnv.gov.ar/SitioWeb/Busqueda/BuscarEmisora?query=${encodeURIComponent(tk)}`},
     ]);
-    const allLinks = [...links,...autoLinks.filter(al=>!links.find(l=>l.url===al.url))];
-    linksEl.innerHTML = allLinks.length ? allLinks.map(l=>`<a href="${l.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;padding:5px 0;font-size:12px;color:#0062DE;text-decoration:none;border-bottom:1px solid #F1F5F9" onmouseover="this.style.color='#0052C0'" onmouseout="this.style.color='#0062DE'"><svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12"><path d="M4.715 6.542L3.343 7.914a3 3 0 104.243 4.243l1.828-1.829A3 3 0 008.586 5.5L8 6.086a1.001 1.001 0 00-.154.199 2 2 0 01.861 3.337L6.88 11.45a2 2 0 11-2.83-2.83l.793-.792a4.018 4.018 0 01-.128-1.287z"/><path d="M6.586 4.672A3 3 0 007.414 9.5l.775-.776a2 2 0 01-.896-3.346L9.12 3.55a2 2 0 112.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 10-4.243-4.243L6.586 4.672z"/></svg>${l.label}</a>`).join('') : '<span style="font-size:11px;color:#A0B0C8">Sin links</span>';
+    const allLinks=[...(e.links||[]),...autoLinks.filter(al=>!(e.links||[]).find(l=>l.url===al.url))];
+    linksEl.innerHTML=allLinks.length
+      ?allLinks.map(l=>`<a href="${l.url}" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid #E4EAF3;border-radius:8px;font-size:11px;font-weight:600;color:#0062DE;text-decoration:none;background:#F8FAFC;transition:all .12s"
+          onmouseover="this.style.background='#EEF4FF';this.style.borderColor='#C8D6EC'"
+          onmouseout="this.style.background='#F8FAFC';this.style.borderColor='#E4EAF3'">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="10" height="10"><path d="M4.715 6.542L3.343 7.914a3 3 0 104.243 4.243l1.828-1.829A3 3 0 008.586 5.5L8 6.086a1.001 1.001 0 00-.154.199 2 2 0 01.861 3.337L6.88 11.45a2 2 0 11-2.83-2.83l.793-.792a4.018 4.018 0 01-.128-1.287z"/><path d="M6.586 4.672A3 3 0 007.414 9.5l.775-.776a2 2 0 01-.896-3.346L9.12 3.55a2 2 0 112.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 10-4.243-4.243L6.586 4.672z"/></svg>
+          ${esc(l.label)}</a>`).join('')
+      :`<span style="font-size:12px;color:#A0B0C8">Sin links</span>`;
   }
 
-  // Description
-  const dw=document.getElementById('evp-desc-wrap');
-  const dv=document.getElementById('evp-desc');
-  if(dw&&dv){dw.style.display=e.desc?'':'none';dv.textContent=e.desc||'';}
-
-  // Note (admin only)
-  const nw=document.getElementById('evp-note-wrap');
-  const nv=document.getElementById('evp-note');
-  if(nw&&nv){nw.style.display=(ia&&e.note)?'':'none';nv.textContent=e.note||'';}
-
-  // Attachments
-  const aw=document.getElementById('evp-atts-wrap');
-  const av=document.getElementById('evp-atts');
-  if(aw&&av){
+  // Attachments (read)
+  const filesWrap=document.getElementById('evp-files-wrap');
+  const attsEl=document.getElementById('evp-atts');
+  if(filesWrap&&attsEl){
     const atts=e.images||[];
     if(atts.length){
-      aw.style.display='';
-      av.innerHTML=atts.map((att,ai)=>{
-        const src=typeof att==='object'?att.d:att;
+      filesWrap.style.display='';
+      attsEl.innerHTML=atts.map((att,ai)=>{
         const nm=typeof att==='object'?(att.n||'adjunto'):'adjunto';
         const mime=typeof att==='object'?(att.mime||''):'';
         const isPdf=mime==='application/pdf'||nm.toLowerCase().endsWith('.pdf');
         const hasDrive=typeof att==='object'&&att.viewLink;
-        const hasBase64=src&&src.startsWith('data:');
-        const isImage=mime.startsWith('image/')||(!isPdf&&(src?.startsWith('data:image')||att.driveId));
-        // Get best inline URL — Drive thumbnail > base64
-        const inlineUrl=driveImgUrl(att)||(hasBase64&&!isPdf?src:null);
-
-        if(isImage&&inlineUrl){
-          // Show image inline
-          return`<div style="margin-bottom:8px">
-            <img src="${inlineUrl}" onclick="openLB('${inlineUrl}')"
-              style="width:100%;border-radius:8px;cursor:zoom-in;display:block;border:1px solid var(--b0);max-height:400px;object-fit:contain"
-              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-            <div style="display:none;align-items:center;gap:10px;padding:11px 14px;background:var(--surf-1);border:1px solid var(--b0);border-radius:8px">
-              <div style="font-size:22px">🖼</div>
-              <div style="flex:1;font-size:13px;font-weight:600;color:var(--t0)">${nm}</div>
-              ${hasDrive?`<a href="${att.viewLink}" target="_blank" style="padding:5px 12px;background:var(--blue);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none">Ver en Drive →</a>`:''}
-            </div>
-            ${hasDrive?`<div style="margin-top:4px;display:flex;align-items:center;gap:8px">
-              <a href="${att.viewLink}" target="_blank" style="font-size:11px;color:var(--blue);text-decoration:none">↗ Ver en Drive</a>
-            </div>`:''}
-          </div>`;
-        }
-
-        // PDF or non-image file
-        return`<div style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--surf-1);border:1px solid var(--b0);border-radius:8px;margin-bottom:8px">
-          <div style="font-size:22px">${isPdf?'📄':'📎'}</div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--t0)">${nm}</div>
-            <div style="font-size:11px;color:var(--t3);margin-top:1px">${hasDrive?'Google Drive':hasBase64?'Guardado localmente':'Sin archivo'}</div>
-          </div>
-          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
-            ${hasDrive?`<a href="${att.viewLink}" target="_blank" style="padding:5px 12px;background:var(--blue);color:#fff;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap">Ver en Drive →</a>`:''}
-            ${hasBase64&&!hasDrive?`<button onclick="openLocalPdf('${e.id}',${ai})" style="padding:5px 12px;background:var(--surf-0);color:var(--t1);border:1px solid var(--b1);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff)">Ver PDF</button>`:''}
-            ${hasBase64&&!hasDrive&&driveToken?`<button onclick="uploadAttToDrive('${e.id}',${ai})" style="padding:5px 12px;background:transparent;color:var(--blue);border:1px solid var(--blue);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--ff)">↑ Subir a Drive</button>`:''}
-            ${!hasBase64&&!hasDrive?`<span style="font-size:11px;color:var(--t3)">Sin vista previa</span>`:''}
+        const src=typeof att==='object'?att.d:att;
+        const inlineUrl=driveImgUrl(att)||(src?.startsWith('data:image')?src:null);
+        if(!isPdf&&inlineUrl)return`<div style="margin-bottom:8px;border-radius:10px;overflow:hidden;border:1px solid #E4EAF3">
+          <img src="${inlineUrl}" onclick="openLB('${inlineUrl}')" style="width:100%;display:block;cursor:zoom-in;max-height:240px;object-fit:cover">
+          <div style="padding:8px 12px;display:flex;align-items:center;gap:8px;background:#F8FAFC">
+            <span style="flex:1;font-size:12px;color:#6B7C99;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nm)}</span>
+            ${hasDrive?`<a href="${att.viewLink}" target="_blank" style="font-size:11px;color:#0062DE;text-decoration:none;white-space:nowrap">↗ Drive</a>`:''}
           </div>
         </div>`;
+        return`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:#F8FAFC;border:1px solid #E4EAF3;border-radius:10px;margin-bottom:8px">
+          <span style="font-size:20px">${isPdf?'📄':'📎'}</span>
+          <span style="flex:1;font-size:12px;font-weight:600;color:#001533;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nm)}</span>
+          ${hasDrive?`<a href="${att.viewLink}" target="_blank" style="font-size:11px;font-weight:600;color:#0062DE;text-decoration:none;white-space:nowrap;padding:4px 10px;border:1px solid rgba(0,98,222,.2);border-radius:6px">Ver →</a>`:''}
+          ${hasDrive&&att.downloadLink?`<a href="${att.downloadLink}" target="_blank" style="font-size:11px;font-weight:600;color:#6B7C99;text-decoration:none;white-space:nowrap;padding:4px 8px;border:1px solid #E4EAF3;border-radius:6px">⬇</a>`:''}
+          ${ia?`<button onclick="evDeleteFile('${e.id}',${ai})" style="padding:4px 8px;background:none;border:1px solid rgba(220,38,38,.2);border-radius:6px;color:#DC2626;font-size:11px;cursor:pointer;font-family:inherit">✕</button>`:''}
+        </div>`;
       }).join('');
-    }else{aw.style.display='none';}
+    }else{filesWrap.style.display='none';}
   }
 
-  // Edit / complete buttons
+  // Desc + Note
+  const dw=document.getElementById('evp-desc-wrap');const dv=document.getElementById('evp-desc');
+  if(dw&&dv){dw.style.display=e.desc?'':'none';dv.textContent=e.desc||'';}
+  const nw=document.getElementById('evp-note-wrap');const nv=document.getElementById('evp-note');
+  if(nw&&nv){nw.style.display=(ia&&e.note)?'':'none';nv.textContent=e.note||'';}
+
+  // Edit button
   const editBtn=document.getElementById('evp-edit-btn');
-  if(editBtn)editBtn.style.display=ia?'':'none';
-  const compBtn=document.getElementById('evp-complete-btn');
-  if(compBtn){
-    if(ia&&e.complete==='no'){
-      compBtn.style.display='';
-      compBtn.textContent='✓ Marcar completo';
-    }else{compBtn.style.display='none';}
-  }
+  if(editBtn)editBtn.style.display=ia?'flex':'none';
 
-  // User avatar in comment input
-  const av2=document.getElementById('evp-user-av');
-  if(av2)av2.textContent=(CU?.name||CU?.email||'?').split(/\s|@/).filter(Boolean).map(s=>s[0].toUpperCase()).slice(0,2).join('');
-
-  // Render comments
+  // Avatar + comments
+  const av=document.getElementById('evp-user-av');
+  if(av)av.textContent=(CU?.name||CU?.email||'?').split(/\s|@/).filter(Boolean).map(s=>s[0].toUpperCase()).slice(0,2).join('');
   renderEvPanelComments();
+
+  // Ensure read mode
+  evPanelSetMode('read',true);
 
   // Show panel
   document.getElementById('ev-panel-overlay').style.display='block';
   const panel=document.getElementById('ev-panel');
   panel.style.display='flex';
   requestAnimationFrame(()=>{panel.style.transform='translateX(0)';});
+}
+
+function evPanelSetMode(mode, skipSave){
+  const readBody=document.getElementById('evp-read-body');
+  const editBody=document.getElementById('evp-edit-body');
+  const readAct=document.getElementById('evp-read-actions');
+  const editAct=document.getElementById('evp-edit-actions');
+  const modeLabel=document.getElementById('evp-mode-label');
+  if(mode==='edit'){
+    readBody.style.display='none';
+    editBody.style.display='flex';
+    readAct.style.display='none';
+    editAct.style.display='flex';
+    if(modeLabel)modeLabel.textContent='Editando';
+    // Populate edit form
+    evPopulateEditForm();
+  }else{
+    readBody.style.display='';
+    editBody.style.display='none';
+    readAct.style.display='flex';
+    editAct.style.display='none';
+    if(modeLabel)modeLabel.textContent='';
+  }
+}
+
+function evPopulateEditForm(){
+  const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;
+  const AVAIL=['Urgente','Seguimiento','Interno','Cliente','Onboarding','Comunicación'];
+  const tagColors={'Urgente':'#DC2626','Seguimiento':'#D97700','Interno':'#6B7C99','Cliente':'#0062DE','Onboarding':'#8B5CF6','Comunicación':'#10B981'};
+
+  // State selects
+  const cEl=document.getElementById('evp-edit-complete');if(cEl)cEl.value=e.complete||'no';
+  const pEl=document.getElementById('evp-edit-priority');if(pEl)pEl.value=e.priority||'normal';
+  const crEl=document.getElementById('evp-edit-critical');if(crEl)crEl.checked=!!e.critical;
+
+  // Tags edit
+  const tagsEl=document.getElementById('evp-edit-tags');
+  const tagOpts=document.getElementById('evp-edit-tag-options');
+  const evTags=e.tags||[];
+  if(tagsEl)tagsEl.innerHTML=evTags.map(t=>{const col=tagColors[t]||'#6B7C99';return`<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600;background:${col}18;color:${col};border:1px solid ${col}33">${esc(t)}<button onclick="evEditRemoveTag('${t}')" style="background:none;border:none;cursor:pointer;color:${col};opacity:.6;font-size:13px;line-height:1;padding:0 0 0 2px">×</button></span>`;}).join('');
+  if(tagOpts)tagOpts.innerHTML=AVAIL.filter(t=>!evTags.includes(t)).map(t=>`<button onclick="evEditAddTag('${t}')" style="padding:3px 10px;border-radius:99px;border:1px dashed #C8D6EC;background:transparent;font-size:11px;font-weight:600;color:#94A3B8;cursor:pointer;font-family:inherit;transition:all .12s" onmouseover="this.style.background='#F4F8FE'" onmouseout="this.style.background='transparent'">+ ${t}</button>`).join('');
+
+  // Checklist edit
+  const TYPE_CHECKLISTS={'PAGO DE DIVIDENDOS':['Evento procesado','Comunicación enviada','Liquidación confirmada'],'LICITACIÓN':['Prospecto revisado','Monto confirmado','Resultado publicado'],'INCIDENCIAS':['Hora inicio registrada','Impacto evaluado','Resolución documentada','Comunicación enviada'],'PAGO DE AMORTIZACIÓN':['Cálculo verificado','Pago procesado','Confirmación recibida']};
+  const chkWrap=document.getElementById('evp-edit-checklist-wrap');
+  const chkEl=document.getElementById('evp-edit-checklist');
+  let items=e.checklist?.length?e.checklist:(TYPE_CHECKLISTS[e.type]||[]).map(l=>({label:l,done:false}));
+  if(chkWrap&&chkEl){
+    if(items.length){
+      chkWrap.style.display='';
+      renderEditChecklist(items);
+    }else{chkWrap.style.display='none';}
+  }
+
+  // Files
+  const editFiles=document.getElementById('evp-edit-files');
+  if(editFiles){
+    const atts=e.images||[];
+    editFiles.innerHTML=atts.map((att,ai)=>{
+      const nm=typeof att==='object'?(att.n||'adjunto'):'adjunto';
+      const hasDrive=typeof att==='object'&&att.viewLink;
+      return`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;margin-bottom:6px;background:#F8FAFC">
+        <span style="font-size:16px">📎</span>
+        <span style="flex:1;font-size:12px;color:#001533;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nm)}</span>
+        ${hasDrive?`<span style="font-size:10px;color:#00956E;font-weight:600">✓ Drive</span>`:''}
+        <button onclick="evDeleteFile('${e.id}',${ai})" style="padding:3px 8px;border:1px solid rgba(220,38,38,.2);border-radius:6px;background:none;color:#DC2626;font-size:11px;cursor:pointer;font-family:inherit">✕</button>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderEditChecklist(items){
+  const chkEl=document.getElementById('evp-edit-checklist');if(!chkEl)return;
+  chkEl.innerHTML=items.map((item,i)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+    <input type="checkbox" ${item.done?'checked':''} onchange="evEditCheckToggle(${i},this.checked)" style="width:14px;height:14px;accent-color:#0062DE;flex-shrink:0">
+    <input type="text" value="${esc(item.label)}" onchange="evEditCheckLabel(${i},this.value)" style="flex:1;padding:5px 8px;border:1px solid #E4EAF3;border-radius:6px;font-size:12px;font-family:inherit;background:#F8FAFC;outline:none;${item.done?'color:#A0B0C8;text-decoration:line-through':''}">
+    <button onclick="evEditCheckDelete(${i})" style="padding:3px 7px;border:none;background:none;color:#C8D6EC;font-size:14px;cursor:pointer">×</button>
+  </div>`).join('');
+}
+
+function evEditCheckToggle(i,done){const e=DB.events.find(x=>x.id===_evPanelId);if(!e||!e.checklist)return;e.checklist[i].done=done;renderEditChecklist(e.checklist);}
+function evEditCheckLabel(i,val){const e=DB.events.find(x=>x.id===_evPanelId);if(!e||!e.checklist)return;e.checklist[i].label=val;}
+function evEditCheckDelete(i){const e=DB.events.find(x=>x.id===_evPanelId);if(!e||!e.checklist)return;e.checklist.splice(i,1);renderEditChecklist(e.checklist);}
+function evAddCheckItem(){const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;if(!e.checklist)e.checklist=[];e.checklist.push({label:'Nuevo ítem',done:false});renderEditChecklist(e.checklist);}
+
+function evEditAddTag(tag){
+  const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;
+  if(!e.tags)e.tags=[];if(!e.tags.includes(tag))e.tags.push(tag);
+  evPopulateEditForm();
+}
+function evEditRemoveTag(tag){
+  const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;
+  e.tags=(e.tags||[]).filter(t=>t!==tag);
+  evPopulateEditForm();
+}
+
+async function evPanelSaveEdit(){
+  const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;
+  const cEl=document.getElementById('evp-edit-complete');
+  const pEl=document.getElementById('evp-edit-priority');
+  const crEl=document.getElementById('evp-edit-critical');
+  if(cEl)e.complete=cEl.value;
+  if(pEl)e.priority=pEl.value;
+  if(crEl)e.critical=crEl.checked;
+  e.updatedAt=new Date().toISOString();
+  saveDB();if(SB_CONNECTED)sbSyncEvent(e.id);
+  renderEvents();renderCal();renderCriticalBanner();
+  evPanelSetMode('read');
+  openEvPanel(_evPanelId);
+  toast('Cambios guardados ✓','ok');
+}
+
+// ── File handling ──────────────────────
+function evHandleDrop(ev){
+  ev.preventDefault();
+  const drop=document.getElementById('evp-dropzone');
+  if(drop){drop.style.borderColor='#C8D6EC';drop.style.background='#F8FAFC';}
+  evHandleFileSelect(ev.dataTransfer.files);
+}
+
+function evHandleFileSelect(files){
+  if(!files||!files.length)return;
+  const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;
+  if(!e.images)e.images=[];
+  Array.from(files).forEach(file=>{
+    const allowed=['image/jpeg','image/png','application/pdf'];
+    if(!allowed.includes(file.type)){toast(`Tipo no permitido: ${file.name}`,'er');return;}
+    if(file.size>10*1024*1024){toast(`Archivo muy grande: ${file.name}`,'er');return;}
+    const reader=new FileReader();
+    reader.onload=ev2=>{
+      const attObj={n:file.name,mime:file.type,d:ev2.target.result,size:file.size};
+      e.images.push(attObj);
+      saveDB();
+      // Try to upload to Drive if connected
+      if(driveToken){
+        const idx=e.images.length-1;
+        uploadFileToDrive(file,e,idx);
+      }
+      // Refresh edit files list
+      const editFiles=document.getElementById('evp-edit-files');
+      if(editFiles){
+        const nm=file.name;
+        editFiles.innerHTML+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;margin-bottom:6px;background:#F8FAFC">
+          <span style="font-size:16px">${file.type==='application/pdf'?'📄':'🖼'}</span>
+          <span style="flex:1;font-size:12px;color:#001533;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(nm)}</span>
+          <span style="font-size:10px;color:#D97700;font-weight:600">⏳ Subiendo...</span>
+        </div>`;
+      }
+      toast(`${file.name} agregado ✓`,'ok');
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadFileToDrive(file,e,idx){
+  if(!driveToken||!DRIVE_FOLDER_ID)return;
+  try{
+    const meta={name:file.name,parents:[DRIVE_FOLDER_ID]};
+    const form=new FormData();
+    form.append('metadata',new Blob([JSON.stringify(meta)],{type:'application/json'}));
+    form.append('file',file);
+    const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink',{
+      method:'POST',headers:{Authorization:'Bearer '+driveToken},body:form
+    });
+    if(r.ok){
+      const data=await r.json();
+      if(e.images[idx]){
+        e.images[idx].driveId=data.id;
+        e.images[idx].viewLink=data.webViewLink;
+        e.images[idx].downloadLink=data.webContentLink;
+        e.images[idx].d=null; // remove base64 once on Drive
+        saveDB();if(SB_CONNECTED)sbSyncEvent(e.id);
+        // Refresh files list
+        const editFiles=document.getElementById('evp-edit-files');
+        if(editFiles)evPopulateEditForm();
+        toast(`${file.name} subido a Drive ✓`,'ok');
+      }
+    }
+  }catch(err){console.warn('[Drive upload]',err);}
+}
+
+function evDeleteFile(evId,idx){
+  const e=DB.events.find(x=>x.id===evId);if(!e||!e.images)return;
+  if(!confirm('¿Eliminar este archivo?'))return;
+  e.images.splice(idx,1);
+  saveDB();if(SB_CONNECTED)sbSyncEvent(e.id);
+  openEvPanel(evId);
+  toast('Archivo eliminado','ok');
 }
 
 function closeEvPanel(){
@@ -3133,19 +3425,16 @@ function closeEvPanel(){
   _evPanelId=null;
 }
 
-function evPanelEdit(){
-  closeEvPanel();
-  editEv(window._viewEvId);
-}
+function evPanelEdit(){evPanelSetMode('edit');}
 
 function evPanelComplete(){
-  const e=DB.events.find(x=>x.id===_evPanelId);
-  if(!e)return;
+  const e=DB.events.find(x=>x.id===_evPanelId);if(!e)return;
   e.complete='yes';e.updatedAt=new Date().toISOString();
   saveDB();sbSyncEvent(e.id);renderEvents();renderCal();
   openEvPanel(_evPanelId);
-  toast('Marcado como completo ✓','success');
+  toast('Marcado como completo ✓','ok');
 }
+
 
 // ── Panel comments ────────────────────
 function renderEvPanelComments(){
