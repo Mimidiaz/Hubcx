@@ -689,7 +689,9 @@ html.light .mh,.light .mf,.light .sp-body{background:#fff}
           </label>
         </div>
         <div>
-          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Comentario QA</div>
+          <!-- Client triggers — QA editable -->
+        <div id="qar-triggers" style="margin-bottom:16px;padding:12px;background:#F8FAFC;border:1px solid #E4EAF3;border-radius:10px"></div>
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Comentario QA</div>
           <textarea id="qar-comment" placeholder="Dejá un comentario para el autor…" rows="4" style="width:100%;padding:9px 11px;background:#F8FAFC;border:1px solid var(--h-border);border-radius:8px;font-size:12px;font-family:var(--h-ff);outline:none;resize:vertical;line-height:1.6"></textarea>
         </div>
         <div>
@@ -839,7 +841,7 @@ async function sbFetch(path,opts={}){
 async function sbSave(t){
   const p={
     id:t.id,user_id:CU.id,title:t.title,body:t.body||'',
-    category:t.cat,tags:t.tags||[],status:t.status||'aprobada',
+    category:t.cat,tags:t.tags||[],client_triggers:t.clientTriggers||[],status:t.status||'aprobada',
     visibility:t.visibility||'private',uses:t.uses||0,
     rating:t.rating||0,rating_cnt:t.ratingCnt||0,
     is_favorite:t.fav||false,comments:t.comments||[],
@@ -957,7 +959,7 @@ async function loadTPL(){
     if(d&&d.length>=0){
       TPL=d.map(r=>({
         id:r.id,title:r.title,body:r.body||'',cat:r.category||'Otros',
-        tags:r.tags||[],status:r.status||'aprobada',
+        tags:r.tags||[],clientTriggers:r.client_triggers||[],status:r.status||'aprobada',
         visibility:r.visibility||'private',uses:r.uses||0,
         rating:r.rating||0,ratingCnt:r.rating_cnt||0,
         fav:r.is_favorite||false,comments:r.comments||[],
@@ -1002,7 +1004,7 @@ function draw(){
   else if(F==='shared')list=list.filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada'); // Oficiales = compartidas + aprobadas
   else if(F==='fav')list=list.filter(t=>t.fav);
   if(actCat)list=list.filter(t=>t.cat===actCat);
-  if(q)list=list.filter(t=>t.title.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q)||stripHTML(t.body).toLowerCase().includes(q));
+  if(q)list=list.filter(t=>t.title.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q)||stripHTML(t.body).toLowerCase().includes(q)||(t.clientTriggers||[]).some(tr=>tr.toLowerCase().includes(q)));
   if(sort==='use')list.sort((a,b)=>b.uses-a.uses);
   else if(sort==='az')list.sort((a,b)=>a.title.localeCompare(b.title));
   else list.sort((a,b)=>new Date(b.edited||0)-new Date(a.edited||0));
@@ -1076,6 +1078,13 @@ function draw(){
       </div>
       <div class="mac-title">${esc(t.title)}</div>
       <div class="mac-preview">${plain||'Sin contenido'}</div>
+      ${(t.clientTriggers&&t.clientTriggers.length)?`<div style="margin:6px 0 2px;display:flex;flex-direction:column;gap:3px">
+        ${t.clientTriggers.slice(0,2).map(tr=>`<div style="display:flex;align-items:flex-start;gap:5px;font-size:11px;color:#6B7C99;line-height:1.35">
+          <span style="color:#A0B0C8;flex-shrink:0;margin-top:1px">💬</span>
+          <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic">"${esc(tr)}"</span>
+        </div>`).join('')}
+        ${t.clientTriggers.length>2?`<span style="font-size:10px;color:#A0B0C8">+${t.clientTriggers.length-2} más</span>`:''}
+      </div>`:''}
       <div class="mac-footer">
         <div style="display:flex;align-items:center;gap:6px">
           <span class="mac-uses">${t.uses} uso${t.uses!==1?'s':''}</span>
@@ -1513,6 +1522,16 @@ async function qaActionFromReview(estado){
   const id=document.getElementById('qar-id')?.value;if(!id)return;
   const t=TPL.find(t=>t.id==id);if(!t)return;
   const comment=document.getElementById('qar-comment')?.value?.trim()||'';
+
+  // Save any trigger edits from QA before acting
+  const triggerInput=document.getElementById('qar-triggers-input');
+  if(triggerInput){
+    const newTriggers=triggerInput.value.split('\n')
+      .map(s=>s.replace(/^[•\-\*]\s*/,'').trim())
+      .filter(Boolean);
+    t.clientTriggers=newTriggers;
+  }
+
   if(estado==='rechazada' && !comment){
     toast('Indicá el motivo del rechazo','er');
     document.getElementById('qar-comment')?.focus();
@@ -1565,21 +1584,24 @@ function openQAReview(id){
   if(intercomEl) intercomEl.checked=!!t.en_intercom;
   const commentEl=document.getElementById('qar-comment');
   if(commentEl) commentEl.value=t.comentario_qa||t.motivo_rechazo||'';
-  const meta=document.getElementById('qar-meta');
-  if(meta) meta.innerHTML=[
-    t.aprobada_por?`Aprobada por: <strong>${esc(t.aprobada_por)}</strong>`:'',
-    t.fecha_aprobacion?`Fecha: ${fmtDateShort(t.fecha_aprobacion)}`:'',
-    t.en_intercom&&t.marcado_intercom_por?`Intercom: <strong>${esc(t.marcado_intercom_por)}</strong>`:'',
-    `Creada: ${fmtDateShort(t.created)}`,
-    `Editada: ${fmtDateShort(t.ultima_edicion||t.edited)}`,
-  ].filter(Boolean).join('<br>');
-  const footer=document.getElementById('qar-footer');
-  if(footer){
-    const qaHistory=(t.comments||[]).filter(c=>c.qa);
-    footer.innerHTML=qaHistory.length?`<div style="margin-top:12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--h-hint);margin-bottom:8px">Historial</div>${qaHistory.map(c=>`<div style="padding:8px 10px;background:#F8FAFC;border:1px solid var(--h-border);border-radius:8px;margin-bottom:6px;font-size:12px"><strong>${esc(c.user)}</strong> ${esc(c.action||'')} <span style="color:var(--h-hint)">${esc(c.date||'')}</span>${c.text?`<div style="color:var(--h-muted);margin-top:3px">${esc(c.text)}</div>`:''}</div>`).join('')}</div>`:'';
+
+  // ── Client triggers — QA editable ──
+  const trEl=document.getElementById('qar-triggers');
+  if(trEl){
+    const triggers=t.clientTriggers||[];
+    trEl.innerHTML=`
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A0B0C8;margin-bottom:8px">
+        💬 ¿Cómo lo dice el cliente?
+      </div>
+      <textarea id="qar-triggers-input" rows="3"
+        style="width:100%;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;font-size:12px;font-family:inherit;resize:vertical;line-height:1.6;background:#F8FAFC;outline:none;box-sizing:border-box"
+        placeholder="Una frase por línea…"
+        onfocus="this.style.background='#fff'"
+        onblur="this.style.background='#F8FAFC'">${triggers.join('\n')}</textarea>
+      ${!triggers.length?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':''}
+    `;
   }
-  document.getElementById('overlay-qa-review').classList.add('on');
-}
+
 function closeQAReview(){document.getElementById('overlay-qa-review').classList.remove('on');}
 
 // ── REJECT MODAL ────────────────────────
@@ -1761,6 +1783,11 @@ function openM(type,id){
       </div>
       <div class="fg"><label>Tags (coma separados)</label><input class="fi" id="f-tags" value="${t?(t.tags||[]).join(', '):''}" placeholder="urgente, formal…"></div>
       <div class="fg"><label>Contenido</label>${buildEditor(t?t.body:'','Escribí el contenido de la macro…')}</div>
+      <div class="fg">
+        <label>💬 ¿Cómo te lo dice el cliente? <span style="font-weight:400;color:#A0B0C8">(opcional)</span></label>
+        <textarea class="fi" id="f-triggers" rows="3" placeholder="Ej:&#10;• No veo los rendimientos&#10;• Ayer tenía plata y hoy no está&#10;• Me desapareció la inversión" style="resize:vertical;line-height:1.6;font-size:13px">${t&&t.clientTriggers&&t.clientTriggers.length?(t.clientTriggers||[]).join('\n'):''}</textarea>
+        ${!t||!(t.clientTriggers&&t.clientTriggers.length)?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':''}
+      </div>
     </div>
     <div class="mf">
       ${type==='edit'?`<button class="btn btn-danger" onclick="delTPL('${t.id}')">Eliminar</button>`:''}
@@ -1819,13 +1846,15 @@ async function saveTPL(id){
   const now=today();
   if(id==='null'){
     const nid=SB_CONNECTED?crypto.randomUUID():'l-'+Date.now();
-    const nt={id:nid,title,body,cat,status:'aprobada',visibility,tags,fav:false,uses:0,rating:0,ratingCnt:0,created:now,edited:now,createdBy:CU.id,versions:[],comments:[],estado_calidad:'pendiente',aprobada_por_calidad:false,aprobada_por:'',fecha_aprobacion:null};
+    const triggers=document.getElementById('f-triggers')?.value.split('\n').map(s=>s.replace(/^[•\-\*]\s*/,'')).map(s=>s.trim()).filter(Boolean)||[];
+    const nt={id:nid,title,body,cat,status:'aprobada',visibility,tags,clientTriggers:triggers,fav:false,uses:0,rating:0,ratingCnt:0,created:now,edited:now,createdBy:CU.id,versions:[],comments:[],estado_calidad:'pendiente',aprobada_por_calidad:false,aprobada_por:'',fecha_aprobacion:null};
     TPL.unshift(nt);if(SB_CONNECTED)await sbSave(nt);
     toast('Macro creada ✓ — pendiente de revisión','ok');
   }else{
     const t=TPL.find(t=>t.id==id);if(!t)return;
     const prevEstado=t.estado_calidad;
-    Object.assign(t,{title,body,cat,visibility,tags,edited:now,
+    const editTriggers=document.getElementById('f-triggers')?.value.split('\n').map(s=>s.replace(/^[•\-\*]\s*/,'')).map(s=>s.trim()).filter(Boolean)||[];
+    Object.assign(t,{title,body,cat,visibility,tags,clientTriggers:editTriggers,edited:now,
       ultima_edicion:new Date().toISOString(),editado_por:CU.name});
     checkQAReversion(t, prevEstado); // auto-revert if edited after approval
     if(SB_CONNECTED)await sbSave(t);
