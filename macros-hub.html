@@ -1589,17 +1589,11 @@ function openQAReview(id){
   const trEl=document.getElementById('qar-triggers');
   if(trEl){
     const triggers=t.clientTriggers||[];
-    trEl.innerHTML=`
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A0B0C8;margin-bottom:8px">
-        💬 ¿Cómo lo dice el cliente?
-      </div>
-      <textarea id="qar-triggers-input" rows="3"
-        style="width:100%;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;font-size:12px;font-family:inherit;resize:vertical;line-height:1.6;background:#F8FAFC;outline:none;box-sizing:border-box"
-        placeholder="Una frase por línea…"
-        onfocus="this.style.background='#fff'"
-        onblur="this.style.background='#F8FAFC'">${triggers.join('\n')}</textarea>
-      ${!triggers.length?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':''}
-    `;
+    trEl.innerHTML='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#A0B0C8;margin-bottom:8px">💬 ¿Cómo lo dice el cliente?</div>'
+      +'<textarea id="qar-triggers-input" rows="3" style="width:100%;padding:8px 10px;border:1px solid #E4EAF3;border-radius:8px;font-size:12px;font-family:inherit;resize:vertical;line-height:1.6;background:#F8FAFC;outline:none;box-sizing:border-box" placeholder="Una frase por línea…"></textarea>'
+      +(!triggers.length?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':'');
+    const ta=document.getElementById('qar-triggers-input');
+    if(ta) ta.value=triggers.join('\n');
   }
 
 function closeQAReview(){document.getElementById('overlay-qa-review').classList.remove('on');}
@@ -1785,8 +1779,8 @@ function openM(type,id){
       <div class="fg"><label>Contenido</label>${buildEditor(t?t.body:'','Escribí el contenido de la macro…')}</div>
       <div class="fg">
         <label>💬 ¿Cómo te lo dice el cliente? <span style="font-weight:400;color:#A0B0C8">(opcional)</span></label>
-        <textarea class="fi" id="f-triggers" rows="3" placeholder="Ej:${String.fromCharCode(10)}• No veo los rendimientos${String.fromCharCode(10)}• Ayer tenía plata y hoy no está" style="resize:vertical;line-height:1.6;font-size:13px">${(t&&t.clientTriggers||[]).join(String.fromCharCode(10))}</textarea>
-        ${(!t||!(t&&t.clientTriggers&&t.clientTriggers.length))?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':''}
+        <textarea class="fi" id="f-triggers" rows="3" placeholder="Ej:&#10;• No veo los rendimientos&#10;• Ayer tenía plata y hoy no está" style="resize:vertical;line-height:1.6;font-size:13px"></textarea>
+        <div id="f-triggers-hint" style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>
       </div>
     </div>
     <div class="mf">
@@ -1794,7 +1788,13 @@ function openM(type,id){
       <button class="btn btn-secondary" onclick="closeM()">Cancelar</button>
       <button class="btn btn-primary" onclick="saveTPL('${t?t.id:'null'}')">${type==='create'?'Crear macro':'Guardar'}</button>
     </div>`;
-    setTimeout(()=>{document.getElementById('editor')?.focus();updateToolbar();},50);
+    setTimeout(()=>{
+      document.getElementById('editor')?.focus();updateToolbar();
+      const ftr=document.getElementById('f-triggers');
+      if(ftr){ ftr.value=(t&&t.clientTriggers||[]).join('\n'); }
+      const hint=document.getElementById('f-triggers-hint');
+      if(hint) hint.style.display=(t&&t.clientTriggers&&t.clientTriggers.length)?'none':'block';
+    },50);
   } else if(type==='newuser'){
     mc.innerHTML=`<div class="mh"><h3 class="mh-title">Nuevo usuario</h3><button class="mx" onclick="closeM()">✕</button></div>
     <div class="mb">
