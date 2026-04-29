@@ -885,14 +885,21 @@ async function doLogin(){
   const input=document.getElementById('li-e').value.trim();
   const pass=document.getElementById('li-p').value.trim();
   const err=document.getElementById('auth-err');
-  const btn=document.querySelector('.btn-login');
+  const btn=document.querySelector('.hub-login-btn');
   err.style.display='none';
   if(!input||!pass){err.textContent='Completá usuario y contraseña';err.style.display='block';return;}
-  if(!USERS.length){btn.textContent='Cargando...';btn.disabled=true;await loadUsers();btn.textContent='Continuar →';btn.disabled=false;}
+  if(!USERS.length){
+    if(btn){btn.textContent='Cargando...';btn.disabled=true;}
+    await loadUsers();
+    if(btn){btn.textContent='Ingresar →';btn.disabled=false;}
+  }
+  console.log('LOGIN ATTEMPT', input, 'USERS loaded:', USERS.length);
   const u=USERS.find(x=>x.active&&x.pass===pass&&(x.email.toLowerCase()===input.toLowerCase()||(x.username&&x.username.toLowerCase()===input.toLowerCase())));
+  console.log('USER FOUND:', u ? u.email : 'none');
   if(!u){err.textContent='Credenciales incorrectas';err.style.display='block';return;}
-  SB_CONNECTED=true;
   saveSharedSession(u);
+  console.log('TOKEN SAVED:', localStorage.getItem(SESSION_KEY)?.slice(0,60));
+  SB_CONNECTED=true;
   loginSuccess(u);
 }
 
@@ -2668,8 +2675,8 @@ function renderCatsBar(){
   const bar = document.getElementById('mac-cats-bar');
   if(!bar) return;
   const cats = [...new Set(TPL.map(t=>t.cat).filter(Boolean))].sort();
-  bar.innerHTML = ['<button class="hub-chip'+(actCat===null?' active':'')+'" onclick="setActCat(null)">Todas</button>',
-    ...cats.map(c=>`<button class="hub-chip'+(actCat===c?' active':'')+'" onclick="setActCat('${c}')">${c}</button>`)
+  bar.innerHTML = [`<button class="hub-chip${actCat===null?' active':''}" onclick="setActCat(null)">Todas</button>`,
+    ...cats.map(c=>`<button class="hub-chip${actCat===c?' active':''}" onclick="setActCat('${c}')">${c}</button>`)
   ].join('');
 }
 // Patch setActCat to also update chips
