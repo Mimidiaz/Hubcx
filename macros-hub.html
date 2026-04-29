@@ -862,7 +862,7 @@ async function sbFetch(path,opts={}){
 async function sbSave(t){
   const p={
     id:t.id,user_id:CU.id,title:t.title,body:t.body||'',
-    category:t.cat,tags:t.tags||[],client_triggers:t.clientTriggers||[],status:t.status||'aprobada',
+    category:t.cat,tags:t.tags||[],status:t.status||'aprobada', // client_triggers omitted — column not in Supabase yet
     visibility:t.visibility||'private',uses:t.uses||0,
     rating:t.rating||0,rating_cnt:t.ratingCnt||0,
     is_favorite:t.fav||false,comments:t.comments||[],
@@ -881,6 +881,7 @@ async function sbSave(t){
     ultima_edicion:t.ultima_edicion||t.edited||null,
     editado_por:t.editado_por||''
   };
+  console.log('SAVE PAYLOAD', p);
   await sbFetch('macros',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(p)});
 }
 async function sbDelete(id){await sbFetch('macros?id=eq.'+id,{method:'DELETE'});}
@@ -1174,8 +1175,21 @@ async function copyMacro(id){
 // ════════════════════════════════════════
 // DETAIL PANEL
 // ════════════════════════════════════════
-function openDetail(id){selId=id;if(settingsOpen)toggleSettings();document.getElementById('detail').classList.remove('closed');renderDetail();draw();}
-function closeDetail(){selId=null;document.getElementById('detail').classList.add('closed');draw();}
+function openDetail(id){
+  const detail=document.getElementById('detail');
+  if(!detail){console.warn('openDetail: #detail not found');draw();return;}
+  selId=id;
+  if(settingsOpen)toggleSettings();
+  detail.classList.remove('closed');
+  renderDetail();
+  draw();
+}
+function closeDetail(){
+  selId=null;
+  const detail=document.getElementById('detail');
+  if(detail) detail.classList.add('closed');
+  draw();
+}
 
 function renderDetail(){
   const t=TPL.find(t=>t.id==selId);if(!t)return;
@@ -1896,7 +1910,7 @@ async function saveTPL(id){
     checkQAReversion(t, prevEstado); // auto-revert if edited after approval
     if(SB_CONNECTED)await sbSave(t);
     toast('Guardado ✓','ok');
-    if(selId==t.id)renderDetail();
+    if(selId==t.id && document.getElementById('detail'))renderDetail();
   }
   save();closeM();draw();
 }
