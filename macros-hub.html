@@ -946,30 +946,21 @@ function draw(){
   const sbCats=document.getElementById('sb-cats');
   if(sbCats)sbCats.innerHTML=catsCount.map(c=>`<div class="sidebar-item${actCat===c?' active':''}" onclick="setActCat('${c}')" style="padding:8px 12px;font-size:12px"><div class="sdot cd-${c.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'')}"></div><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c}</span><span style="font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.35);flex-shrink:0">${TPL.filter(t=>t.createdBy===CU?.id&&t.cat===c).length}</span></div>`).join('');
 
-  const title=F==='mine'?'Mis macros':F==='shared'?'Oficiales':F==='fav'?'Favoritas':actCat||'Macros';
-  const cbt=document.getElementById('cbar-title');if(cbt)cbt.textContent=title;
-  const cbs=document.getElementById('cbar-sub');if(cbs)cbs.textContent=`${list.length} macro${list.length!==1?'s':''}`;
-
-  const grid=document.getElementById('grid');if(!grid)return;
-  if(!list.length){
-    const emptyMsg=F==='mine'?'Creá tu primera macro con el botón +':F==='shared'?'Aún no hay macros aprobadas por Calidad':'Cambiá los filtros';
-    grid.innerHTML=`<div class="empty"><div class="empty-ico">${q?'🔍':F==='shared'?'✅':'📋'}</div><div class="empty-t">${q?'No encontramos una macro exacta':'Sin macros'}</div><div class="empty-s">${q?'Probá con otras palabras, buscá por categoría o usá los términos del cliente':''+emptyMsg}</div>${q&&(USER_ROLES||[]).includes('admin')?`<button onclick="openM('create')" style="margin-top:8px;padding:8px 16px;background:#0062DE;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">+ Crear nueva macro</button>`:''}</div>`;
-    return;
-  }
+  const grid=document.getElementById('grid');
 
   // ── EMPTY STATE ──
   if(!list.length){
-    const isSearch = !!q;
-    const grid=document.getElementById('grid');
     if(grid) grid.innerHTML=`<div class="empty">
-      <div class="empty-ico">${isSearch?'🔍':F==='fav'?'★':'📋'}</div>
-      <div class="empty-t">${isSearch?'No encontramos ninguna macro':'Sin macros aquí'}</div>
-      <div class="empty-s">${isSearch?'Probá con otras palabras o los términos del cliente':F==='mine'?'Creá tu primera macro':'Cambiá el filtro para ver macros'}</div>
-      ${isSearch&&(USER_ROLES||[]).includes('admin')?`<button onclick="openM('create')" style="margin-top:10px;padding:8px 16px;background:#0062DE;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">+ Crear nueva macro</button>`:''}
+      <div class="empty-ico">${q?'🔍':F==='fav'?'★':'📋'}</div>
+      <div class="empty-t">${q?'No encontramos ninguna macro':'Sin macros aquí'}</div>
+      <div class="empty-s">${q?'Probá con otras palabras o los términos del cliente':F==='mine'?'Creá tu primera macro':'Cambiá el filtro para ver macros'}</div>
+      ${q&&(USER_ROLES||[]).includes('admin')?`<button onclick="openM('create')" style="margin-top:10px;padding:8px 16px;background:#0062DE;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">+ Crear nueva macro</button>`:''}
     </div>`;
     renderRecommended();
     return;
   }
+
+  if(!grid) return;
 
   function buildCard(t, i){
       const plain=stripHTML(t.body);
@@ -1014,9 +1005,6 @@ function draw(){
     </div>`;
   }
 
-
-  const grid=document.getElementById('grid');
-  if(!grid) return;
 
   // ── FLAT GRID: search or single category ──
   if(q || actCat){
