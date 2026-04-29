@@ -881,7 +881,7 @@ async function loadUsers(){
   if(!USERS.length) USERS=[{id:'u1',email:'mirdiaz@cocos.capital',pass:'cocos2024',name:'Mir Díaz',username:'mirdiaz',role:'admin',active:true,av:'MD',passChanged:true}];
 }
 
-async function doLogin(){
+async async function doLogin(){
   const input=document.getElementById('li-e').value.trim();
   const pass=document.getElementById('li-p').value.trim();
   const err=document.getElementById('auth-err');
