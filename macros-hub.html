@@ -6,6 +6,31 @@
 <title>Macros · Cocos Capital</title>
 <link rel="stylesheet" href="shell.css?v=4">
 <style>
+/* ══ OVERLAY / MODAL DEFAULTS (CRITICAL: must be hidden until activated) ══ */
+#overlay,
+.overlay,
+#overlay-qa-review,
+#overlay-reject {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  background: rgba(0,21,51,.55);
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+#overlay.on,
+.overlay.on,
+#overlay-qa-review.on,
+#overlay-reject.on {
+  display: flex;
+}
+
+/* chpass: already has display:none in CSS rule, but add inline safety */
+#chpass-overlay { display: none; }
+#chpass-overlay.on { display: flex; }
+
 /* ══ PIP-WIN: fixed bottom-left, never blocks layout ══ */
 .pip-win,#pip-win{
   position:fixed!important;
