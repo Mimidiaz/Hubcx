@@ -6,6 +6,34 @@
 <title>Macros · Cocos Capital</title>
 <link rel="stylesheet" href="shell.css?v=4">
 <style>
+/* ── MAC SIDEBAR ── */
+.mac-sb-item{
+  display:flex;align-items:center;gap:8px;
+  width:100%;padding:7px 10px;border-radius:8px;
+  background:transparent;border:none;cursor:pointer;
+  font-size:12px;font-weight:500;color:#6B7C99;
+  font-family:inherit;text-align:left;
+  transition:all .12s;margin-bottom:2px;
+}
+.mac-sb-item:hover{background:#F4F8FE;color:#001533}
+.mac-sb-item.active{background:#EEF4FF;color:#0062DE;font-weight:700}
+.mac-sb-item.active svg{opacity:1}
+.mac-sb-item svg{opacity:.5;flex-shrink:0;transition:opacity .12s}
+.mac-sb-item:hover svg{opacity:.8}
+.mac-sb-item.active ~ .mac-sb-item{} 
+.mac-sb-cat{
+  display:flex;align-items:center;gap:7px;
+  width:100%;padding:6px 10px;border-radius:7px;
+  background:transparent;border:none;cursor:pointer;
+  font-size:12px;font-weight:500;color:#6B7C99;
+  font-family:inherit;text-align:left;
+  transition:all .12s;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.mac-sb-cat:hover{background:#F4F8FE;color:#001533}
+.mac-sb-cat.active{background:#EEF4FF;color:#0062DE;font-weight:600}
+.mac-sb-count{margin-left:auto;font-size:10px;padding:1px 7px;border-radius:99px;background:#F1F5F9;color:#94A3B8;font-weight:600;flex-shrink:0}
+.mac-sb-item.active .mac-sb-count{background:rgba(0,98,222,.12);color:#0062DE}
+
 /* ── RECOMMENDED STRIP ── */
 #recommended-strip{padding:12px 24px 0;flex-shrink:0}
 .rec-strip-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -359,27 +387,7 @@ select.ssel{padding:7px 10px;background:var(--ds-bg);border:1px solid var(--ds-b
       <div class="sh-hero-badge"><span class="sh-hero-dot"></span>Macros</div>
       <h1 class="sh-hero-title" id="cbar-title">Mis <em style="color:#D7ECFE">macros</em></h1>
       <p class="sh-hero-sub" id="cbar-sub">Plantillas rápidas para responder mejor y ahorrar tiempo</p>
-      <div class="sh-hero-pills">
-        <button class="sh-hero-pill active" id="sf-mine" onclick="setF('mine')">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
-          Mis macros <span id="cnt-mine" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
-        </button>
-        <button class="sh-hero-pill" id="sf-shared" onclick="setF('shared')">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M2.5 1a1 1 0 00-1 1v11a1 1 0 001 1H9a1 1 0 001-1V4.914a1 1 0 00-.293-.707L7.793 2.293A1 1 0 007.086 2H2.5z"/></svg>
-          Oficiales <span id="cnt-shared" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
-        </button>
-        <button class="sh-hero-pill" id="sf-fav" onclick="setF('fav')">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
-          Favoritas <span id="cnt-fav" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
-        </button>
-        <button class="sh-hero-pill admin-only qa-only" id="sf-pending" onclick="setF('pending')" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/><path d="M7.1 4.995a.905.905 0 111.8 0l-.35 3.507a.552.552 0 01-1.1 0L7.1 4.995z"/></svg>
-          QA <span id="cnt-pending" style="font-size:10px;opacity:.5;margin-left:2px">0</span>
-        </button>
-        <button class="sh-hero-pill admin-only qa-only" id="sf-qa" onclick="switchToQA(this)" style="display:none">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M2.5 8a5.5 5.5 0 018.25-4.764.5.5 0 00.5-.866A6.5 6.5 0 1014.5 8a.5.5 0 00-1 0 5.5 5.5 0 11-11 0z"/><path d="M15.354 3.354a.5.5 0 00-.708-.708L8 9.293 5.354 6.646a.5.5 0 10-.708.708l3 3a.5.5 0 00.708 0l7-7z"/></svg>
-          Calidad QA
-        </button>
+            <div class="sh-hero-pills">
         <button class="sh-hero-pill sh-hero-pill-cta admin-only" onclick="openM('create')" id="btn-nueva-macro" style="display:none">
           <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M7 1v6H1v2h6v6h2V9h6V7H9V1z"/></svg>
           + Nueva macro
@@ -388,36 +396,83 @@ select.ssel{padding:7px 10px;background:var(--ds-bg);border:1px solid var(--ds-b
     </div>
   </div>
   <!-- CONTENT -->
-  <div class="sh-main">
-    <div class="sh-content">
+  <div class="sh-main" style="display:flex;flex-direction:row;flex:1;min-height:0;overflow:hidden">
 
-    <!-- Search + sort toolbar -->
-    <div id="view-usuario" style="">
-      <!-- Recommended strip -->
-      <div id="recommended-strip"></div>
-      <!-- Search result header -->
-      <div id="search-result-hdr">
-        <span class="search-result-label">Resultados para: <b id="search-result-q"></b></span>
-        <button class="search-clear" onclick="clearSearch()">× Limpiar</button>
-      </div>
-      <div style="padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;background:#fff;border-bottom:1px solid #E4EAF3">
-        <div style="flex:1;position:relative">
-          <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:#A0B0C8;pointer-events:none"><path d="M11.4 10A5.5 5.5 0 102.6 2.6a5.5 5.5 0 008.8 7.4l3.3 3.3 1.4-1.4-3.3-3.3zm-5-.4a3.5 3.5 0 113.5-3.5A3.5 3.5 0 016.4 9.6z"/></svg>
-          <input type="text" id="q" placeholder="Buscar macros…" oninput="draw()" style="width:100%;padding:9px 12px 9px 34px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:10px;font-family:var(--h-ff);font-size:13px;color:var(--h-text);outline:none">
-        </div>
-        <select id="sort" onchange="draw()" style="padding:8px 12px;background:#F5F7FA;border:1px solid var(--h-border);border-radius:10px;font-family:var(--h-ff);font-size:12px;color:var(--h-text);outline:none">
-          <option value="new">Recientes</option>
-          <option value="use">Más usadas</option>
-          <option value="az">A → Z</option>
-        </select>
-      </div>
-      <!-- Categories sub-nav -->
-      <div id="mac-cats-bar" style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0"></div>
-      <!-- Grid -->
-      <div id="grid" style=""></div>
+  <!-- ═══ SIDEBAR ═══════════════════════════════════════════ -->
+  <nav id="mac-sidebar" style="width:240px;flex-shrink:0;background:#fff;border-right:1px solid #E4EAF3;display:flex;flex-direction:column;overflow-y:auto">
+
+    <!-- Search -->
+    <div style="padding:12px 14px;border-bottom:1px solid #E4EAF3;flex-shrink:0;position:relative">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13" style="position:absolute;left:23px;top:50%;transform:translateY(-50%);color:#A0B0C8;pointer-events:none"><path d="M11.4 10A5.5 5.5 0 102.6 2.6a5.5 5.5 0 008.8 7.4l3.3 3.3 1.4-1.4-3.3-3.3zm-5-.4a3.5 3.5 0 113.5-3.5A3.5 3.5 0 016.4 9.6z"/></svg>
+      <input type="text" id="q" placeholder="Buscar macros… (⌘K)" oninput="draw()" style="width:100%;padding:8px 10px 8px 30px;border:1px solid #E4EAF3;border-radius:9px;font-size:12px;font-family:inherit;background:#F8FAFC;outline:none;transition:border-color .15s;box-sizing:border-box" onfocus="this.style.borderColor='#0062DE';this.style.background='#fff'" onblur="this.style.borderColor='#E4EAF3';this.style.background='#F8FAFC'">
     </div>
 
-    <!-- ══ VIEW: CALIDAD QA ══════════════════════════════════ -->
+    <!-- Section: Principal -->
+    <div style="padding:10px 10px 4px">
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#A0B0C8;padding:0 6px;margin-bottom:4px">Principal</div>
+      <button class="mac-sb-item active" id="sbi-recientes" onclick="setSidebarFilter('recientes',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 3.5a.5.5 0 00-1 0V9a.5.5 0 00.252.434l3.5 2a.5.5 0 00.496-.868L8 8.71V3.5z"/><path d="M8 16A8 8 0 108 0a8 8 0 000 16zm7-8A7 7 0 111 8a7 7 0 0114 0z"/></svg>
+        Recientes
+      </button>
+      <button class="mac-sb-item" id="sbi-mine" onclick="setSidebarFilter('mine',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 8a3 3 0 100-6 3 3 0 000 6zm-5 6a5 5 0 0110 0H3z"/></svg>
+        Mis macros
+        <span class="mac-sb-count" id="cnt-mine">0</span>
+      </button>
+      <button class="mac-sb-item" id="sbi-fav" onclick="setSidebarFilter('fav',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+        Favoritas
+        <span class="mac-sb-count" id="cnt-fav">0</span>
+      </button>
+      <button class="mac-sb-item" id="sbi-shared" onclick="setSidebarFilter('shared',this)">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M2.5 1h11A1.5 1.5 0 0115 2.5v11a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 011 13.5v-11A1.5 1.5 0 012.5 1zm0 1a.5.5 0 00-.5.5v11a.5.5 0 00.5.5h11a.5.5 0 00.5-.5v-11a.5.5 0 00-.5-.5h-11z"/><path d="M5 4h6M5 8h6M5 12h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Oficiales
+        <span class="mac-sb-count" id="cnt-shared">0</span>
+      </button>
+      <button class="mac-sb-item qa-only" id="sbi-qa" onclick="setSidebarFilter('qa',this)" style="display:none">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="13" height="13"><path d="M8 15A7 7 0 118 1a7 7 0 010 14zm0 1A8 8 0 108 0a8 8 0 000 16z"/><path d="M10.97 4.97a.235.235 0 00-.02.022L7.477 9.417 5.384 7.323a.75.75 0 00-1.06 1.06L6.97 11.03a.75.75 0 001.079-.02l3.992-4.99a.75.75 0 00-1.071-1.05z"/></svg>
+        Calidad QA
+        <span class="mac-sb-count" id="cnt-pending">0</span>
+      </button>
+    </div>
+
+    <!-- Section: Categorías -->
+    <div style="padding:10px 10px 8px;flex:1">
+      <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#A0B0C8;padding:0 6px;margin-bottom:4px">Categorías</div>
+      <div id="mac-cats-sidebar"></div>
+    </div>
+
+  </nav>
+
+  <!-- ═══ MAIN CONTENT ════════════════════════════════════════ -->
+  <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0">
+
+    <!-- Content toolbar -->
+    <div style="padding:10px 20px;border-bottom:1px solid #E4EAF3;background:#fff;display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <div id="content-toolbar-title" style="font-size:14px;font-weight:700;color:#001533;min-width:100px">Recientes</div>
+      <div style="flex:1"></div>
+      <select id="sort" onchange="draw()" style="padding:7px 11px;background:#F8FAFC;border:1px solid #E4EAF3;border-radius:9px;font-size:12px;font-family:inherit;color:#001533;outline:none;cursor:pointer">
+        <option value="new">Recientes</option>
+        <option value="use">Más usadas</option>
+        <option value="az">A → Z</option>
+      </select>
+    </div>
+
+    <!-- Search active header -->
+    <div id="search-result-hdr" style="display:none;padding:8px 20px;align-items:center;gap:8px;background:#FFF9E6;border-bottom:1px solid #FDE68A;flex-shrink:0">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12" style="color:#D97700"><path d="M11.4 10A5.5 5.5 0 102.6 2.6a5.5 5.5 0 008.8 7.4l3.3 3.3 1.4-1.4-3.3-3.3zm-5-.4a3.5 3.5 0 113.5-3.5A3.5 3.5 0 016.4 9.6z"/></svg>
+      <span style="font-size:12px;color:#92400E">Resultados para: <b id="search-result-q" style="color:#001533"></b></span>
+      <button onclick="clearSearch()" style="margin-left:4px;background:none;border:none;cursor:pointer;font-size:12px;color:#A0B0C8;font-family:inherit;padding:2px 6px;border-radius:4px" onmouseover="this.style.color='#DC2626'" onmouseout="this.style.color='#A0B0C8'">× Limpiar</button>
+    </div>
+
+    <!-- Recommended strip -->
+    <div id="recommended-strip" style="flex-shrink:0"></div>
+
+    <!-- Views -->
+    <div id="view-usuario" style="flex:1;overflow-y:auto;padding:16px 20px">
+      <div id="grid"></div>
+    </div>
+
     <div id="view-qa" style="display:none;flex:1;flex-direction:column;gap:12px;overflow:hidden;min-height:0">
 
       <!-- Metrics + search bar -->
@@ -446,12 +501,9 @@ select.ssel{padding:7px 10px;background:var(--ds-bg);border:1px solid var(--ds-b
       <!-- Grouped content -->
       <div id="qa-groups" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:20px;padding-bottom:24px;min-height:0"></div>
     </div>
+  </div>
 
-  </main>
 </div>
-
-
-    </div>
   </div>
 </div>
 </div><!-- /app -->
@@ -634,7 +686,7 @@ const ROLES_MAP = {
 };
 
 let TPL=[], USERS=[], CU=null;
-let F='mine', actCat=null, actTag=null, selId=null;
+let F='recientes', actCat=null, actTag=null, selId=null;
 let settingsOpen=false, currentSpTab='analytics', importPreview=[];
 let CURRENT_MODE='usuario'; // 'usuario' | 'calidad' | 'admin'
 let USER_ROLES=[]; // roles disponibles para el usuario actual
@@ -770,6 +822,16 @@ function loginSuccess(u, fromSession=false){
   if(tabDb)tabDb.style.display='';
 
   loadTPL();
+  // Activate default sidebar item
+  setTimeout(()=>{
+    const btn=document.getElementById('sbi-recientes');
+    if(btn) setSidebarFilter('recientes', btn);
+    // Show QA items for admin/calidad
+    const canQA=(USER_ROLES||[]).some(r=>['admin','calidad','superusuario'].includes(r));
+    document.querySelectorAll('.qa-only').forEach(el=>{
+      el.style.display=canQA?'flex':'none';
+    });
+  }, 0);
   initPiPDrag();
   cxNotifBadge();
   if(!u.passChanged && !fromSession) setTimeout(()=>document.getElementById('chpass-overlay').classList.add('on'),600);
@@ -855,28 +917,29 @@ function draw(){
   const q=(document.getElementById('q')?.value||'').toLowerCase();
   const sort=document.getElementById('sort')?.value||'new';
   let list=getVisTPL();
-  if(F==='mine')list=list.filter(t=>t.createdBy===CU?.id);
-  else if(F==='shared')list=list.filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada'); // Oficiales = compartidas + aprobadas
-  else if(F==='fav')list=list.filter(t=>t.fav);
-  if(actCat)list=list.filter(t=>t.cat===actCat);
-  if(q)list=list.filter(t=>t.title.toLowerCase().includes(q)||t.cat.toLowerCase().includes(q)||stripHTML(t.body).toLowerCase().includes(q)||(t.clientTriggers||[]).some(tr=>tr.toLowerCase().includes(q)));
-  // Smart sort
+  // Apply sidebar filter (search overrides all)
+  if(q){
+    list=list.filter(t=>
+      t.title.toLowerCase().includes(q)||
+      t.cat.toLowerCase().includes(q)||
+      stripHTML(t.body).toLowerCase().includes(q)||
+      (t.tags||[]).some(tg=>tg.toLowerCase().includes(q))||
+      (t.clientTriggers||[]).some(tr=>tr.toLowerCase().includes(q))
+    );
+  } else if(actCat){
+    list=list.filter(t=>t.cat===actCat);
+  } else if(F==='mine'){
+    list=list.filter(t=>t.createdBy===CU?.id);
+  } else if(F==='shared'){
+    list=list.filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada');
+  } else if(F==='fav'){
+    list=list.filter(t=>t.fav);
+  }
+  // recientes = no filter, smart sort by recency handles it
   smartSort(list, q);
-  // Update search header
   updateSearchHeader(q);
-
-  const mine=TPL.filter(t=>t.createdBy===CU?.id);
-  const oficiales=getVisTPL().filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada');
-  const favs=getVisTPL().filter(t=>t.fav);
-  const pending=TPL.filter(t=>t.estado_calidad==='pendiente');
-  const _cm=document.getElementById('cnt-mine');if(_cm)_cm.textContent=mine.length;
-  const _cs=document.getElementById('cnt-shared');if(_cs)_cs.textContent=oficiales.length;
-  const _cf=document.getElementById('cnt-fav');if(_cf)_cf.textContent=favs.length;
-  // KPI cards
-  const kpiTotal=document.getElementById('kpi-total');if(kpiTotal)kpiTotal.textContent=TPL.length;
-  const kpiTop=document.getElementById('kpi-top');if(kpiTop){const topN=TPL.filter(t=>t.uses>0).length;kpiTop.textContent=topN;}
-  const kpiFav=document.getElementById('kpi-fav');if(kpiFav)kpiFav.textContent=favs.length;
-  const kpiQA=document.getElementById('kpi-qa');if(kpiQA)kpiQA.textContent=pending.length;
+  updateSidebarCounts();
+  populateSidebarCats();
 
   // Sidebar cats — only categories, no tags
   const catsCount=[...new Set(TPL.filter(t=>t.createdBy===CU?.id).map(t=>t.cat))].sort();
@@ -894,73 +957,46 @@ function draw(){
     return;
   }
 
-  // Sort: most used first within each category
-  list.sort((a,b)=>b.uses-a.uses);
-
+  // ── EMPTY STATE ──
   if(!list.length){
-    const emptyMsg=F==='mine'?'Creá tu primera macro con el botón +':F==='shared'?'Aún no hay macros aprobadas por Calidad':'Cambiá los filtros';
-    grid.innerHTML=`<div class="empty"><div class="empty-ico">${F==='shared'?'✅':'📋'}</div><div class="empty-t">Sin macros${q?` para "${q}"`:''}${actCat?` en ${actCat}`:''}</div><div class="empty-s">${emptyMsg}</div></div>`;
+    const isSearch = !!q;
+    const grid=document.getElementById('grid');
+    if(grid) grid.innerHTML=`<div class="empty">
+      <div class="empty-ico">${isSearch?'🔍':F==='fav'?'★':'📋'}</div>
+      <div class="empty-t">${isSearch?'No encontramos ninguna macro':'Sin macros aquí'}</div>
+      <div class="empty-s">${isSearch?'Probá con otras palabras o los términos del cliente':F==='mine'?'Creá tu primera macro':'Cambiá el filtro para ver macros'}</div>
+      ${isSearch&&(USER_ROLES||[]).includes('admin')?`<button onclick="openM('create')" style="margin-top:10px;padding:8px 16px;background:#0062DE;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">+ Crear nueva macro</button>`:''}
+    </div>`;
+    renderRecommended();
     return;
   }
 
-  // Group by category
-  const cats=[...new Set(list.map(t=>t.cat))].sort();
-  const topUsed=Math.max(...list.map(t=>t.uses));
-
-  grid.innerHTML=cats.map(cat=>{
-    const catList=list.filter(t=>t.cat===cat);
-    const catId='cg-'+cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'');
-    const cardsHtml=catList.map((t,i)=>{
+  function buildCard(t, i){
       const plain=stripHTML(t.body);
-      const QA_VISUAL={
-        aprobada:{icon:'✓',label:'Aprobada',color:'#00956E',bg:'rgba(0,191,140,.1)',border:'rgba(0,191,140,.25)'},
-        rechazada:{icon:'✕',label:'Rechazada',color:'#DC2626',bg:'rgba(240,92,92,.1)',border:'rgba(240,92,92,.25)'},
-        requiere_ajustes:{icon:'⚠',label:'Ajustes',color:'#D97700',bg:'rgba(245,158,11,.12)',border:'rgba(245,158,11,.3)'},
-        requiere_nueva_revision:{icon:'↺',label:'Revisión',color:'#7C3AED',bg:'rgba(163,120,243,.1)',border:'rgba(163,120,243,.25)'},
-      };
-      const qv=QA_VISUAL[t.estado_calidad||''];
-      const qaEl=qv?`<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:700;background:${qv.bg};color:${qv.color};border:1px solid ${qv.border}">${qv.icon} ${qv.label}</span>`:'';
-      const intercomEl=t.en_intercom?`<span style="display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:99px;font-size:10px;font-weight:600;background:rgba(0,191,140,.08);color:#00956E;border:1px solid rgba(0,191,140,.2)">✓ IC</span>`:'';
-      const selId=null;
-      // QA badge
       const QA_MAP={
-        aprobada:   {cls:'mac-qa-aprobada',   dot:'●', label:'Aprobada'},
-        rechazada:  {cls:'mac-qa-rechazada',   dot:'●', label:'Rechazada'},
-        requiere_ajustes:       {cls:'mac-qa-ajustes', dot:'⚠', label:'Requiere ajustes'},
-        requiere_nueva_revision:{cls:'mac-qa-revision',dot:'↺', label:'Nueva revisión'},
+        aprobada:   {cls:'mac-qa-aprobada',   dot:'●',label:'Aprobada'},
+        rechazada:  {cls:'mac-qa-rechazada',   dot:'●',label:'Rechazada'},
+        requiere_ajustes:       {cls:'mac-qa-ajustes', dot:'⚠',label:'Requiere ajustes'},
+        requiere_nueva_revision:{cls:'mac-qa-revision',dot:'↺',label:'Nueva revisión'},
       };
       const qm=QA_MAP[t.estado_calidad||''];
       const qaBadge=qm
-        ? `<span class="mac-qa-badge ${qm.cls}">${qm.dot} ${qm.label}</span>`
-        : `<span class="mac-qa-badge mac-qa-pendiente">● Pendiente</span>`;
-
-      // Category dot class
+        ?`<span class="mac-qa-badge ${qm.cls}">${qm.dot} ${qm.label}</span>`
+        :`<span class="mac-qa-badge mac-qa-pendiente">● Pendiente</span>`;
       const catCls='cd-'+t.cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'');
-
-      // Tags (max 3 + overflow)
       const tags=(t.tags||[]);
       const tagHtml=tags.length
-        ? tags.slice(0,3).map(tg=>`<span class="mac-tag">${esc(tg)}</span>`).join('')
-          +(tags.length>3?`<span class="mac-tag-more">+${tags.length-3}</span>`:'')
-        : '';
-
+        ?tags.slice(0,3).map(tg=>`<span class="mac-tag">${esc(tg)}</span>`).join('')+(tags.length>3?`<span class="mac-tag-more">+${tags.length-3}</span>`:'')
+        :'';
       return `<div class="mac-card" data-macro-id="${t.id}" onclick="openQuickDrawer('${t.id}')" style="animation-delay:${Math.min(i,10)*0.02}s">
-      <!-- Header: cat + fav -->
       <div class="mac-card-hdr">
-        <span class="mac-cat-badge">
-          <span class="sdot ${catCls}"></span>${esc(t.cat)}
-        </span>
+        <span class="mac-cat-badge"><span class="sdot ${catCls}"></span>${esc(t.cat)}</span>
         <button class="mac-fav${t.fav?' on':''}" onclick="event.stopPropagation();toggleFav('${t.id}')">${t.fav?'★':'☆'}</button>
       </div>
-      <!-- Title (2 lines) -->
       <div class="mac-title">${esc(t.title)}</div>
-      <!-- Preview (3 lines) -->
       <div class="mac-preview">${plain||'Sin contenido'}</div>
-      <!-- Tags -->
       ${tagHtml?`<div class="mac-tags">${tagHtml}</div>`:''}
-      <!-- Client keywords hint -->
-      ${(t.clientTriggers&&t.clientTriggers.length)?`<div style="font-size:10px;color:#A0B0C8;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">💬 ${t.clientTriggers.slice(0,2).map(s=>'"'+s+'"').join(' · ')}</div>`:''}
-      <!-- Footer -->
+      ${(t.clientTriggers&&t.clientTriggers.length)?`<div style="font-size:10px;color:#A0B0C8;margin-bottom:7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">💬 ${t.clientTriggers.slice(0,2).map(s=>'"'+s+'"').join(' · ')}</div>`:''}
       <div class="mac-footer">
         <div class="mac-footer-left">
           <span class="mac-uses">${t.uses} uso${t.uses!==1?'s':''}</span>
@@ -968,10 +1004,7 @@ function draw(){
           ${qaBadge}
         </div>
         <div class="mac-footer-actions">
-          <button class="mac-sec-btn" onclick="event.stopPropagation();openPiP('${t.id}')" title="PiP">
-            <svg viewBox="0 0 16 16" fill="currentColor" width="10" height="10"><path d="M1.5 1h13A1.5 1.5 0 0116 2.5v11a1.5 1.5 0 01-1.5 1.5h-13A1.5 1.5 0 010 13.5v-11A1.5 1.5 0 011.5 1zm0 1a.5.5 0 00-.5.5v7h14v-7a.5.5 0 00-.5-.5h-13zM1 13.5a.5.5 0 00.5.5h4V10H1v3.5zm5 .5v-4h9v3.5a.5.5 0 01-.5.5H6z"/></svg>
-            PiP
-          </button>
+          <button class="mac-sec-btn" onclick="event.stopPropagation();openPiP('${t.id}')" title="PiP">PiP</button>
           <button class="mac-sec-btn" onclick="event.stopPropagation();openQuickDrawer('${t.id}')" title="Ver detalle">Ver</button>
           <button class="mac-copy-btn" onclick="event.stopPropagation();copyMacroFeedback(this,'${t.id}')">
             <svg viewBox="0 0 16 16" fill="currentColor" width="10" height="10"><path d="M4 2h8v2H4zm-2 2h12v11H2V4zm2 2v7h8V6H4z"/></svg>Copiar
@@ -979,18 +1012,38 @@ function draw(){
         </div>
       </div>
     </div>`;
-    }).join('');
+  }
 
+
+  const grid=document.getElementById('grid');
+  if(!grid) return;
+
+  // ── FLAT GRID: search or single category ──
+  if(q || actCat){
+    grid.innerHTML=`<div class="cat-group-grid" style="grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px">`
+      + list.map((t,i)=>buildCard(t,i)).join('')
+      + `</div>`;
+    if(!q) renderRecommended();
+    return;
+  }
+
+  // ── GROUPED BY CATEGORY ──
+  const cats=[...new Set(list.map(t=>t.cat))].sort();
+  grid.innerHTML=cats.map(cat=>{
+    const catList=list.filter(t=>t.cat===cat);
+    const catId='cg-'+cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'');
     return `<div class="cat-group">
       <div class="cat-group-hdr">
         <span class="sdot ${catId}"></span>
         <span class="cat-group-title">${esc(cat)}</span>
         <span class="cat-group-count">${catList.length}</span>
       </div>
-      <div class="cat-group-grid">${cardsHtml}</div>
+      <div class="cat-group-grid">${catList.map((t,i)=>buildCard(t,i)).join('')}</div>
     </div>`;
   }).join('');
+  renderRecommended();
 }
+
 
 function toggleSbCats(){
   const el=document.getElementById('sb-cats');
@@ -1001,31 +1054,87 @@ function toggleSbCats(){
   if(arrow)arrow.style.transform=open?'rotate(0deg)':'rotate(-90deg)';
 }
 
-function setF(f){
-  // Role guard: block QA/calidad views for non-admin/calidad
-  if((f==='pending'||f==='qa')&&!USER_ROLES.includes('calidad')&&!USER_ROLES.includes('admin')){
-    console.warn('Acceso denegado: vista QA requiere rol calidad o admin');
-    return;
+// ══ SIDEBAR FILTER ═══════════════════════════════════════════
+
+function setSidebarFilter(f, btn){
+  // Role guard
+  if(f==='qa' && !USER_ROLES.includes('calidad') && !USER_ROLES.includes('admin')){
+    console.warn('Acceso denegado: QA requiere rol calidad o admin'); return;
   }
   F=f; actCat=null;
-  // Single active pill — remove from ALL pill types
-  document.querySelectorAll('.sh-hero-pill,.sb-item,.hub-pill').forEach(el=>{
-    el.classList.remove('active','on');
-  });
-  const el=document.getElementById('sf-'+f);
-  if(el) el.classList.add('active');
+  // Update active state
+  document.querySelectorAll('.mac-sb-item,.mac-sb-cat').forEach(el=>el.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  // Update toolbar title
+  const titles={recientes:'Recientes',mine:'Mis macros',fav:'Favoritas',shared:'Oficiales',qa:'Calidad QA'};
+  const titleEl=document.getElementById('content-toolbar-title');
+  if(titleEl) titleEl.textContent=titles[f]||f;
   // Show/hide views
   const vqa=document.getElementById('view-qa');
   const vU=document.getElementById('view-usuario');
-  if(f==='qa'||f==='pending'){
-    if(vqa) vqa.style.display='flex';
-    if(vU)  vU.style.display='none';
-    renderQATable&&renderQATable();
+  if(f==='qa'){
+    if(vqa){vqa.style.display='flex';}
+    if(vU) vU.style.display='none';
+    switchToQA&&switchToQA();
   } else {
     if(vqa) vqa.style.display='none';
-    if(vU)  vU.style.display='flex';
+    if(vU) vU.style.display='flex';
     draw();
   }
+}
+
+// Legacy setF → delegates to setSidebarFilter
+function setF(f){
+  const btn=document.getElementById('sbi-'+f)||document.getElementById('sf-'+f);
+  setSidebarFilter(f, btn);
+}
+
+function switchToQA(btn){
+  setSidebarFilter('qa', btn||document.getElementById('sbi-qa'));
+}
+
+function populateSidebarCats(){
+  const el=document.getElementById('mac-cats-sidebar');
+  if(!el)return;
+  const cats=[...new Set(TPL.map(t=>t.cat))].sort();
+  el.innerHTML=cats.map(cat=>{
+    const catId='cg-'+cat.toLowerCase().replace(/\s/g,'-').replace(/[^a-z-]/g,'');
+    const count=TPL.filter(t=>t.cat===cat).length;
+    return `<button class="mac-sb-cat" onclick="setSidebarCat('${cat.replace(/'/g,'\\\'')}')" data-cat="${cat}">
+      <span class="sdot ${catId}" style="flex-shrink:0"></span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis">${esc(cat)}</span>
+      <span class="mac-sb-count">${count}</span>
+    </button>`;
+  }).join('');
+}
+
+function setSidebarCat(cat){
+  actCat=cat;
+  // Clear principal active
+  document.querySelectorAll('.mac-sb-item').forEach(el=>el.classList.remove('active'));
+  // Active the cat button
+  document.querySelectorAll('.mac-sb-cat').forEach(el=>{
+    el.classList.toggle('active', el.dataset.cat===cat);
+  });
+  const titleEl=document.getElementById('content-toolbar-title');
+  if(titleEl) titleEl.textContent=cat;
+  const vqa=document.getElementById('view-qa');
+  const vU=document.getElementById('view-usuario');
+  if(vqa) vqa.style.display='none';
+  if(vU) vU.style.display='flex';
+  draw();
+}
+
+function updateSidebarCounts(){
+  const mine=TPL.filter(t=>t.createdBy===CU?.id);
+  const favs=TPL.filter(t=>t.fav);
+  const shared=getVisTPL().filter(t=>t.visibility==='shared'&&t.estado_calidad==='aprobada');
+  const pending=TPL.filter(t=>!t.estado_calidad||t.estado_calidad==='pendiente'||t.estado_calidad==='sin_revisar');
+  const g=id=>document.getElementById(id);
+  if(g('cnt-mine')) g('cnt-mine').textContent=mine.length;
+  if(g('cnt-fav'))  g('cnt-fav').textContent=favs.length;
+  if(g('cnt-shared'))g('cnt-shared').textContent=shared.length;
+  if(g('cnt-pending'))g('cnt-pending').textContent=pending.length;
 }
 function setActCat(c){actCat=actCat===c?null:c;F=null;document.querySelectorAll('.sidebar-nav .sidebar-item,.mac-cat-item').forEach(i=>i.classList.remove('active','on'));draw();}
 function toggleFav(id){const t=TPL.find(t=>t.id==id);if(!t)return;t.fav=!t.fav;save();if(SB_CONNECTED)sbSave(t);draw();if(selId==id)renderDetail();}
