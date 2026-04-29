@@ -881,7 +881,7 @@ async function loadUsers(){
   if(!USERS.length) USERS=[{id:'u1',email:'mirdiaz@cocos.capital',pass:'cocos2024',name:'Mir Díaz',username:'mirdiaz',role:'admin',active:true,av:'MD',passChanged:true}];
 }
 
-async async function doLogin(){
+async function doLogin(){
   const input=document.getElementById('li-e').value.trim();
   const pass=document.getElementById('li-p').value.trim();
   const err=document.getElementById('auth-err');
@@ -1785,8 +1785,8 @@ function openM(type,id){
       <div class="fg"><label>Contenido</label>${buildEditor(t?t.body:'','Escribí el contenido de la macro…')}</div>
       <div class="fg">
         <label>💬 ¿Cómo te lo dice el cliente? <span style="font-weight:400;color:#A0B0C8">(opcional)</span></label>
-        <textarea class="fi" id="f-triggers" rows="3" placeholder="Ej:&#10;• No veo los rendimientos&#10;• Ayer tenía plata y hoy no está&#10;• Me desapareció la inversión" style="resize:vertical;line-height:1.6;font-size:13px">${t&&t.clientTriggers&&t.clientTriggers.length?(t.clientTriggers||[]).join('\n'):''}</textarea>
-        ${!t||!(t.clientTriggers&&t.clientTriggers.length)?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':''}
+        <textarea class="fi" id="f-triggers" rows="3" placeholder="Ej:${String.fromCharCode(10)}• No veo los rendimientos${String.fromCharCode(10)}• Ayer tenía plata y hoy no está" style="resize:vertical;line-height:1.6;font-size:13px">${(t&&t.clientTriggers||[]).join(String.fromCharCode(10))}</textarea>
+        ${(!t||!(t&&t.clientTriggers&&t.clientTriggers.length))?'<div style="font-size:11px;color:#A0B0C8;margin-top:4px">💡 Agregar ejemplos reales ayuda a encontrar la macro más rápido</div>':''}
       </div>
     </div>
     <div class="mf">
